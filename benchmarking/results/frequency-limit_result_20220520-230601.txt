@@ -1,0 +1,504 @@
+
+Benchmark 0 1600: 
+Iteration 0:
+energy: 81050mJ | time: 5714116308ns
+Iteration 1:
+energy: 80390mJ | time: 5771596292ns
+Iteration 2:
+energy: 80190mJ | time: 5632118703ns
+Iteration 3:
+energy: 80070mJ | time: 5659696831ns
+Iteration 4:
+energy: 80230mJ | time: 5724834292ns
+Iteration 5:
+energy: 80670mJ | time: 5844873677ns
+Iteration 6:
+energy: 80630mJ | time: 5746828415ns
+Iteration 7:
+energy: 81000mJ | time: 5774820903ns
+Iteration 8:
+energy: 80010mJ | time: 5671521936ns
+Iteration 9:
+energy: 81140mJ | time: 5803929828ns
+Iteration 10:
+energy: 80700mJ | time: 5742899080ns
+Iteration 11:
+energy: 81000mJ | time: 5764049347ns
+Iteration 12:
+energy: 80470mJ | time: 5697244384ns
+Iteration 13:
+energy: 81550mJ | time: 5803313111ns
+Iteration 14:
+energy: 80280mJ | time: 5665426517ns
+Iteration 15:
+energy: 81560mJ | time: 5796583328ns
+Iteration 16:
+energy: 80640mJ | time: 5689209543ns
+Iteration 17:
+energy: 80450mJ | time: 5726824256ns
+Iteration 18:
+energy: 80190mJ | time: 5690722560ns
+Iteration 19:
+energy: 80580mJ | time: 5747383217ns
+
+Benchmark 0 2100: 
+Iteration 0:
+energy: 77820mJ | time: 4280966074ns
+Iteration 1:
+energy: 105490mJ | time: 4799980415ns
+Iteration 2:
+energy: 78070mJ | time: 4335699725ns
+Iteration 3:
+energy: 77780mJ | time: 4311452294ns
+Iteration 4:
+energy: 77440mJ | time: 4269089037ns
+Iteration 5:
+energy: 77840mJ | time: 4310293433ns
+Iteration 6:
+energy: 77560mJ | time: 4273789500ns
+Iteration 7:
+energy: 77840mJ | time: 4265786259ns
+Iteration 8:
+energy: 77540mJ | time: 4275495787ns
+Iteration 9:
+energy: 77870mJ | time: 4309595041ns
+Iteration 10:
+energy: 77990mJ | time: 4308152128ns
+Iteration 11:
+energy: 77750mJ | time: 4267026908ns
+Iteration 12:
+energy: 77700mJ | time: 4268748059ns
+Iteration 13:
+energy: 78000mJ | time: 4311398080ns
+Iteration 14:
+energy: 77650mJ | time: 4282482585ns
+Iteration 15:
+energy: 77180mJ | time: 4279126539ns
+Iteration 16:
+energy: 77800mJ | time: 4282652189ns
+Iteration 17:
+energy: 77970mJ | time: 4317275003ns
+Iteration 18:
+energy: 77870mJ | time: 4261398675ns
+Iteration 19:
+energy: 77460mJ | time: 4256964879ns
+
+Benchmark 0 2600: 
+Iteration 0:
+energy: 76310mJ | time: 3418109165ns
+Iteration 1:
+energy: 76600mJ | time: 3459943410ns
+Iteration 2:
+energy: 77200mJ | time: 3452246464ns
+Iteration 3:
+energy: 76410mJ | time: 3418468269ns
+Iteration 4:
+energy: 76470mJ | time: 3434424229ns
+Iteration 5:
+energy: 76830mJ | time: 3432218887ns
+Iteration 6:
+energy: 76840mJ | time: 3444796688ns
+Iteration 7:
+energy: 76540mJ | time: 3437283620ns
+Iteration 8:
+energy: 76560mJ | time: 3421399335ns
+Iteration 9:
+energy: 76450mJ | time: 3424091573ns
+Iteration 10:
+energy: 76930mJ | time: 3481309587ns
+Iteration 11:
+energy: 76450mJ | time: 3390294574ns
+Iteration 12:
+energy: 76420mJ | time: 3428369847ns
+Iteration 13:
+energy: 76420mJ | time: 3420547248ns
+Iteration 14:
+energy: 76450mJ | time: 3420174959ns
+Iteration 15:
+energy: 76180mJ | time: 3422934735ns
+Iteration 16:
+energy: 76460mJ | time: 3380589335ns
+Iteration 17:
+energy: 76620mJ | time: 3446075303ns
+Iteration 18:
+energy: 76390mJ | time: 3425547365ns
+Iteration 19:
+energy: 76270mJ | time: 3394268364ns
+
+Benchmark 0 3100: 
+Iteration 0:
+energy: 81330mJ | time: 2861065053ns
+Iteration 1:
+energy: 81370mJ | time: 2841855990ns
+Iteration 2:
+energy: 81790mJ | time: 2860266293ns
+Iteration 3:
+energy: 81200mJ | time: 2829111887ns
+Iteration 4:
+energy: 81360mJ | time: 2863074272ns
+Iteration 5:
+energy: 81580mJ | time: 2877423330ns
+Iteration 6:
+energy: 81710mJ | time: 2880507161ns
+Iteration 7:
+energy: 81310mJ | time: 2856620458ns
+Iteration 8:
+energy: 81250mJ | time: 2865021688ns
+Iteration 9:
+energy: 81660mJ | time: 2849311452ns
+Iteration 10:
+energy: 81270mJ | time: 2858063500ns
+Iteration 11:
+energy: 80940mJ | time: 2849495887ns
+Iteration 12:
+energy: 81520mJ | time: 2863321410ns
+Iteration 13:
+energy: 81150mJ | time: 2857373557ns
+Iteration 14:
+energy: 81300mJ | time: 2883751996ns
+Iteration 15:
+energy: 81040mJ | time: 2852166447ns
+Iteration 16:
+energy: 80990mJ | time: 2836981705ns
+Iteration 17:
+energy: 80680mJ | time: 2826094877ns
+Iteration 18:
+energy: 81130mJ | time: 2842999268ns
+Iteration 19:
+energy: 80890mJ | time: 2849454981ns
+
+Benchmark 0 3600: 
+Iteration 0:
+energy: 97160mJ | time: 2430987806ns
+Iteration 1:
+energy: 97560mJ | time: 2453816670ns
+Iteration 2:
+energy: 97290mJ | time: 2425909956ns
+Iteration 3:
+energy: 97840mJ | time: 2477658456ns
+Iteration 4:
+energy: 97630mJ | time: 2449423124ns
+Iteration 5:
+energy: 97300mJ | time: 2437778894ns
+Iteration 6:
+energy: 98340mJ | time: 2481895047ns
+Iteration 7:
+energy: 97570mJ | time: 2461082386ns
+Iteration 8:
+energy: 97450mJ | time: 2431798477ns
+Iteration 9:
+energy: 97480mJ | time: 2453319518ns
+Iteration 10:
+energy: 97660mJ | time: 2443118966ns
+Iteration 11:
+energy: 98180mJ | time: 2458727180ns
+Iteration 12:
+energy: 98090mJ | time: 2477685764ns
+Iteration 13:
+energy: 97600mJ | time: 2435849638ns
+Iteration 14:
+energy: 98080mJ | time: 2447851881ns
+Iteration 15:
+energy: 97860mJ | time: 2436833173ns
+Iteration 16:
+energy: 101670mJ | time: 2545655983ns
+Iteration 17:
+energy: 98180mJ | time: 2451848783ns
+Iteration 18:
+energy: 98980mJ | time: 2510969567ns
+Iteration 19:
+energy: 97760mJ | time: 2453852448ns
+
+Benchmark 0 4100: 
+Iteration 0:
+energy: 114740mJ | time: 2152505472ns
+Iteration 1:
+energy: 114710mJ | time: 2136094327ns
+Iteration 2:
+energy: 115170mJ | time: 2140307276ns
+Iteration 3:
+energy: 114800mJ | time: 2137773390ns
+Iteration 4:
+energy: 114880mJ | time: 2134075569ns
+Iteration 5:
+energy: 115320mJ | time: 2134679990ns
+Iteration 6:
+energy: 115590mJ | time: 2154616702ns
+Iteration 7:
+energy: 115070mJ | time: 2138811547ns
+Iteration 8:
+energy: 115100mJ | time: 2151022311ns
+Iteration 9:
+energy: 114950mJ | time: 2136095073ns
+Iteration 10:
+energy: 114940mJ | time: 2120204706ns
+Iteration 11:
+energy: 115390mJ | time: 2152159088ns
+Iteration 12:
+energy: 115060mJ | time: 2138467737ns
+Iteration 13:
+energy: 115180mJ | time: 2127767675ns
+Iteration 14:
+energy: 115260mJ | time: 2145049054ns
+Iteration 15:
+energy: 115000mJ | time: 2131773102ns
+Iteration 16:
+energy: 115210mJ | time: 2143896017ns
+Iteration 17:
+energy: 114800mJ | time: 2110175905ns
+Iteration 18:
+energy: 115240mJ | time: 2137284011ns
+Iteration 19:
+energy: 115350mJ | time: 2133215306ns
+
+Benchmark 1 1600: 
+Iteration 0:
+energy: 80570mJ | time: 5725409302ns
+Iteration 1:
+energy: 81010mJ | time: 5787392691ns
+Iteration 2:
+energy: 80470mJ | time: 5760392432ns
+Iteration 3:
+energy: 80620mJ | time: 5707514726ns
+Iteration 4:
+energy: 80770mJ | time: 5864991611ns
+Iteration 5:
+energy: 80630mJ | time: 5763133628ns
+Iteration 6:
+energy: 80500mJ | time: 5735303853ns
+Iteration 7:
+energy: 80020mJ | time: 5655641530ns
+Iteration 8:
+energy: 80340mJ | time: 5708629118ns
+Iteration 9:
+energy: 81100mJ | time: 5774887671ns
+Iteration 10:
+energy: 80540mJ | time: 5737060758ns
+Iteration 11:
+energy: 81110mJ | time: 5746487583ns
+Iteration 12:
+energy: 81160mJ | time: 5862831918ns
+Iteration 13:
+energy: 80440mJ | time: 5752367408ns
+Iteration 14:
+energy: 80540mJ | time: 5731695849ns
+Iteration 15:
+energy: 80420mJ | time: 5707883089ns
+Iteration 16:
+energy: 80620mJ | time: 5757042388ns
+Iteration 17:
+energy: 80000mJ | time: 5731522207ns
+Iteration 18:
+energy: 80590mJ | time: 5739446769ns
+Iteration 19:
+energy: 80490mJ | time: 5718386790ns
+
+Benchmark 1 2100: 
+Iteration 0:
+energy: 96570mJ | time: 4418354600ns
+Iteration 1:
+energy: 93980mJ | time: 4324872860ns
+Iteration 2:
+energy: 78010mJ | time: 4328449961ns
+Iteration 3:
+energy: 78250mJ | time: 4348300391ns
+Iteration 4:
+energy: 77470mJ | time: 4248739628ns
+Iteration 5:
+energy: 77650mJ | time: 4287369820ns
+Iteration 6:
+energy: 77770mJ | time: 4252295959ns
+Iteration 7:
+energy: 78410mJ | time: 4361097823ns
+Iteration 8:
+energy: 77920mJ | time: 4368112280ns
+Iteration 9:
+energy: 77670mJ | time: 4298290033ns
+Iteration 10:
+energy: 77850mJ | time: 4292765930ns
+Iteration 11:
+energy: 78050mJ | time: 4314430429ns
+Iteration 12:
+energy: 77300mJ | time: 4216476759ns
+Iteration 13:
+energy: 78770mJ | time: 4384019693ns
+Iteration 14:
+energy: 77820mJ | time: 4252477349ns
+Iteration 15:
+energy: 77720mJ | time: 4320663109ns
+Iteration 16:
+energy: 77780mJ | time: 4283394199ns
+Iteration 17:
+energy: 78940mJ | time: 4398043434ns
+Iteration 18:
+energy: 77750mJ | time: 4279286219ns
+Iteration 19:
+energy: 77940mJ | time: 4292809861ns
+
+Benchmark 1 2600: 
+Iteration 0:
+energy: 76140mJ | time: 3393069573ns
+Iteration 1:
+energy: 76460mJ | time: 3420071786ns
+Iteration 2:
+energy: 76370mJ | time: 3414853864ns
+Iteration 3:
+energy: 76770mJ | time: 3446396223ns
+Iteration 4:
+energy: 76870mJ | time: 3437422849ns
+Iteration 5:
+energy: 76590mJ | time: 3442706871ns
+Iteration 6:
+energy: 76290mJ | time: 3386038490ns
+Iteration 7:
+energy: 76150mJ | time: 3383374398ns
+Iteration 8:
+energy: 76590mJ | time: 3409662906ns
+Iteration 9:
+energy: 76620mJ | time: 3422229446ns
+Iteration 10:
+energy: 76400mJ | time: 3366296182ns
+Iteration 11:
+energy: 76450mJ | time: 3410270125ns
+Iteration 12:
+energy: 76690mJ | time: 3433464930ns
+Iteration 13:
+energy: 76510mJ | time: 3424104748ns
+Iteration 14:
+energy: 76370mJ | time: 3432477480ns
+Iteration 15:
+energy: 76540mJ | time: 3421933877ns
+Iteration 16:
+energy: 76390mJ | time: 3419483495ns
+Iteration 17:
+energy: 76000mJ | time: 3415776363ns
+Iteration 18:
+energy: 76490mJ | time: 3421785941ns
+Iteration 19:
+energy: 76550mJ | time: 3437318543ns
+
+Benchmark 1 3100: 
+Iteration 0:
+energy: 81630mJ | time: 2867861247ns
+Iteration 1:
+energy: 81510mJ | time: 2845307411ns
+Iteration 2:
+energy: 81490mJ | time: 2838626811ns
+Iteration 3:
+energy: 81460mJ | time: 2839421934ns
+Iteration 4:
+energy: 81540mJ | time: 2844212577ns
+Iteration 5:
+energy: 81690mJ | time: 2863834542ns
+Iteration 6:
+energy: 81220mJ | time: 2852340527ns
+Iteration 7:
+energy: 81180mJ | time: 2840305765ns
+Iteration 8:
+energy: 81880mJ | time: 2877260892ns
+Iteration 9:
+energy: 81280mJ | time: 2839696425ns
+Iteration 10:
+energy: 81380mJ | time: 2875958444ns
+Iteration 11:
+energy: 81170mJ | time: 2838857786ns
+Iteration 12:
+energy: 81160mJ | time: 2828251145ns
+Iteration 13:
+energy: 81610mJ | time: 2903580479ns
+Iteration 14:
+energy: 81200mJ | time: 2887729465ns
+Iteration 15:
+energy: 80720mJ | time: 2839863345ns
+Iteration 16:
+energy: 81110mJ | time: 2843614216ns
+Iteration 17:
+energy: 80880mJ | time: 2842740399ns
+Iteration 18:
+energy: 80990mJ | time: 2864272827ns
+Iteration 19:
+energy: 81360mJ | time: 2888067570ns
+
+Benchmark 1 3600: 
+Iteration 0:
+energy: 97520mJ | time: 2456242535ns
+Iteration 1:
+energy: 97860mJ | time: 2456652479ns
+Iteration 2:
+energy: 97730mJ | time: 2457338811ns
+Iteration 3:
+energy: 97830mJ | time: 2448360331ns
+Iteration 4:
+energy: 97140mJ | time: 2419061488ns
+Iteration 5:
+energy: 97800mJ | time: 2459034335ns
+Iteration 6:
+energy: 97360mJ | time: 2447955263ns
+Iteration 7:
+energy: 97500mJ | time: 2446626953ns
+Iteration 8:
+energy: 97520mJ | time: 2433125807ns
+Iteration 9:
+energy: 98190mJ | time: 2447349182ns
+Iteration 10:
+energy: 97560mJ | time: 2432791067ns
+Iteration 11:
+energy: 97750mJ | time: 2467882045ns
+Iteration 12:
+energy: 97930mJ | time: 2445821272ns
+Iteration 13:
+energy: 97440mJ | time: 2423380480ns
+Iteration 14:
+energy: 97810mJ | time: 2468860316ns
+Iteration 15:
+energy: 98600mJ | time: 2454247953ns
+Iteration 16:
+energy: 98470mJ | time: 2443889287ns
+Iteration 17:
+energy: 98070mJ | time: 2466162263ns
+Iteration 18:
+energy: 98220mJ | time: 2458012308ns
+Iteration 19:
+energy: 97620mJ | time: 2441247311ns
+
+Benchmark 1 4100: 
+Iteration 0:
+energy: 115000mJ | time: 2149396034ns
+Iteration 1:
+energy: 115290mJ | time: 2142901822ns
+Iteration 2:
+energy: 114670mJ | time: 2126587522ns
+Iteration 3:
+energy: 114940mJ | time: 2147020356ns
+Iteration 4:
+energy: 115020mJ | time: 2141885670ns
+Iteration 5:
+energy: 115440mJ | time: 2143384719ns
+Iteration 6:
+energy: 115070mJ | time: 2145964841ns
+Iteration 7:
+energy: 114870mJ | time: 2124191981ns
+Iteration 8:
+energy: 116060mJ | time: 2157925816ns
+Iteration 9:
+energy: 115010mJ | time: 2139388379ns
+Iteration 10:
+energy: 114960mJ | time: 2132761448ns
+Iteration 11:
+energy: 115040mJ | time: 2136671620ns
+Iteration 12:
+energy: 115380mJ | time: 2137401650ns
+Iteration 13:
+energy: 115330mJ | time: 2126726204ns
+Iteration 14:
+energy: 115660mJ | time: 2136643116ns
+Iteration 15:
+energy: 115010mJ | time: 2123421968ns
+Iteration 16:
+energy: 114880mJ | time: 2133696360ns
+Iteration 17:
+energy: 115000mJ | time: 2139220244ns
+Iteration 18:
+energy: 114950mJ | time: 2131833940ns
+Iteration 19:
+energy: 115590mJ | time: 2142365074ns
