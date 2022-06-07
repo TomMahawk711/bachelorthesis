@@ -22,10 +22,12 @@ def main():
     plot_data.write(f"{limit_type},time\n")
 
     if limit_type == "power-limit":
-        power_limit_benchmark(min_value, max_value, step_size, iterations, limit_type, num_benchmarks, result, plot_data)
+        power_limit_benchmark(min_value, max_value, step_size, iterations,
+                              limit_type, num_benchmarks, result, plot_data)
 
     elif limit_type == "frequency-limit":
-        frequency_limit_benchmark(min_value, max_value, step_size, iterations, limit_type, num_benchmarks, result, plot_data)
+        frequency_limit_benchmark(min_value, max_value, step_size, iterations,
+                                  limit_type, num_benchmarks, result, plot_data)
 
     else:
         print("usage: help message not created yet")
@@ -60,7 +62,8 @@ def power_limit_benchmark(min_value, max_value, step_size, iterations, limit_typ
     _delete_outputs(limit_type)
 
 
-def frequency_limit_benchmark(min_value, max_value, step_size, iterations, limit_type, num_benchmarks, result, plot_data):
+def frequency_limit_benchmark(min_value, max_value, step_size, iterations,
+                              limit_type, num_benchmarks, result, plot_data):
     print("\nrunning frequency limiting benchmark...")
 
     _set_scaling_governor("userspace")
@@ -93,7 +96,10 @@ def _save_results(limit_type, limits, num_benchmarks, result, plot_data):
 
     for i in range(0, num_benchmarks):
         for limit in limits:
-            output_files = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file)) and f"{limit}" in file and f"benchmark{i}" in file]
+            output_files = [file for file in os.listdir(path)
+                            if os.path.isfile(os.path.join(path, file))
+                            and f"{limit}" in file
+                            and f"benchmark{i}" in file]
             output_files.sort()
             output_files.sort(key=len)
 
@@ -112,11 +118,11 @@ def _write_results(file, limit_type, result, plot_data):
     iteration = file[start_index:end_index]
 
     tokens = nltk.word_tokenize(output)
-    energy_measurement = _get_measurement(tokens, "Joules") * 10
+    energy_measurement = _get_measurement(tokens, "Joules")
     time_measurement = _get_measurement(tokens, "seconds")
 
     result.write(f"Iteration {iteration}:\n")
-    result.write(f"energy: {energy_measurement}mJ | time: {time_measurement}ns\n")
+    result.write(f"energy: {energy_measurement}J | time: {time_measurement}s\n")
 
     plot_data.write(f"{energy_measurement},{time_measurement}\n")
 
@@ -124,7 +130,6 @@ def _write_results(file, limit_type, result, plot_data):
 def _get_measurement(tokens, unit):
     measurement_index = tokens.index(unit) - 1
     measurement = tokens[measurement_index]
-    measurement = measurement.replace(".", "")
     return int(measurement)
 
 

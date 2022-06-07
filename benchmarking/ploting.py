@@ -19,16 +19,12 @@ def create_plots(measurement_parameters):
     mean_energy_measurements = _get_mean_measurements(energy_per_benchmark_per_limit, measurement_parameters)
     mean_time_measurements = _get_mean_measurements(time_per_benchmark_per_limit, measurement_parameters)
 
-    normalized_mean_energy_measurements = [measurement / 1e6 for measurement in mean_energy_measurements[0]]
-    normalized_mean_time_measurements = [measurement / 1e9 for measurement in mean_time_measurements[0]]
-
-    # just taking the measurements from first benchmark
-    mean_power = [e / t for e, t in zip(normalized_mean_energy_measurements, normalized_mean_time_measurements)]
+    mean_power = [e / t for e, t in zip(mean_energy_measurements[0], mean_time_measurements[0])]
 
     x = measurement_parameters.limits
-    y1 = normalized_mean_time_measurements
+    y1 = mean_time_measurements[0]
     y2 = mean_power
-    y3 = normalized_mean_energy_measurements
+    y3 = mean_energy_measurements[0]
 
     grid_x_size = 2
     grid_y_size = 2
@@ -122,7 +118,7 @@ def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y
 my_min_value = 1600
 my_max_value = 4300
 my_step_size = 500
-my_iterations = 20
+my_iterations = 3
 my_num_benchmarks = 2
 
 my_limits = _get_limits(my_min_value, my_max_value, my_step_size)
