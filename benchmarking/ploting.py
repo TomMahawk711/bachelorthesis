@@ -6,9 +6,10 @@ import matplotlib.pyplot as plt
 
 
 class MeasurementParameters:
-    def __init__(self, limits, iterations, num_benchmarks, limit_type, threads, vector_size):
+    def __init__(self, limits, iterations, benchmarks, num_benchmarks, limit_type, threads, vector_size):
         self.limits = limits
         self.iterations = iterations
+        self.benchmarks = benchmarks
         self.num_benchmarks = num_benchmarks
         self.limit_type = limit_type
         self.threads = threads
@@ -125,12 +126,13 @@ if __name__ == "__main__":
     my_max_value = 4300
     my_step_size = 500
     my_iterations = 3
+    my_benchmarks = []
     my_num_benchmarks = 2
     my_threads = 0
     my_vector_size = 0
 
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks,
+    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_benchmarks, my_num_benchmarks,
                                                       my_limit_type, my_threads, my_vector_size)
 
     create_plots(my_measurement_parameters)

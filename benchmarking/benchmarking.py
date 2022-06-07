@@ -46,7 +46,6 @@ def _create_file(limit_type, result_type):
 
 def power_limit_benchmark(parameters, result, plot_data, password):
     print("\nrunning power limiting benchmark...")
-
     os.system("modprobe intel_rapl_msr")
     _enable_cpu_zones(password)
     original_power_limit = _get_power_limit()
@@ -61,7 +60,6 @@ def power_limit_benchmark(parameters, result, plot_data, password):
 
 def frequency_limit_benchmark(parameters, result, plot_data, password):
     print("\nrunning frequency limiting benchmark...")
-
     _set_scaling_governor("userspace", password)
 
     for limit in tqdm(parameters.limits):
@@ -74,14 +72,12 @@ def frequency_limit_benchmark(parameters, result, plot_data, password):
 
 # TODO: verify result for correctness? probably difficult to check for differing benchmarks
 def _execute_benchmarks(parameters, limit, password):
-    benchmark_count = len(glob.glob1("benchmarks/", "*.out"))
-
     for i in range(0, parameters.iterations):
-        for j in range(0, benchmark_count):
+        for j in range(0, parameters.num_benchmarks):
             subprocess.run([
                 f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}/"
                 f"_benchmark{j}_{limit}MHz_iteration{i}.txt -e power/energy-cores/ "
-                f"./benchmarks/monte_carlo_par.out 10000000 8"
+                f"./benchmarks/{parameters.benchmarks[j]}"
             ], shell=True)
 
 
@@ -117,7 +113,6 @@ def _write_results(file, limit_type, result, plot_data):
 
     result.write(f"Iteration {iteration}:\n")
     result.write(f"energy: {energy_measurement}J | time: {time_measurement}s\n")
-
     plot_data.write(f"{energy_measurement},{time_measurement}\n")
 
 
@@ -173,12 +168,13 @@ my_min_value = 1600
 my_max_value = 4300
 my_step_size = 500
 my_iterations = 3
-my_num_benchmarks = 2
+my_benchmarks = ["monte_carlo_par.out 10000000 8", "monte_carlo_ser.out 10000000 8"]
+my_num_benchmarks = len(glob.glob1("benchmarks/", "*.out"))
 my_threads = 0
 my_vector_size = 0
 
 my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks,
+my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_benchmarks, my_num_benchmarks,
                                                   my_limit_type, my_threads, my_vector_size)
 
 if __name__ == "__main__":
