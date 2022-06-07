@@ -130,6 +130,7 @@ if __name__ == "__main__":
     my_vector_size = 0
 
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks, my_limit_type, my_threads, my_vector_size)
+    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks,
+                                                      my_limit_type, my_threads, my_vector_size)
 
     create_plots(my_measurement_parameters)

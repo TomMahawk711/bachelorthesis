@@ -72,7 +72,6 @@ def frequency_limit_benchmark(parameters, result, plot_data, password):
     _set_scaling_governor("ondemand", password)
 
 
-# TODO: fix sudo usage
 # TODO: verify result for correctness? probably difficult to check for differing benchmarks
 def _execute_benchmarks(parameters, limit, password):
     benchmark_count = len(glob.glob1("benchmarks/", "*.out"))
@@ -138,7 +137,6 @@ def _delete_outputs(limit_type):
 # --------------------POWERCAP_STUFF--------------------
 
 
-# TODO: fix sudo usage
 def _enable_cpu_zones(password):
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -e 1")
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -e 1")
@@ -151,7 +149,6 @@ def _get_power_limit():
     return tokens[power_limit_index]
 
 
-# TODO: fix sudo usage
 def _set_power(power, password):
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 0 -l %s" % power)
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 1 -l %s" % power)
@@ -161,12 +158,10 @@ def _set_power(power, password):
 # --------------------CPUFREQ_STUFF--------------------
 
 
-# TODO: fix sudo usage
 def _set_scaling_governor(governor, password):
     os.system(f"echo {password}|sudo cpupower frequency-set --governor %s 2>&1 > /dev/null" % governor)
 
 
-# TODO: fix sudo usage
 def _set_frequency(frequency, password):
     os.system(f"echo {password}|sudo cpupower --cpu all frequency-set --freq %sMHz 2>&1 > /dev/null" % frequency)
 
@@ -183,8 +178,8 @@ my_threads = 0
 my_vector_size = 0
 
 my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks, my_limit_type,
-                                                  my_threads, my_vector_size)
+my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks,
+                                                  my_limit_type, my_threads, my_vector_size)
 
 if __name__ == "__main__":
     main(my_measurement_parameters)
