@@ -130,7 +130,7 @@ def _write_results(file, limit_type, result, plot_data):
 def _get_measurement(tokens, unit):
     measurement_index = tokens.index(unit) - 1
     measurement = tokens[measurement_index]
-    return int(measurement)
+    return float(measurement)
 
 
 def _delete_outputs(limit_type):
