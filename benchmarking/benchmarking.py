@@ -4,36 +4,36 @@ import glob
 import time
 import nltk
 from tqdm import tqdm
+from ploting import MeasurementParameters, get_limits
 
 
 # --------------------MAIN--------------------
 
 
-def main():
-    limit_type = "frequency-limit"
-    min_value = 1600
-    max_value = 4300
-    step_size = 500
-    iterations = 20
-    num_benchmarks = 2
+def main(measurement_parameters):
+    result = _create_file(measurement_parameters.limit_type, "result")
+    plot_data = _create_file(measurement_parameters.limit_type, "plot-data")
+    plot_data.write(f"{measurement_parameters.limit_type},time\n")
 
-    result = _create_file(limit_type, "result")
-    plot_data = _create_file(limit_type, "plot-data")
-    plot_data.write(f"{limit_type},time\n")
+    password = _read_password()
 
-    if limit_type == "power-limit":
-        power_limit_benchmark(min_value, max_value, step_size, iterations,
-                              limit_type, num_benchmarks, result, plot_data)
+    if measurement_parameters.limit_type == "power-limit":
+        power_limit_benchmark(measurement_parameters, result, plot_data, password)
 
-    elif limit_type == "frequency-limit":
-        frequency_limit_benchmark(min_value, max_value, step_size, iterations,
-                                  limit_type, num_benchmarks, result, plot_data)
+    elif measurement_parameters.limit_type == "frequency-limit":
+        frequency_limit_benchmark(measurement_parameters, result, plot_data, password)
 
     else:
         print("usage: help message not created yet")
         return
 
-    # TODO: generate plots
+    _delete_outputs(measurement_parameters.limit_type)
+
+
+def _read_password():
+    with open("password.txt") as file:
+        password = file.readlines()
+    return password
 
 
 def _create_file(limit_type, result_type):
@@ -44,58 +44,53 @@ def _create_file(limit_type, result_type):
 # --------------------BENCHMARK_STUFF--------------------
 
 
-def power_limit_benchmark(min_value, max_value, step_size, iterations, limit_type, num_benchmarks, result, plot_data):
+def power_limit_benchmark(parameters, result, plot_data, password):
     print("\nrunning power limiting benchmark...")
 
     os.system("modprobe intel_rapl_msr")
-    _enable_cpu_zones()
+    _enable_cpu_zones(password)
     original_power_limit = _get_power_limit()
 
-    limits = [x for x in range(min_value, max_value, step_size)]
+    for limit in tqdm(parameters.limits):
+        _set_power(limit, password)
+        _execute_benchmarks(parameters, limit, password)
 
-    for limit in tqdm(limits):
-        _set_power(limit)
-        _execute_benchmarks(iterations, limit, limit_type)
-        
-    _save_results(limit_type, limits, num_benchmarks, result, plot_data)
-    _set_power(original_power_limit)
-    _delete_outputs(limit_type)
+    _save_results(parameters, result, plot_data)
+    _set_power(original_power_limit, password)
 
 
-def frequency_limit_benchmark(min_value, max_value, step_size, iterations,
-                              limit_type, num_benchmarks, result, plot_data):
+def frequency_limit_benchmark(parameters, result, plot_data, password):
     print("\nrunning frequency limiting benchmark...")
 
-    _set_scaling_governor("userspace")
+    _set_scaling_governor("userspace", password)
 
-    limits = [x for x in range(min_value, max_value, step_size)]
+    for limit in tqdm(parameters.limits):
+        _set_frequency(limit, password)
+        _execute_benchmarks(parameters, limit, password)
 
-    for limit in tqdm(limits):
-        _set_frequency(limit)
-        _execute_benchmarks(iterations, limit, limit_type)
-
-    _save_results(limit_type, limits, num_benchmarks, result, plot_data)
-    _set_scaling_governor("ondemand")
-    _delete_outputs(limit_type)
+    _save_results(parameters, result, plot_data)
+    _set_scaling_governor("ondemand", password)
 
 
 # TODO: fix sudo usage
 # TODO: verify result for correctness? probably difficult to check for differing benchmarks
-def _execute_benchmarks(iterations, limit, limit_type):
+def _execute_benchmarks(parameters, limit, password):
     benchmark_count = len(glob.glob1("benchmarks/", "*.out"))
 
-    for i in range(0, iterations):
+    for i in range(0, parameters.iterations):
         for j in range(0, benchmark_count):
             subprocess.run([
-                f"sudo perf stat -o outputs/{limit_type}/_benchmark{j}_{limit}MHz_iteration{i}.txt -e "
-                f"power/energy-cores/ ./benchmarks/monte_carlo_par.out 1000000000 8"], shell=True)
+                f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}/"
+                f"_benchmark{j}_{limit}MHz_iteration{i}.txt -e power/energy-cores/ "
+                f"./benchmarks/monte_carlo_par.out 10000000 8"
+            ], shell=True)
 
 
-def _save_results(limit_type, limits, num_benchmarks, result, plot_data):
-    path = f"outputs/{limit_type}/"
+def _save_results(parameters, result, plot_data):
+    path = f"outputs/{parameters.limit_type}/"
 
-    for i in range(0, num_benchmarks):
-        for limit in limits:
+    for i in range(0, parameters.num_benchmarks):
+        for limit in parameters.limits:
             output_files = [file for file in os.listdir(path)
                             if os.path.isfile(os.path.join(path, file))
                             and f"{limit}" in file
@@ -106,7 +101,7 @@ def _save_results(limit_type, limits, num_benchmarks, result, plot_data):
             result.write(f"\nBenchmark {i} {limit}: \n")
 
             for file in output_files:
-                _write_results(file, limit_type, result, plot_data)
+                _write_results(file, parameters.limit_type, result, plot_data)
 
 
 def _write_results(file, limit_type, result, plot_data):
@@ -144,9 +139,9 @@ def _delete_outputs(limit_type):
 
 
 # TODO: fix sudo usage
-def _enable_cpu_zones():
-    os.system("echo 1234|sudo powercap-set -p intel-rapl -z 0 -e 1")
-    os.system("echo 1234|sudo powercap-set -p intel-rapl -z 0:0 -e 1")
+def _enable_cpu_zones(password):
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -e 1")
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -e 1")
 
 
 def _get_power_limit():
@@ -157,27 +152,39 @@ def _get_power_limit():
 
 
 # TODO: fix sudo usage
-def _set_power(power):
-    os.system("echo 1234|sudo powercap-set -p intel-rapl -z 0 -c 0 -l %s" % power)
-    os.system("echo 1234|sudo powercap-set -p intel-rapl -z 0 -c 1 -l %s" % power)
-    os.system("echo 1234|sudo powercap-set -p intel-rapl -z 0:0 -c 0 -l %s" % power)
+def _set_power(power, password):
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 0 -l %s" % power)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 1 -l %s" % power)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -c 0 -l %s" % power)
 
 
 # --------------------CPUFREQ_STUFF--------------------
 
 
 # TODO: fix sudo usage
-def _set_scaling_governor(governor):
-    os.system("echo 1234|sudo cpupower frequency-set --governor %s 2>&1 > /dev/null" % governor)
+def _set_scaling_governor(governor, password):
+    os.system(f"echo {password}|sudo cpupower frequency-set --governor %s 2>&1 > /dev/null" % governor)
 
 
 # TODO: fix sudo usage
-def _set_frequency(frequency):
-    os.system("echo 1234|sudo cpupower --cpu all frequency-set --freq %sMHz 2>&1 > /dev/null" % frequency)
+def _set_frequency(frequency, password):
+    os.system(f"echo {password}|sudo cpupower --cpu all frequency-set --freq %sMHz 2>&1 > /dev/null" % frequency)
 
 
 # --------------------RUN--------------------
 
+my_limit_type = "frequency-limit"
+my_min_value = 1600
+my_max_value = 4300
+my_step_size = 500
+my_iterations = 3
+my_num_benchmarks = 2
+my_threads = 0
+my_vector_size = 0
+
+my_limits = get_limits(my_min_value, my_max_value, my_step_size)
+my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_num_benchmarks, my_limit_type,
+                                                  my_threads, my_vector_size)
 
 if __name__ == "__main__":
-    main()
+    main(my_measurement_parameters)
