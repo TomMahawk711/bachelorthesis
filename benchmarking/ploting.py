@@ -1,60 +1,112 @@
 import csv
+import nltk
 import os
 import statistics
-
+import time
 import matplotlib.pyplot as plt
 
-
-class MeasurementParameters:
-    def __init__(self, limits, iterations, benchmarks, num_benchmarks, limit_type, threads, vector_size):
-        self.limits = limits
-        self.iterations = iterations
-        self.benchmarks = benchmarks
-        self.num_benchmarks = num_benchmarks
-        self.limit_type = limit_type
-        self.threads = threads
-        self.vector_sizes = vector_size
+from benchmarking import MeasurementParameters, get_limits
 
 
 def create_plots(measurement_parameters):
-    data = _get_data_from_file()
-    energy_per_benchmark_per_limit, time_per_benchmark_per_limit = _get_measurements(data, measurement_parameters)
+    data, files = _get_data_vector(measurement_parameters, "vector-operations")
 
-    mean_energy_measurements = _get_mean_measurements(energy_per_benchmark_per_limit, measurement_parameters)
-    mean_time_measurements = _get_mean_measurements(time_per_benchmark_per_limit, measurement_parameters)
+    data_as_list = list()
 
-    mean_power = [e / t for e, t in zip(mean_energy_measurements[0], mean_time_measurements[0])]
+    for file in files["1"]:
+        data_as_list += data[file]
 
-    x = measurement_parameters.limits
-    y1 = mean_time_measurements[0]
-    y2 = mean_power
-    y3 = mean_energy_measurements[0]
+    energies_as_list = data_as_list[2 - 1::2]
+    times_as_list = data_as_list[::2]
 
-    grid_x_size = 2
-    grid_y_size = 2
+    print(energies_as_list)
+    print(times_as_list)
 
-    _create_scatter_plot(grid_x_size, grid_y_size, 1, "execution time/frequency", "frequency [MHz]", "time [s]", x, y1)
-    _create_scatter_plot(grid_x_size, grid_y_size, 2, "power/frequency", "frequency [MHz]", "power [W]", x, y2)
-    _create_scatter_plot(grid_x_size, grid_y_size, 3, "energy/frequency", "frequency [MHz]", "energy [J]", x, y3)
-    _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", y1, y3)
+    # data_monte_carlo = _get_data_from_file("monte-carlo")
+    # energy_per_benchmark_per_limit, time_per_benchmark_per_limit = _get_measurements(data_monte_carlo, measurement_parameters)
+    #
+    # mean_energy_measurements = _get_mean_measurements(energy_per_benchmark_per_limit, measurement_parameters)
+    # mean_time_measurements = _get_mean_measurements(time_per_benchmark_per_limit, measurement_parameters)
+    #
+    # mean_power = [e / t for e, t in zip(mean_energy_measurements[0], mean_time_measurements[0])]
+    #
+    # x = measurement_parameters.limits
+    # y1 = mean_time_measurements[0]
+    # y2 = mean_power
+    # y3 = mean_energy_measurements[0]
+    #
+    # grid_x_size = 2
+    # grid_y_size = 2
+    #
+    # _create_scatter_plot(grid_x_size, grid_y_size, 1, "execution time/frequency", "frequency [MHz]", "time [s]", x, y1)
+    # _create_scatter_plot(grid_x_size, grid_y_size, 2, "power/frequency", "frequency [MHz]", "power [W]", x, y2)
+    # _create_scatter_plot(grid_x_size, grid_y_size, 3, "energy/frequency", "frequency [MHz]", "energy [J]", x, y3)
+    # _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", y1, y3)
+    #
+    # plt.tight_layout()
+    # plt.grid()
+    # plt.savefig("test_plots.png")
+    # plt.show()
 
-    plt.tight_layout()
-    plt.savefig("test_plots.png")
-    plt.show()
+
+def _get_data_vector(parameters, benchmark_name):
+    path = "outputs/"
+    folders = [folder for folder in os.listdir(path) if parameters.limit_type in folder]
+    folders.sort()
+    path += f"{folders[-1]}/{benchmark_name}"
+
+    files_vectorization = dict()
+    plot_data = dict()
+
+    files_vectorization["1"] = \
+        [file for file in os.listdir(path) if "vectorization-size-1" and "vector-size-2048" in file]
+    files_vectorization["2"] = \
+        [file for file in os.listdir(path) if "vectorization-size-2" and "vector-size-2048" in file]
+    files_vectorization["4"] = \
+        [file for file in os.listdir(path) if "vectorization-size-4" and "vector-size-2048" in file]
+    files_vectorization["8"] = \
+        [file for file in os.listdir(path) if "vectorization-size-8" and "vector-size-2048" in file]
+    files_vectorization["16"] = \
+        [file for file in os.listdir(path) if "vectorization-size-16" and "vector-size-2048" in file]
+
+    for key, value in files_vectorization.items():
+
+        files_vectorization[key].sort()
+
+        for file in files_vectorization[key]:
+            with open(path + "/" + file) as f:
+                output = f.read()
+
+            tokens = nltk.word_tokenize(output)
+            energy_measurement = _get_measurement(tokens, "Joules")
+            time_measurement = _get_measurement(tokens, "seconds")
+
+            plot_data[file] = (energy_measurement, time_measurement)
+
+    return plot_data, files_vectorization
 
 
-def get_limits(min_value, max_value, step_size):
-    return [x for x in range(min_value, max_value, step_size)]
+def _get_measurement(tokens, unit):
+    measurement_index = tokens.index(unit) - 1
+    measurement = tokens[measurement_index]
+    return float(measurement)
 
 
-def _get_data_from_file():
-    path = "results/"
-    plot_files = [file for file in os.listdir(path) if "plot-data" in file]
+def _get_data_from_file(benchmark_name):
+    plot_files = []
+    path = "plot-data/"
+    folders = [f.path for f in os.scandir(path) if f.is_dir()]
+
+    folders.sort()
+    path = folders[-1]
+
+    plot_files += [file for file in os.listdir(path) if benchmark_name in file]
+
     plot_files.sort()
     plot_file = plot_files[-1]
 
     data = []
-    with open(f"{path}{plot_file}", 'r') as file:
+    with open(f"{path}/{plot_file}", 'r') as file:
         csvreader = csv.reader(file)
         header = next(csvreader)
         for row in csvreader:
@@ -69,7 +121,7 @@ def _get_measurements(data, measurement_parameters):
 
     start_index = 0
     end_index = measurement_parameters.iterations
-    for benchmark in range(0, measurement_parameters.num_benchmarks):
+    for benchmark in range(0, len(measurement_parameters.benchmark_names) - 1):
         for limit in measurement_parameters.limits:
             energy_per_benchmark_per_limit[benchmark, limit], time_per_benchmark_per_limit[benchmark, limit] = \
                 _get_measurements_aux(data, start_index, end_index)
@@ -94,7 +146,7 @@ def _get_measurements_aux(data, start_index, end_index):
 def _get_mean_measurements(measurements_per_benchmark_per_limit, measurement_parameters):
     mean_measurements = {}
 
-    for benchmark in range(0, measurement_parameters.num_benchmarks):
+    for benchmark in range(0, len(measurement_parameters.benchmark_names) - 1):
         mean_measurements[benchmark] = \
             _get_mean_measurements_aux(measurements_per_benchmark_per_limit, measurement_parameters, benchmark)
 
@@ -112,27 +164,30 @@ def _get_mean_measurements_aux(measurements_per_benchmark_per_limit, measurement
 
 
 def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y):
-    plt.subplot(x_size, y_size, position)
-    plt.title(title)
-    plt.xlabel(x_label)
-    plt.ylabel(y_label)
-    plt.scatter(x, y)
+    # plt.subplot(x_size, y_size, position)
+    # plt.title(title)
+    # plt.xlabel(x_label)
+    # plt.ylabel(y_label)
+    # plt.plot(x, y, marker="x")
+    pass
 
 
 if __name__ == "__main__":
-
     my_limit_type = "frequency-limit"
+
     my_min_value = 1600
     my_max_value = 4300
     my_step_size = 500
-    my_iterations = 3
-    my_benchmarks = []
-    my_num_benchmarks = 2
-    my_threads = 0
-    my_vector_size = 0
-
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_benchmarks, my_num_benchmarks,
-                                                      my_limit_type, my_threads, my_vector_size)
 
+    my_iterations = 10
+    my_thread_counts = [4, 8]
+    my_vectorization_sizes = [2, 4]
+    my_vector_sizes = [1024, 2048]
+    my_benchmark_names = ["monte-carlo", "vector-operations"]
+    my_start_time = time.strftime("%Y%m%d-%H%M%S")
+
+    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts,
+                                                      my_vectorization_sizes, my_vector_sizes, my_benchmark_names,
+                                                      my_start_time)
     create_plots(my_measurement_parameters)
