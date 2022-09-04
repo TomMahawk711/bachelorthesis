@@ -1,52 +1,51 @@
 import csv
 import nltk
 import os
-import statistics
 import time
 import matplotlib.pyplot as plt
 
+from statistics import mean
 from benchmarking import MeasurementParameters, get_limits
 
 
 def create_plots(measurement_parameters):
     data, files = _get_data_vector(measurement_parameters, "vector-operations")
+    energies = list()
+    times = list()
 
-    data_as_list = list()
+    for vectorization_size in measurement_parameters.vectorization_sizes:
+        for file in files[str(vectorization_size)]:
+            energies.append(data[file][0])
+            times.append(data[file][1])
 
-    for file in files["1"]:
-        data_as_list += data[file]
+    energies_plot_data = list()
+    times_plot_data = list()
 
-    energies_as_list = data_as_list[2 - 1::2]
-    times_as_list = data_as_list[::2]
+    for index in range(len(measurement_parameters.vectorization_sizes)):
+        start_index = measurement_parameters.iterations * index
+        end_index = start_index + measurement_parameters.iterations - 1
 
-    print(energies_as_list)
-    print(times_as_list)
+        energies_plot_data.append(mean(energies[start_index:end_index]))
+        times_plot_data.append(mean(times[start_index:end_index]))
 
-    # data_monte_carlo = _get_data_from_file("monte-carlo")
-    # energy_per_benchmark_per_limit, time_per_benchmark_per_limit = _get_measurements(data_monte_carlo, measurement_parameters)
-    #
-    # mean_energy_measurements = _get_mean_measurements(energy_per_benchmark_per_limit, measurement_parameters)
-    # mean_time_measurements = _get_mean_measurements(time_per_benchmark_per_limit, measurement_parameters)
-    #
-    # mean_power = [e / t for e, t in zip(mean_energy_measurements[0], mean_time_measurements[0])]
-    #
-    # x = measurement_parameters.limits
-    # y1 = mean_time_measurements[0]
-    # y2 = mean_power
-    # y3 = mean_energy_measurements[0]
-    #
-    # grid_x_size = 2
-    # grid_y_size = 2
-    #
-    # _create_scatter_plot(grid_x_size, grid_y_size, 1, "execution time/frequency", "frequency [MHz]", "time [s]", x, y1)
-    # _create_scatter_plot(grid_x_size, grid_y_size, 2, "power/frequency", "frequency [MHz]", "power [W]", x, y2)
-    # _create_scatter_plot(grid_x_size, grid_y_size, 3, "energy/frequency", "frequency [MHz]", "energy [J]", x, y3)
-    # _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", y1, y3)
-    #
-    # plt.tight_layout()
-    # plt.grid()
-    # plt.savefig("test_plots.png")
-    # plt.show()
+    print(energies_plot_data)
+    print(times_plot_data)
+
+    x = measurement_parameters.vectorization_sizes
+    mean_power = [e/t for e, t in zip(energies_plot_data, times_plot_data)]
+
+    grid_x_size = 2
+    grid_y_size = 2
+
+    _create_scatter_plot(grid_x_size, grid_y_size, 1, "vectorization size/frequency", "vectorization size", "time [s]", x, times_plot_data)
+    _create_scatter_plot(grid_x_size, grid_y_size, 2, "vectorization size/energy", "vectorization size", "energy [J]", x, energies_plot_data)
+    _create_scatter_plot(grid_x_size, grid_y_size, 3, "vectorization size/power", "vectorization size", "power [W]", x, mean_power)
+    _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", times_plot_data, energies_plot_data)
+
+    plt.tight_layout()
+    plt.grid()
+    plt.savefig("test_plots.png")
+    plt.show()
 
 
 def _get_data_vector(parameters, benchmark_name):
@@ -159,18 +158,17 @@ def _get_mean_measurements_aux(measurements_per_benchmark_per_limit, measurement
 
     for limit in measurement_parameters.limits:
         measurements_float = [float(i) for i in measurements_per_benchmark_per_limit[benchmark, limit]]
-        mean_measurements.append(statistics.mean(measurements_float))
+        mean_measurements.append(mean(measurements_float))
 
     return mean_measurements
 
 
-# def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y):
-    # plt.subplot(x_size, y_size, position)
-    # plt.title(title)
-    # plt.xlabel(x_label)
-    # plt.ylabel(y_label)
-    # plt.plot(x, y, marker="x")
-    # pass
+def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y):
+    plt.subplot(x_size, y_size, position)
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.plot(x, y, marker="x")
 
 
 if __name__ == "__main__":
