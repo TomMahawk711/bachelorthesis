@@ -53,21 +53,22 @@ def _get_data_vector(parameters, benchmark_name):
     path = "outputs/"
     folders = [folder for folder in os.listdir(path) if parameters.limit_type in folder]
     folders.sort()
+    folders.sort(key=len)
     path += f"{folders[-1]}/{benchmark_name}"
 
     files_vectorization = dict()
     plot_data = dict()
 
     files_vectorization["1"] = \
-        [file for file in os.listdir(path) if "vectorization-size-1" and "vector-size-2048" in file]
+        [file for file in os.listdir(path) if "_vectorization-size-1_" in file and "_vector-size-2048_" in file]
     files_vectorization["2"] = \
-        [file for file in os.listdir(path) if "vectorization-size-2" and "vector-size-2048" in file]
+        [file for file in os.listdir(path) if "_vectorization-size-2_" in file and "_vector-size-2048_" in file]
     files_vectorization["4"] = \
-        [file for file in os.listdir(path) if "vectorization-size-4" and "vector-size-2048" in file]
+        [file for file in os.listdir(path) if "_vectorization-size-4_" in file and "_vector-size-2048_" in file]
     files_vectorization["8"] = \
-        [file for file in os.listdir(path) if "vectorization-size-8" and "vector-size-2048" in file]
+        [file for file in os.listdir(path) if "_vectorization-size-8_" in file and "_vector-size-2048_" in file]
     files_vectorization["16"] = \
-        [file for file in os.listdir(path) if "vectorization-size-16" and "vector-size-2048" in file]
+        [file for file in os.listdir(path) if "_vectorization-size-16_" in file and "_vector-size-2048_" in file]
 
     for key, value in files_vectorization.items():
 
@@ -163,28 +164,28 @@ def _get_mean_measurements_aux(measurements_per_benchmark_per_limit, measurement
     return mean_measurements
 
 
-def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y):
+# def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y):
     # plt.subplot(x_size, y_size, position)
     # plt.title(title)
     # plt.xlabel(x_label)
     # plt.ylabel(y_label)
     # plt.plot(x, y, marker="x")
-    pass
+    # pass
 
 
 if __name__ == "__main__":
     my_limit_type = "frequency-limit"
 
-    my_min_value = 1600
+    my_min_value = 4100
     my_max_value = 4300
     my_step_size = 500
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
 
     my_iterations = 10
-    my_thread_counts = [4, 8]
-    my_vectorization_sizes = [2, 4]
+    my_thread_counts = [8]
+    my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [1024, 2048]
-    my_benchmark_names = ["monte-carlo", "vector-operations"]
+    my_benchmark_names = ["vector-operations"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
 
     my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts,
