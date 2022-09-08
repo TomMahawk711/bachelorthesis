@@ -20,7 +20,7 @@
 #define IND(y, x) ((y) * (N) + (x))
 
 void printTemperature(double *m, int N, int M);
-
+float
 double getValue(int x, int y, double* array, int N);
 
 // -- simulation code ---

@@ -23,6 +23,8 @@ class MeasurementParameters:
 
 
 def main(measurement_parameters):
+    # TODO: slim down main and extract into functions
+
     result = dict()
     plot_data = dict()
 
@@ -100,9 +102,8 @@ def _execute_benchmarks(parameters, limit, password, iteration):
     if "monte-carlo" in parameters.benchmark_names:
         for thread_count in parameters.thread_counts:
             subprocess.run([
-                f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/"
-                f"monte-carlo/monte-carlo_{thread_count}-threads_{limit}MHz_iteration{iteration}.txt -e power/"
-                f"energy-cores/ ./benchmarks/monte-carlo/monte_carlo_par.out 100000000 {thread_count}"
+                f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/monte-carlo_{thread_count}-threads_"
+                f"{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/monte-carlo/monte_carlo_par.out 100000000 {thread_count}"
             ], shell=True)
 
     # compiling and running vector operations
@@ -111,20 +112,25 @@ def _execute_benchmarks(parameters, limit, password, iteration):
             for vector_size in parameters.vector_sizes:
                 for thread_count in parameters.thread_counts:
                     subprocess.run([
-                        f"gcc -Wall -Werror -Wextra -pedantic -fopenmp -O1 -D VS{vectorization_size} -o benchmarks/"
-                        f"vector-operations/vector_operations_float.out benchmarks/vector-operations/"
-                        f"vector_operations_float.c"
+                        f"gcc -Wall -Werror -Wextra -pedantic -fopenmp -O1 -D VS{vectorization_size} -o benchmarks/vector-operations/"
+                        f"vector_operations_float.out benchmarks/vector-operations/vector_operations_float.c"
                     ], shell=True)
 
                     subprocess.run([
-                        f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/"
-                        f"vector-operations/vector-operations_vectorization-size-{vectorization_size}_vector-size-"
-                        f"{vector_size}_thread-count-{thread_count}_{limit}MHz_iteration{iteration}.txt -e power/"
-                        f"energy-cores/ ./benchmarks/vector-operations/task2_float.out {vector_size}"
+                        f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/vector-operations_"
+                        f"vectorization-size-{vectorization_size}_vector-size-{vector_size}_thread-count-{thread_count}_{limit}MHz_iteration{iteration}.txt "
+                        f"-e power/energy-cores/ ./benchmarks/vector-operations/task2_float.out {vector_size}"
                     ], shell=True)
 
-    if "placeholder" in parameters.benchmark_names:
-        pass
+    # running heat stencil benchmark
+    if "heat-stencil" in parameters.benchmark_names:
+        for thread_count in parameters.thread_counts:
+            for map_size in parameters.map_sizes:
+                subprocess.run([
+                    f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/heat-stencil_"
+                    f"thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/heat-stencil/"
+                    f"heat_stencil.out"
+                ])
 
 
 def _save_results(parameters, result, plot_data):
