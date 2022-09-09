@@ -30,8 +30,6 @@ int main(int argc, char** argv) {
 	void* ret_vals[number_of_threads];
 	struct thread_args t_args[number_of_threads];
 
-	double start_time = omp_get_wtime();
-
 	for(int i = 0; i < number_of_threads - 1; i++) {
 		t_args[i].fract_n = &fract_n;
 		t_args[i].seed = time(NULL);
@@ -49,10 +47,6 @@ int main(int argc, char** argv) {
 		total_inside_points += *(long*)ret_vals[i];
 		free(ret_vals[i]);
 	}
-
-	double end_time = omp_get_wtime();
-
-	// printf("sum: %f time: %2.6f \n", 4 * (float)total_inside_points / n, end_time - start_time);
 
 	return EXIT_SUCCESS;
 }
