@@ -23,25 +23,13 @@ class MeasurementParameters:
 
 
 def main(measurement_parameters):
-    # TODO: slim down main and extract into functions
-
     result = dict()
     plot_data = dict()
-
-    for benchmark_name in measurement_parameters.benchmark_names:
-        os.makedirs(
-            f"outputs/{measurement_parameters.limit_type}_{measurement_parameters.start_time}/{benchmark_name}/")
-
-    os.mkdir(f"result/{measurement_parameters.limit_type}_{measurement_parameters.start_time}/")
-    os.mkdir(f"plot-data/{measurement_parameters.limit_type}_{measurement_parameters.start_time}/")
-
-    for benchmark_name in measurement_parameters.benchmark_names:
-        result[benchmark_name] = _create_file(measurement_parameters, "result", benchmark_name)
-        plot_data[benchmark_name] = _create_file(measurement_parameters, "plot-data", benchmark_name)
-
     password = _read_password()
 
-    # _delete_outputs(measurement_parameters)
+    # _delete_old_outputs(measurement_parameters)
+
+    _create_directories(measurement_parameters, result, plot_data)
 
     if measurement_parameters.limit_type == "power-limit":
         power_limit_benchmark(measurement_parameters, result, plot_data, password)
@@ -56,6 +44,19 @@ def _read_password():
     with open("password.txt") as file:
         password = file.readlines()
     return password
+
+
+def _create_directories(parameters, result, plot_data):
+    for benchmark_name in parameters.benchmark_names:
+        os.makedirs(
+            f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
+
+    os.mkdir(f"result/{parameters.limit_type}_{parameters.start_time}/")
+    os.mkdir(f"plot-data/{parameters.limit_type}_{parameters.start_time}/")
+
+    for benchmark_name in parameters.benchmark_names:
+        result[benchmark_name] = _create_file(parameters, "result", benchmark_name)
+        plot_data[benchmark_name] = _create_file(parameters, "plot-data", benchmark_name)
 
 
 def _create_file(parameters, result_type, benchmark_name):
@@ -94,7 +95,8 @@ def frequency_limit_benchmark(parameters, result, plot_data, password):
 
 
 def _execute_benchmarks(parameters, limit, password, iteration):
-    # TODO: save outputs in separate folders
+    # TODO: instead of recompiling benchmarks by hand, make Makefiles
+    # TODO: put all executions into the same loop nest
     # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through,
     #  also add it in the benchmarks attribute of the parameters object
 
@@ -131,6 +133,10 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                     f"thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/heat-stencil/"
                     f"heat_stencil.out"
                 ])
+
+    if "streammaster" in parameters.benchmark_names:
+        for thread_count in parameters.thread_counts:
+            pass
 
 
 def _save_results(parameters, result, plot_data):
@@ -176,7 +182,7 @@ def _get_measurement(tokens, unit):
 
 
 # TODO: update for new directory structure
-def _delete_outputs(parameters):
+def _delete_old_outputs(parameters):
     print("\n deleting old outputs...")
     for benchmark_name in parameters.benchmark_names:
         files = glob.glob(f"outputs/{benchmark_name}/{parameters.limit_type}/*")
