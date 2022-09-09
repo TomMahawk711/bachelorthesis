@@ -2,7 +2,7 @@ CC = gcc-12
 CFLAGS = -std=gnu11 -Wall -Werror -Wextra -pedantic -fopenmp
 VARIABLE = -DVECTORIZATION_SIZE=4
 
-all: monte_carlo vector_operations_double vector_operations_float heat_stencil
+all: monte_carlo heat_stencil
 vector_operations: vector_operations_double vector_operations_float
 
 clean:

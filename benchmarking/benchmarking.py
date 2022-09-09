@@ -26,10 +26,10 @@ def main(measurement_parameters):
     result = dict()
     plot_data = dict()
     password = _read_password()
-
     # _delete_old_outputs(measurement_parameters)
-
     _create_directories(measurement_parameters, result, plot_data)
+
+    os.system("cd benchmarks && make")
 
     if measurement_parameters.limit_type == "power-limit":
         power_limit_benchmark(measurement_parameters, result, plot_data, password)
@@ -38,6 +38,8 @@ def main(measurement_parameters):
     else:
         print("usage: help message not yet created")
         return
+
+    os.system("cd benchmarks && make clean")
 
 
 def _read_password():
@@ -109,10 +111,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
         if "vector-operations" in parameters.benchmark_names:
             for vectorization_size in parameters.vectorization_sizes:
                 for vector_size in parameters.vector_sizes:
-                    subprocess.run([
-                        f"gcc -Wall -Werror -Wextra -pedantic -fopenmp -O1 -D VS{vectorization_size} -o benchmarks/vector-operations/"
-                        f"vector_operations_float.out benchmarks/vector-operations/vector_operations_float.c"
-                    ], shell=True)
+                    os.system("cd benchmarks && make vector_operations")
 
                     subprocess.run([
                         f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/vector-operations_"
