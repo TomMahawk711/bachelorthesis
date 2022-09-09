@@ -7,14 +7,14 @@ from tqdm import tqdm
 
 
 class MeasurementParameters:
-    def __init__(self, limits, iterations, limit_type, thread_counts,
-                 vectorization_sizes, vector_sizes, benchmark_names, start_time):
+    def __init__(self, limits, iterations, limit_type, thread_counts, vectorization_sizes, vector_sizes, map_sizes, benchmark_names, start_time):
         self.limits = limits
         self.iterations = iterations
         self.limit_type = limit_type
         self.thread_counts = thread_counts
         self.vectorization_sizes = vectorization_sizes
         self.vector_sizes = vector_sizes
+        self.map_sizes = map_sizes
         self.benchmark_names = benchmark_names
         self.start_time = start_time
 
@@ -96,23 +96,19 @@ def frequency_limit_benchmark(parameters, result, plot_data, password):
 
 def _execute_benchmarks(parameters, limit, password, iteration):
     # TODO: instead of recompiling benchmarks by hand, make Makefiles
-    # TODO: put all executions into the same loop nest
-    # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through,
-    #  also add it in the benchmarks attribute of the parameters object
+    # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through, also add it in the benchmarks attribute of the parameters object
 
-    # running monte carlo
-    if "monte-carlo" in parameters.benchmark_names:
-        for thread_count in parameters.thread_counts:
+    for thread_count in parameters.thread_counts:
+
+        if "monte-carlo" in parameters.benchmark_names:
             subprocess.run([
                 f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/monte-carlo_{thread_count}-threads_"
                 f"{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/monte-carlo/monte_carlo_par.out 100000000 {thread_count}"
             ], shell=True)
 
-    # compiling and running vector operations
-    if "vector-operations" in parameters.benchmark_names:
-        for vectorization_size in parameters.vectorization_sizes:
-            for vector_size in parameters.vector_sizes:
-                for thread_count in parameters.thread_counts:
+        if "vector-operations" in parameters.benchmark_names:
+            for vectorization_size in parameters.vectorization_sizes:
+                for vector_size in parameters.vector_sizes:
                     subprocess.run([
                         f"gcc -Wall -Werror -Wextra -pedantic -fopenmp -O1 -D VS{vectorization_size} -o benchmarks/vector-operations/"
                         f"vector_operations_float.out benchmarks/vector-operations/vector_operations_float.c"
@@ -124,9 +120,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                         f"-e power/energy-cores/ ./benchmarks/vector-operations/task2_float.out {vector_size}"
                     ], shell=True)
 
-    # running heat stencil benchmark
-    if "heat-stencil" in parameters.benchmark_names:
-        for thread_count in parameters.thread_counts:
+        if "heat-stencil" in parameters.benchmark_names:
             for map_size in parameters.map_sizes:
                 subprocess.run([
                     f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/heat-stencil_"
@@ -134,8 +128,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                     f"heat_stencil.out"
                 ])
 
-    if "streammaster" in parameters.benchmark_names:
-        for thread_count in parameters.thread_counts:
+        if "streammaster" in parameters.benchmark_names:
             pass
 
 
@@ -181,8 +174,9 @@ def _get_measurement(tokens, unit):
     return float(measurement)
 
 
-# TODO: update for new directory structure
 def _delete_old_outputs(parameters):
+    # TODO: update for new directory structure
+
     print("\n deleting old outputs...")
     for benchmark_name in parameters.benchmark_names:
         files = glob.glob(f"outputs/{benchmark_name}/{parameters.limit_type}/*")
@@ -236,15 +230,15 @@ my_step_size = 500
 my_limits = get_limits(my_min_value, my_max_value, my_step_size)
 
 my_iterations = 10
-my_thread_counts = [8]
-my_vectorization_sizes = [2, 4]
-my_vector_sizes = [1024, 2048]
-my_benchmark_names = ["monte-carlo"]
+my_thread_counts = [1, 2, 4, 8]
+my_vectorization_sizes = [1, 2, 4, 8]
+my_vector_sizes = [512, 1024, 2048, 4096]
+my_map_sizes = [100, 200, 400, 800]
+my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "streammaster"]
 my_start_time = time.strftime("%Y%m%d-%H%M%S")
 
-my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts,
-                                                  my_vectorization_sizes, my_vector_sizes, my_benchmark_names,
-                                                  my_start_time)
+my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts, my_vectorization_sizes, my_vector_sizes,
+                                                  my_map_sizes, my_benchmark_names, my_start_time)
 
 if __name__ == "__main__":
     main(my_measurement_parameters)
