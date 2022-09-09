@@ -97,7 +97,6 @@ def frequency_limit_benchmark(parameters, result, plot_data, password):
 
 
 def _execute_benchmarks(parameters, limit, password, iteration):
-    # TODO: instead of recompiling benchmarks by hand, make Makefiles
     # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through, also add it in the benchmarks attribute of the parameters object
 
     for thread_count in parameters.thread_counts:
