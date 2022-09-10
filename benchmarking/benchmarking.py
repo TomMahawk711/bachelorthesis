@@ -104,7 +104,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
         if "monte-carlo" in parameters.benchmark_names:
             subprocess.run([
                 f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/monte-carlo_{thread_count}-threads_"
-                f"{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/monte-carlo/monte_carlo_par.out 100000000 {thread_count}"
+                f"{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/monte_carlo.out 100000000 {thread_count}"
             ], shell=True)
 
         if "vector-operations" in parameters.benchmark_names:
@@ -115,14 +115,14 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                     subprocess.run([
                         f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/vector-operations_"
                         f"vectorization-size-{vectorization_size}_vector-size-{vector_size}_thread-count-{thread_count}_{limit}MHz_iteration{iteration}.txt "
-                        f"-e power/energy-cores/ ./benchmarks/vector-operations/task2_float.out {vector_size}"
+                        f"-e power/energy-cores/ ./benchmarks/vector_operations_float.out {vector_size}"
                     ], shell=True)
 
         if "heat-stencil" in parameters.benchmark_names:
             for map_size in parameters.map_sizes:
                 subprocess.run([
                     f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/heat-stencil_"
-                    f"thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/heat-stencil/"
+                    f"thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration{iteration}.txt -e power/energy-cores/ ./benchmarks/"
                     f"heat_stencil.out"
                 ])
 
