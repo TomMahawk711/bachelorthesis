@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     // printf("\n");
 
     // ---------- compute ----------
-    double startTime =  omp_get_wtime();
+    // double startTime =  omp_get_wtime();
 
     // create a second buffer for the computation
     double *B = malloc(sizeof(double) * N * N);
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
 
 
     // ---------- check ----------
-    double endtime = omp_get_wtime();
+    // double endtime = omp_get_wtime();
 
     // printf("Final:");
     // printTemperature(A, N, N);
