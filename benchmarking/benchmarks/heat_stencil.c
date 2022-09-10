@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
     // printf("Final:");
     // printTemperature(A, N, N);
     // printf("\n");
-    printf("time: %2.5f\n", (endtime - startTime));
+    // printf("time: %2.5f\n", (endtime - startTime));
 
     // simple verification if nowhere the heat is more then the heat source
     int success = 1;
