@@ -1,9 +1,9 @@
-CC=gcc-12
+CC=gcc
 CFLAGS=-std=gnu11 -Wall -Werror -Wextra -pedantic -fopenmp
 VECTORIZATION_SIZE?=2
 
 all: monte_carlo heat_stencil
-vector_operations: vector_operations_double vector_operations_float
+vector_operations: vector_operations_float
 
 clean:
 	$(RM) *.out
