@@ -25,17 +25,16 @@ class MeasurementParameters:
 
 def main(measurement_parameters):
     result = dict()
-    plot_data = dict()
     password = _read_password()
     # _delete_old_outputs(measurement_parameters)
-    _create_directories(measurement_parameters, result, plot_data)
+    _create_directories(measurement_parameters, result)
 
     os.system("cd benchmarks && make")
 
     if measurement_parameters.limit_type == "power-limit":
-        power_limit_benchmark(measurement_parameters, result, plot_data, password)
+        power_limit_benchmark(measurement_parameters, result,  password)
     elif measurement_parameters.limit_type == "frequency-limit":
-        frequency_limit_benchmark(measurement_parameters, result, plot_data, password)
+        frequency_limit_benchmark(measurement_parameters, result, password)
     else:
         print("usage: help message not yet created")
         return
@@ -49,17 +48,15 @@ def _read_password():
     return password
 
 
-def _create_directories(parameters, result, plot_data):
+def _create_directories(parameters, result):
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(
             f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
     os.mkdir(f"result/{parameters.limit_type}_{parameters.start_time}/")
-    os.mkdir(f"plot-data/{parameters.limit_type}_{parameters.start_time}/")
 
     for benchmark_name in parameters.benchmark_names:
         result[benchmark_name] = _create_file(parameters, "result", benchmark_name)
-        plot_data[benchmark_name] = _create_file(parameters, "plot-data", benchmark_name)
 
 
 def _create_file(parameters, result_type, benchmark_name):
@@ -69,7 +66,7 @@ def _create_file(parameters, result_type, benchmark_name):
 # --------------------BENCHMARK_STUFF--------------------
 
 
-def power_limit_benchmark(parameters, result, plot_data, password):
+def power_limit_benchmark(parameters, result, password):
     print("\nrunning power limiting benchmark...")
     os.system("modprobe intel_rapl_msr")
     _enable_cpu_zones(password)
@@ -80,11 +77,11 @@ def power_limit_benchmark(parameters, result, plot_data, password):
             _set_power(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration)
 
-    _save_results(parameters, result, plot_data)
+    _save_results(parameters, result)
     _set_power(original_power_limit, password)
 
 
-def frequency_limit_benchmark(parameters, result, plot_data, password):
+def frequency_limit_benchmark(parameters, result, password):
     print("\nrunning frequency limiting benchmark...")
     _set_scaling_governor("userspace", password)
 
@@ -93,7 +90,7 @@ def frequency_limit_benchmark(parameters, result, plot_data, password):
             _set_frequency(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration)
 
-    _save_results(parameters, result, plot_data)
+    _save_results(parameters, result)
     _set_scaling_governor("ondemand", password)
 
 
@@ -141,7 +138,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
             pass
 
 
-def _save_results(parameters, result, plot_data):
+def _save_results(parameters, result):
     for benchmark_name in parameters.benchmark_names:
         path = f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/"
 
@@ -157,10 +154,10 @@ def _save_results(parameters, result, plot_data):
             result[benchmark_name].write(f"\n{benchmark_name} {limit}: \n")
 
             for file in output_files:
-                _write_results(file, parameters, result, plot_data, benchmark_name)
+                _write_results(file, parameters, result, benchmark_name)
 
 
-def _write_results(file, parameters, result, plot_data, benchmark_name):
+def _write_results(file, parameters, result, benchmark_name):
     with open(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/{file}") as f:
         output = f.read()
 
@@ -174,7 +171,6 @@ def _write_results(file, parameters, result, plot_data, benchmark_name):
 
     result[benchmark_name].write(f"Iteration {iteration}:\n")
     result[benchmark_name].write(f"energy: {energy_measurement}J | time: {time_measurement}s\n")
-    plot_data[benchmark_name].write(f"{energy_measurement},{time_measurement}\n")
 
 
 def _get_measurement(tokens, unit):
