@@ -29,6 +29,8 @@ def main(measurement_parameters):
     result = dict()
     password = _read_password()
     _create_directory(measurement_parameters, result)
+
+    # TODO: only compile benchmarks when needed
     os.system("cd benchmarks && make")
 
     if measurement_parameters.limit_type == "power-limit":
@@ -238,7 +240,7 @@ my_thread_counts = [1, 2, 4, 8]
 my_vectorization_sizes = [1, 2, 4, 8, 16]
 my_vector_sizes = [512, 1024, 2048, 4096]
 my_map_sizes = [100, 200, 400, 800]
-my_benchmark_names = ["monte-carlo", "vector-operations", "streammaster"]
+my_benchmark_names = ["heat-stencil"]
 my_start_time = time.strftime("%Y%m%d-%H%M%S")
 
 my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts, my_vectorization_sizes,
