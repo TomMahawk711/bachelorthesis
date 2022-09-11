@@ -26,9 +26,7 @@ class MeasurementParameters:
 def main(measurement_parameters):
     result = dict()
     password = _read_password()
-    # _delete_old_outputs(measurement_parameters)
-    _create_directories(measurement_parameters, result)
-
+    _create_directory(measurement_parameters, result)
     os.system("cd benchmarks && make")
 
     if measurement_parameters.limit_type == "power-limit":
@@ -48,7 +46,7 @@ def _read_password():
     return password
 
 
-def _create_directories(parameters, result):
+def _create_directory(parameters, result):
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(
             f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
@@ -132,7 +130,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                     f"heat-stencil_thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration-{iteration}.txt "
                     f""
                     f"-e power/energy-cores/ ./benchmarks/heat_stencil.out {map_size}"
-                ])
+                ], shell=True)
 
         if "streammaster" in parameters.benchmark_names:
             pass
