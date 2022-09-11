@@ -24,6 +24,8 @@ class MeasurementParameters:
 
 
 def main(measurement_parameters):
+
+    # saving in a result-dict in human-readable format for sanity checking later
     result = dict()
     password = _read_password()
     _create_directory(measurement_parameters, result)
@@ -95,7 +97,6 @@ def frequency_limit_benchmark(parameters, result, password):
 def _execute_benchmarks(parameters, limit, password, iteration):
     # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through, also add it in the benchmarks attribute of
     #  the parameters object
-    # TODO: fix path of output file for heat stencil
 
     for thread_count in parameters.thread_counts:
 
