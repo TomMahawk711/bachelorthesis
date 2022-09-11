@@ -25,7 +25,7 @@ class MeasurementParameters:
 
 def main(measurement_parameters):
 
-    # saving in a result-dict in human-readable format for sanity checking later
+    # saving in a result-dict in human-readable format for sanity checking
     result = dict()
     password = _read_password()
     _create_directory(measurement_parameters, result)
@@ -51,6 +51,8 @@ def _read_password():
 
 
 def _create_directory(parameters, result):
+    # TODO: maybe remove separate folders for each benchmark
+
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(
             f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
