@@ -1,11 +1,9 @@
-import csv
 import nltk
 import os
-import time
 import matplotlib.pyplot as plt
 
 from statistics import mean
-from benchmarking import MeasurementParameters, get_limits
+from benchmarking import init_parameters
 
 
 def create_plots(measurement_parameters):
@@ -105,21 +103,4 @@ def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y
 
 
 if __name__ == "__main__":
-    my_limit_type = "frequency-limit"
-
-    my_min_value = 1600
-    my_max_value = 4300
-    my_step_size = 500
-    my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-
-    my_iterations = 10
-    my_thread_counts = [1, 2, 4, 8]
-    my_vectorization_sizes = [1, 2, 4, 8, 16]
-    my_vector_sizes = [512, 1024, 2048, 4096]
-    my_map_sizes = [100, 200, 400, 800]
-    my_benchmark_names = ["heat-stencil"]
-    my_start_time = time.strftime("%Y%m%d-%H%M%S")
-
-    my_measurement_parameters = MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts, my_vectorization_sizes,
-                                                      my_vector_sizes, my_map_sizes, my_benchmark_names, my_start_time)
-    create_plots(my_measurement_parameters)
+    create_plots(init_parameters())
