@@ -51,7 +51,7 @@ def _read_password():
 
 
 def _create_directory(parameters, result):
-    # TODO: maybe remove separate folders for each benchmark
+    # TODO: maybe do not save outputs per benchmark in separate folders
 
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(

@@ -9,7 +9,9 @@ from benchmarking import init_parameters
 def create_plots(measurement_parameters):
     # TODO: split up into several functions
 
-    data_vector_operations, files_vector_operations = _get_data_vectorization(measurement_parameters, "vector-operations", "i7-3770")
+    data_vector_operations, files_vector_operations = \
+        _get_data_per_benchmark_per_system(measurement_parameters, "vector-operations", "i7-3770")
+
     energies = list()
     times = list()
 
@@ -33,15 +35,17 @@ def create_plots(measurement_parameters):
     # print(times_plot_data)
 
     x = measurement_parameters.vectorization_sizes
-    mean_power = [e/t for e, t in zip(energies_plot_data, times_plot_data)]
+    mean_power = [e / t for e, t in zip(energies_plot_data, times_plot_data)]
 
     grid_x_size = 2
     grid_y_size = 2
 
     _create_scatter_plot(grid_x_size, grid_y_size, 1, "vectorization size/frequency", "vectorization size", "time [s]", x, times_plot_data)
-    _create_scatter_plot(grid_x_size, grid_y_size, 2, "vectorization size/energy", "vectorization size", "energy [J]", x, energies_plot_data)
+    _create_scatter_plot(grid_x_size, grid_y_size, 2, "vectorization size/energy", "vectorization size", "energy [J]", x,
+                         energies_plot_data)
     _create_scatter_plot(grid_x_size, grid_y_size, 3, "vectorization size/power", "vectorization size", "power [W]", x, mean_power)
-    _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", times_plot_data, energies_plot_data)
+    _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", times_plot_data,
+                         energies_plot_data)
 
     plt.tight_layout()
     plt.grid()
@@ -49,23 +53,11 @@ def create_plots(measurement_parameters):
     plt.show()
 
 
-def _get_data_vectorization(parameters, benchmark_name, processor):
+def _get_data_per_benchmark_per_system(parameters, benchmark_name, processor):
 
-    # TODO: put following five lines into a function
-    path = f"outputs/{processor}/"
-    folders = [folder for folder in os.listdir(path) if parameters.limit_type in folder]
-    folders.sort()
-    folders.sort(key=len)
-
-    monte_carlo_path = path + f"{folders[-1]}/monte-carlo"
-    vector_operations_path = path + f"{folders[-1]}/vector-operations"
-    heat_stencil_path = path + f"{folders[-1]}/heat-stencil"
-
-    path += f"{folders[-1]}/{benchmark_name}"
-
+    path = _get_path(parameters, processor, benchmark_name)
     files_vectorization = dict()
     plot_data = dict()
-
 
     for vectorization_size in parameters.vectorization_sizes:
         files_vectorization[str(vectorization_size)] = \
@@ -85,6 +77,14 @@ def _get_data_vectorization(parameters, benchmark_name, processor):
             plot_data[file] = (energy_measurement, time_measurement)
 
     return plot_data, files_vectorization
+
+
+def _get_path(parameters, processor, benchmark_name):
+    path = f"outputs/{processor}/"
+    folders = [folder for folder in os.listdir(path) if parameters.limit_type in folder]
+    folders.sort()
+    folders.sort(key=len)
+    return f"{folders[-1]}/{benchmark_name}"
 
 
 def _get_measurement(tokens, unit):
