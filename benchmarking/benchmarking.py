@@ -249,5 +249,6 @@ def init_parameters():
     return MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts, my_vectorization_sizes, my_vector_sizes,
                                  my_map_sizes, my_benchmark_names, my_start_time)
 
+
 if __name__ == "__main__":
     main(init_parameters())
