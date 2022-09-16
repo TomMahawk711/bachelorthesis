@@ -84,7 +84,7 @@ def _get_path(parameters, processor, benchmark_name):
     folders = [folder for folder in os.listdir(path) if parameters.limit_type in folder]
     folders.sort()
     folders.sort(key=len)
-    return f"{folders[-1]}/{benchmark_name}"
+    return f"{path}{folders[-1]}/{benchmark_name}"
 
 
 def _get_measurement(tokens, unit):
