@@ -34,7 +34,7 @@ def main(measurement_parameters):
     os.system("cd benchmarks && make")
 
     if measurement_parameters.limit_type == "power-limit":
-        power_limit_benchmark(measurement_parameters, result,  password)
+        power_limit_benchmark(measurement_parameters, result, password)
     elif measurement_parameters.limit_type == "frequency-limit":
         frequency_limit_benchmark(measurement_parameters, result, password)
     else:
@@ -81,7 +81,6 @@ def power_limit_benchmark(parameters, result, password):
             _set_power(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration)
 
-    _save_results(parameters, result)
     _set_power(original_power_limit, password)
 
 
@@ -94,7 +93,6 @@ def frequency_limit_benchmark(parameters, result, password):
             _set_frequency(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration)
 
-    _save_results(parameters, result)
     _set_scaling_governor("ondemand", password)
 
 
@@ -137,43 +135,8 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                     f"-e power/energy-cores/ ./benchmarks/heat_stencil.out {map_size}"
                 ], shell=True)
 
-        if "streammaster" in parameters.benchmark_names:
+        if "stream" in parameters.benchmark_names:
             pass
-
-
-def _save_results(parameters, result):
-    for benchmark_name in parameters.benchmark_names:
-        path = f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/"
-
-        for limit in parameters.limits:
-
-            output_files = [file for file in os.listdir(path)
-                            if os.path.isfile(os.path.join(path, file))
-                            and f"{limit}" in file
-                            and f"{benchmark_name}" in file]
-            output_files.sort()
-            output_files.sort(key=len)
-
-            result[benchmark_name].write(f"\n{benchmark_name} {limit}: \n")
-
-            for file in output_files:
-                _write_results(file, parameters, result, benchmark_name)
-
-
-def _write_results(file, parameters, result, benchmark_name):
-    with open(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/{file}") as f:
-        output = f.read()
-
-    start_index = file.find("iteration") + 9
-    end_index = file.find(".txt")
-    iteration = file[start_index:end_index]
-
-    tokens = nltk.word_tokenize(output)
-    energy_measurement = _get_measurement(tokens, "Joules")
-    time_measurement = _get_measurement(tokens, "seconds")
-
-    result[benchmark_name].write(f"Iteration {iteration}:\n")
-    result[benchmark_name].write(f"energy: {energy_measurement}J | time: {time_measurement}s\n")
 
 
 def _get_measurement(tokens, unit):
@@ -243,7 +206,7 @@ def init_parameters():
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
     my_map_sizes = [100, 200, 400, 800]
-    my_benchmark_names = ["heat-stencil"]
+    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
 
     return MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts, my_vectorization_sizes, my_vector_sizes,
