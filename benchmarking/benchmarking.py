@@ -11,19 +11,16 @@ from tqdm import tqdm
 
 
 def main(measurement_parameters):
-
-    # saving in a result-dict in human-readable format for sanity checking
-    result = dict()
     password = _read_password()
-    _create_directory(measurement_parameters, result)
+    _create_directory(measurement_parameters)
 
     # TODO: only compile benchmarks when needed
     os.system("cd benchmarks && make")
 
     if measurement_parameters.limit_type == "power-limit":
-        power_limit_benchmark(measurement_parameters, result, password)
+        power_limit_benchmark(measurement_parameters, password)
     elif measurement_parameters.limit_type == "frequency-limit":
-        frequency_limit_benchmark(measurement_parameters, result, password)
+        frequency_limit_benchmark(measurement_parameters, password)
     else:
         print("usage: help message not yet created")
         return
@@ -37,27 +34,17 @@ def _read_password():
     return password
 
 
-def _create_directory(parameters, result):
+def _create_directory(parameters):
     # TODO: maybe do not save outputs per benchmark in separate folders
 
     for benchmark_name in parameters.benchmark_names:
-        os.makedirs(
-            f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
-
-    os.mkdir(f"result/{parameters.limit_type}_{parameters.start_time}/")
-
-    for benchmark_name in parameters.benchmark_names:
-        result[benchmark_name] = _create_file(parameters, "result", benchmark_name)
-
-
-def _create_file(parameters, result_type, benchmark_name):
-    return open(f"{result_type}/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}.txt", "w")
+        os.makedirs(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
 
 # --------------------BENCHMARK_STUFF--------------------
 
 
-def power_limit_benchmark(parameters, result, password):
+def power_limit_benchmark(parameters, password):
     print("\nrunning power limiting benchmark...")
     os.system("modprobe intel_rapl_msr")
     _enable_cpu_zones(password)
@@ -71,7 +58,7 @@ def power_limit_benchmark(parameters, result, password):
     _set_power(original_power_limit, password)
 
 
-def frequency_limit_benchmark(parameters, result, password):
+def frequency_limit_benchmark(parameters, password):
     print("\nrunning frequency limiting benchmark...")
     _set_scaling_governor("userspace", password)
 
