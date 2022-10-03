@@ -11,8 +11,10 @@ from tqdm import tqdm
 
 
 def main(measurement_parameters):
+
     password = _read_password()
-    _create_directory(measurement_parameters)
+    _create_output_directory(measurement_parameters)
+    _save_benchmarking_config(measurement_parameters)
 
     # TODO: only compile benchmarks when needed
     os.system("cd benchmarks && make")
@@ -28,13 +30,29 @@ def main(measurement_parameters):
     os.system("cd benchmarks && make clean")
 
 
+def _save_benchmarking_config(parameters):
+    file = open(f"outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
+    file.write(
+        f"benchmark_names:{parameters.benchmark_names}"
+        f"start_time:{parameters.start_time}"
+        f"iterations:{parameters.iterations}"
+        f"limit_type:{parameters.limit_type}"
+        f"limits:{parameters.limits}"
+        f"thread_counts:{parameters.thread_counts}"
+        f"vectorization_sizes:{parameters.vectorization_sizes}"
+        f"vector_sizes:{parameters.vector_sizes}"
+        f"map_sizes:{parameters.map_sizes}"
+
+    )
+
+
 def _read_password():
     with open("password.txt") as file:
         password = file.readlines()
     return password
 
 
-def _create_directory(parameters):
+def _create_output_directory(parameters):
     # TODO: maybe do not save outputs per benchmark in separate folders
 
     for benchmark_name in parameters.benchmark_names:
@@ -168,20 +186,19 @@ def _set_frequency(frequency, password):
 # --------------------RUN--------------------
 
 def init_parameters():
-    my_limit_type = "frequency-limit"
-
     my_min_value = 1600
     my_max_value = 4300
     my_step_size = 500
-    my_limits = get_limits(my_min_value, my_max_value, my_step_size)
 
+    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "stream"]
+    my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
+    my_limit_type = "frequency-limit"
+    my_limits = get_limits(my_min_value, my_max_value, my_step_size)
     my_thread_counts = [1, 2, 4, 8]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
     my_map_sizes = [100, 200, 400, 800]
-    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "stream"]
-    my_start_time = time.strftime("%Y%m%d-%H%M%S")
 
     return MeasurementParameters(my_limits, my_iterations, my_limit_type, my_thread_counts, my_vectorization_sizes, my_vector_sizes,
                                  my_map_sizes, my_benchmark_names, my_start_time)

@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 
 from statistics import mean
-from benchmarking import init_parameters
+from MeasurementParameters import MeasurementParameters
 
 
 def create_plots(measurement_parameters):
@@ -102,5 +102,9 @@ def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y
     plt.plot(x, y, marker="x")
 
 
+def _get_config():
+    pass
+
+
 if __name__ == "__main__":
-    create_plots(init_parameters())
+    create_plots(_get_config())
