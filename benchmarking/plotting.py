@@ -103,6 +103,7 @@ def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y
 
 
 def _get_config():
+    # TODO: enhance this
     pass
 
 

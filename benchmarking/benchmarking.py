@@ -11,7 +11,6 @@ from tqdm import tqdm
 
 
 def main(measurement_parameters):
-
     password = _read_password()
     _create_output_directory(measurement_parameters)
     _save_benchmarking_config(measurement_parameters)
@@ -31,6 +30,7 @@ def main(measurement_parameters):
 
 
 def _save_benchmarking_config(parameters):
+    # TODO: check if this works
     file = open(f"outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
     file.write(
         f"benchmark_names:{parameters.benchmark_names}"
