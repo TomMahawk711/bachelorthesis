@@ -1,4 +1,4 @@
-class MeasurementParameters:
+class Parameters:
     def __init__(self, benchmark_names, start_time, iterations, limit_type, limits, thread_counts, vectorization_sizes, vector_sizes,
                  map_sizes):
         self.benchmark_names = benchmark_names

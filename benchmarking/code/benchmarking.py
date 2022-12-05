@@ -3,25 +3,25 @@ import subprocess
 import glob
 import time
 import nltk
-from MeasurementParameters import MeasurementParameters
+from parameters import Parameters
 from tqdm import tqdm
 
 
 # --------------------MAIN--------------------
 
 
-def main(measurement_parameters):
+def main(parameters):
     password = _read_password()
-    _create_output_directory(measurement_parameters)
-    _save_benchmarking_config(measurement_parameters)
+    _create_output_directory(parameters)
+    _save_benchmarking_config(parameters)
 
     # TODO: only compile benchmarks when needed
     os.system("cd benchmarks && make")
 
-    if measurement_parameters.limit_type == "power-limit":
-        power_limit_benchmark(measurement_parameters, password)
-    elif measurement_parameters.limit_type == "frequency-limit":
-        frequency_limit_benchmark(measurement_parameters, password)
+    if parameters.limit_type == "power-limit":
+        power_limit_benchmark(parameters, password)
+    elif parameters.limit_type == "frequency-limit":
+        frequency_limit_benchmark(parameters, password)
     else:
         print("usage: help message not yet created")
         return
@@ -184,7 +184,7 @@ def _set_frequency(frequency, password):
 
 # --------------------RUN--------------------
 
-def init_parameters():
+def get_config():
     my_min_value = 1600
     my_max_value = 4300
     my_step_size = 500
@@ -199,9 +199,9 @@ def init_parameters():
     my_vector_sizes = [512, 1024, 2048, 4096]
     my_map_sizes = [100, 200, 400, 800]
 
-    return MeasurementParameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
-                                 my_vectorization_sizes, my_vector_sizes, my_map_sizes)
+    return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
+                      my_vectorization_sizes, my_vector_sizes, my_map_sizes)
 
 
 if __name__ == "__main__":
-    main(init_parameters())
+    main(get_config())
