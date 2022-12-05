@@ -10,5 +10,3 @@ class Parameters:
         self.vectorization_sizes = vectorization_sizes
         self.vector_sizes = vector_sizes
         self.map_sizes = map_sizes
-
-

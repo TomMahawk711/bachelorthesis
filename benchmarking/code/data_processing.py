@@ -4,21 +4,21 @@ import os
 from statistics import mean
 
 
-def process(parameters):
-    data_monte_carlo, files_monte_carlo = _get_data_per_benchmark_per_system(parameters, "monte-carlo", "intel-3770_full-test")
+def process(parameters, benchmark_name):
+    data, files = _get_data_per_benchmark_per_system(parameters, benchmark_name, "intel-3770_full-test")
 
     energies = list()
     times = list()
 
-    for limit in parameters.limits:
-        for file in files_monte_carlo[str(limit)]:
-            energies.append(data_monte_carlo[file][0])
-            times.append(data_monte_carlo[file][1])
+    for limit in parameters.limits:     # parameter to iterate over has to be changed here...
+        for file in files[str(limit)]:
+            energies.append(data[file][0])
+            times.append(data[file][1])
 
     energies_plot_data = list()
     times_plot_data = list()
 
-    for index in range(len(parameters.limits)):
+    for index in range(len(parameters.limits)):     # ...and here
         start_index = parameters.iterations * index
         end_index = start_index + parameters.iterations - 1
 
@@ -31,6 +31,8 @@ def process(parameters):
 def _get_data_per_benchmark_per_system(parameters, benchmark_name, processor):
     path = _get_path(processor, benchmark_name)
     files_dict = dict()
+
+    # for every benchmark there is a separate list comprehension, one parameter should be variable, the other are fixed
 
     if benchmark_name == "monte-carlo":
         for limit in parameters.limits:

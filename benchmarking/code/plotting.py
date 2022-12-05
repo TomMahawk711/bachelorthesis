@@ -5,7 +5,7 @@ from data_processing import process
 
 
 def create_plots(parameters):
-    energies_plot_data, times_plot_data = process(parameters)
+    energies_plot_data, times_plot_data = process(parameters, "monte-carlo")
 
     x = parameters.limits
     mean_power = [e / t for e, t in zip(energies_plot_data, times_plot_data)]
