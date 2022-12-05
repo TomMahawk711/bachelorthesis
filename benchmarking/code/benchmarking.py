@@ -52,8 +52,6 @@ def _read_password():
 
 
 def _create_output_directory(parameters):
-    # TODO: maybe do not save outputs per benchmark in separate folders
-
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
