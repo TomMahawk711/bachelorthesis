@@ -14,8 +14,6 @@ def main(parameters):
     password = _read_password()
     _create_output_directory(parameters)
     _save_benchmarking_config(parameters)
-
-    # TODO: only compile benchmarks when needed
     os.system("cd benchmarks && make")
 
     if parameters.limit_type == "power-limit":
@@ -27,6 +25,17 @@ def main(parameters):
         return
 
     os.system("cd benchmarks && make clean")
+
+
+def _read_password():
+    with open("../password.txt") as file:
+        password = file.readlines()
+    return password
+
+
+def _create_output_directory(parameters):
+    for benchmark_name in parameters.benchmark_names:
+        os.makedirs(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
 
 def _save_benchmarking_config(parameters):
@@ -43,17 +52,6 @@ def _save_benchmarking_config(parameters):
         f"vector_sizes:{parameters.vector_sizes}"
         f"map_sizes:{parameters.map_sizes}"
     )
-
-
-def _read_password():
-    with open("../password.txt") as file:
-        password = file.readlines()
-    return password
-
-
-def _create_output_directory(parameters):
-    for benchmark_name in parameters.benchmark_names:
-        os.makedirs(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
 
 # --------------------BENCHMARK_STUFF--------------------
