@@ -128,7 +128,7 @@ def _get_config():
     my_thread_counts = [1, 2, 4, 8]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
-    my_map_sizes = [200]
+    my_map_sizes = [100, 200, 400, 800]
 
     return MeasurementParameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                                  my_vectorization_sizes, my_vector_sizes, my_map_sizes)
