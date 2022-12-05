@@ -6,26 +6,9 @@ from statistics import mean
 
 def process(parameters, benchmark_name):
     data, files = _get_data_per_benchmark_per_system(parameters, benchmark_name, "intel-3770_full-test")
+    energies, times = _extract_data(parameters, data, files)
 
-    energies = list()
-    times = list()
-
-    for limit in parameters.limits:     # parameter to iterate over has to be changed here...
-        for file in files[str(limit)]:
-            energies.append(data[file][0])
-            times.append(data[file][1])
-
-    energies_plot_data = list()
-    times_plot_data = list()
-
-    for index in range(len(parameters.limits)):     # ...and here
-        start_index = parameters.iterations * index
-        end_index = start_index + parameters.iterations - 1
-
-        energies_plot_data.append(mean(energies[start_index:end_index]))
-        times_plot_data.append(mean(times[start_index:end_index]))
-
-    return energies_plot_data, times_plot_data
+    return _get_means(parameters, energies, times)
 
 
 def _get_data_per_benchmark_per_system(parameters, benchmark_name, processor):
@@ -78,6 +61,32 @@ def _get_data(files_dict, path):
             plot_data_dict[file] = (energy_measurement, time_measurement)
 
     return plot_data_dict
+
+
+def _extract_data(parameters, data, files):
+    energies = list()
+    times = list()
+
+    for limit in parameters.limits:     # parameter to iterate over has to be changed here...
+        for file in files[str(limit)]:
+            energies.append(data[file][0])
+            times.append(data[file][1])
+
+    return energies, times
+
+
+def _get_means(parameters, energies, times):
+    energies_plot_data = list()
+    times_plot_data = list()
+
+    for index in range(len(parameters.limits)):  # ...and here
+        start_index = parameters.iterations * index
+        end_index = start_index + parameters.iterations - 1
+
+        energies_plot_data.append(mean(energies[start_index:end_index]))
+        times_plot_data.append(mean(times[start_index:end_index]))
+
+    return energies_plot_data, times_plot_data
 
 
 def _get_measurement(tokens, unit):
