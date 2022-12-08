@@ -14,7 +14,7 @@ def main(parameters):
     password = _read_password()
     _create_output_directory(parameters)
     _save_benchmarking_config(parameters)
-    os.system("cd benchmarks && make")
+    os.system("cd ../benchmarks && make")
 
     if parameters.limit_type == "power-limit":
         power_limit_benchmark(parameters, password)
@@ -24,7 +24,7 @@ def main(parameters):
         print("usage: help message not yet created")
         return
 
-    os.system("cd benchmarks && make clean")
+    os.system("cd ../benchmarks && make clean")
 
 
 def _read_password():
@@ -35,21 +35,20 @@ def _read_password():
 
 def _create_output_directory(parameters):
     for benchmark_name in parameters.benchmark_names:
-        os.makedirs(f"outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
+        os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
 
 def _save_benchmarking_config(parameters):
-    # TODO: check if this works
-    file = open(f"outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
+    file = open(f"../outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
     file.write(
-        f"benchmark_names:{parameters.benchmark_names}"
-        f"start_time:{parameters.start_time}"
-        f"iterations:{parameters.iterations}"
-        f"limit_type:{parameters.limit_type}"
-        f"limits:{parameters.limits}"
-        f"thread_counts:{parameters.thread_counts}"
-        f"vectorization_sizes:{parameters.vectorization_sizes}"
-        f"vector_sizes:{parameters.vector_sizes}"
+        f"benchmark_names:{parameters.benchmark_names}\n"
+        f"start_time:{parameters.start_time}\n"
+        f"iterations:{parameters.iterations}\n"
+        f"limit_type:{parameters.limit_type}\n"
+        f"limits:{parameters.limits}\n"
+        f"thread_counts:{parameters.thread_counts}\n"
+        f"vectorization_sizes:{parameters.vectorization_sizes}\n"
+        f"vector_sizes:{parameters.vector_sizes}\n"
         f"map_sizes:{parameters.map_sizes}"
     )
 
@@ -91,35 +90,35 @@ def _execute_benchmarks(parameters, limit, password, iteration):
 
         if "monte-carlo" in parameters.benchmark_names:
             subprocess.run([
-                f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
+                f"echo {password}|sudo perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
                 f""
                 f"monte-carlo_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
                 f""
-                f"-e power/energy-cores/ ./benchmarks/monte_carlo.out 100000000 {thread_count}"
+                f"-e power/energy-cores/ ./../benchmarks/monte_carlo.out 100000000 {thread_count}"
             ], shell=True)
 
         if "vector-operations" in parameters.benchmark_names:
             for vectorization_size in parameters.vectorization_sizes:
                 for vector_size in parameters.vector_sizes:
-                    os.system(f"cd benchmarks && make vector_operations VECTORIZATION_SIZE={vectorization_size}")
+                    os.system(f"cd ../benchmarks && make vector_operations VECTORIZATION_SIZE={vectorization_size}")
 
                     subprocess.run([
-                        f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
+                        f"echo {password}|sudo perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
                         f""
                         f"vector-operations_vectorization-size-{vectorization_size}_vector-size-{vector_size}_thread-count-{thread_count}_"
                         f"{limit}MHz_iteration-{iteration}.txt "
                         f""
-                        f"-e power/energy-cores/ ./benchmarks/vector_operations_float.out {vector_size}"
+                        f"-e power/energy-cores/ ./../benchmarks/vector_operations_float.out {vector_size}"
                     ], shell=True)
 
         if "heat-stencil" in parameters.benchmark_names:
             for map_size in parameters.map_sizes:
                 subprocess.run([
-                    f"echo {password}|sudo perf stat -o outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
+                    f"echo {password}|sudo perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
                     f""
                     f"heat-stencil_thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration-{iteration}.txt "
                     f""
-                    f"-e power/energy-cores/ ./benchmarks/heat_stencil.out {map_size}"
+                    f"-e power/energy-cores/ ./../benchmarks/heat_stencil.out {map_size}"
                 ], shell=True)
 
         if "stream" in parameters.benchmark_names:
@@ -180,24 +179,24 @@ def _set_frequency(frequency, password):
 
 # --------------------RUN--------------------
 
-def get_config():
+def initialize_parameters():
     my_min_value = 1600
-    my_max_value = 4300
+    my_max_value = 2600
     my_step_size = 500
 
-    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "stream"]
+    my_benchmark_names = ["monte-carlo", "vector-operations"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
-    my_iterations = 10
+    my_iterations = 2
     my_limit_type = "frequency-limit"
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-    my_thread_counts = [1, 2, 4, 8]
-    my_vectorization_sizes = [1, 2, 4, 8, 16]
-    my_vector_sizes = [512, 1024, 2048, 4096]
-    my_map_sizes = [100, 200, 400, 800]
+    my_thread_counts = [4, 8]
+    my_vectorization_sizes = [1, 2]
+    my_vector_sizes = [512, 1024]
+    my_map_sizes = [100, 200]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_map_sizes)
 
 
 if __name__ == "__main__":
-    main(get_config())
+    main(initialize_parameters())

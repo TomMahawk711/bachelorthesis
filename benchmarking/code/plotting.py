@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
-from benchmarking import get_config
 from data_processing import process
+from parameters import Parameters
 
 
 def create_plots(parameters):
@@ -33,5 +33,19 @@ def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y
     plt.plot(x, y, marker="x")
 
 
+def _get_config(folder_name):
+    limit_type, start_time = folder_name.split("_")
+    lines = open(f"../outputs/{limit_type}_{start_time}/benchmark-config.txt", "w+").readlines()
+    parameters = list()
+
+    for line in lines:
+        start_index = line.index(":")
+        end_index = line.index("\n")
+        parameters.append(line[start_index + 1:end_index])
+
+    return Parameters(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6],
+                      parameters[7], parameters[8])
+
+
 if __name__ == "__main__":
-    create_plots(get_config())
+    create_plots(_get_config())
