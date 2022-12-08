@@ -14,7 +14,7 @@ def main(parameters):
     password = _read_password()
     _create_output_directory(parameters)
     _save_config(parameters)
-    os.system("cd ../benchmarks && make")
+    os.system("cd ../benchmarks && make > /dev/null")
 
     if parameters.limit_type == "power-limit":
         power_limit_benchmark(parameters, password)
@@ -24,7 +24,7 @@ def main(parameters):
         print("usage: help message not yet created")
         return
 
-    os.system("cd ../benchmarks && make clean")
+    os.system("cd ../benchmarks && make clean > /dev/null")
 
 
 def _read_password():
@@ -100,7 +100,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
         if "vector-operations" in parameters.benchmark_names:
             for vectorization_size in parameters.vectorization_sizes:
                 for vector_size in parameters.vector_sizes:
-                    os.system(f"cd ../benchmarks && make vector_operations VECTORIZATION_SIZE={vectorization_size}")
+                    os.system(f"cd ../benchmarks && make vector_operations VECTORIZATION_SIZE={vectorization_size} > /dev/null")
 
                     subprocess.run([
                         f"echo {password}|sudo perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
