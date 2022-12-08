@@ -49,7 +49,7 @@ def _save_config(parameters):
         f"thread_counts:{parameters.thread_counts}\n"
         f"vectorization_sizes:{parameters.vectorization_sizes}\n"
         f"vector_sizes:{parameters.vector_sizes}\n"
-        f"map_sizes:{parameters.map_sizes}"
+        f"map_sizes:{parameters.map_sizes}\n"
     )
 
 
