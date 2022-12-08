@@ -2,17 +2,18 @@ import nltk
 import os
 
 from statistics import mean
+from parameters import Parameters
 
 
-def process(parameters, benchmark_name):
-    data, files = _get_data_per_benchmark_per_system(parameters, benchmark_name, "intel-3770_full-test")
+def process(parameters, benchmark_name, folder_name):
+    data, files = _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name)
     energies, times = _extract_data(parameters, data, files)
 
     return _get_means(parameters, energies, times)
 
 
-def _get_data_per_benchmark_per_system(parameters, benchmark_name, processor):
-    path = _get_path(processor, benchmark_name)
+def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
+    path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
 
     # for every benchmark there is a separate list comprehension, one parameter should be variable, the other are fixed
@@ -93,3 +94,19 @@ def _get_measurement(tokens, unit):
     measurement_index = tokens.index(unit) - 1
     measurement = tokens[measurement_index]
     return float(measurement)
+
+
+def get_config(folder_name):
+    limit_type, start_time = folder_name.split("_")
+    lines = open(f"../outputs/{limit_type}_{start_time}/benchmark-config.txt", "r").readlines()
+    parameters = list()
+
+    for line in lines:
+        start_index = line.index(":")
+        end_index = line.index("\n")
+        parameters.append(line[start_index + 1:end_index])
+
+    return Parameters(parameters[0].strip('][').split(', '), parameters[1], int(parameters[2]), parameters[3],
+                      parameters[4].strip('][').split(', '), parameters[5].strip('][').split(', '),
+                      parameters[6].strip('][').split(', '), parameters[7].strip('][').split(', '),
+                      parameters[8].strip('][').split(', '))

@@ -13,7 +13,7 @@ from tqdm import tqdm
 def main(parameters):
     password = _read_password()
     _create_output_directory(parameters)
-    _save_benchmarking_config(parameters)
+    _save_config(parameters)
     os.system("cd ../benchmarks && make")
 
     if parameters.limit_type == "power-limit":
@@ -38,7 +38,7 @@ def _create_output_directory(parameters):
         os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
 
 
-def _save_benchmarking_config(parameters):
+def _save_config(parameters):
     file = open(f"../outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
     file.write(
         f"benchmark_names:{parameters.benchmark_names}\n"
@@ -181,18 +181,18 @@ def _set_frequency(frequency, password):
 
 def initialize_parameters():
     my_min_value = 1600
-    my_max_value = 2600
+    my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["monte-carlo", "vector-operations"]
+    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
-    my_iterations = 2
+    my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-    my_thread_counts = [4, 8]
-    my_vectorization_sizes = [1, 2]
-    my_vector_sizes = [512, 1024]
-    my_map_sizes = [100, 200]
+    my_thread_counts = [1, 2, 4, 8]
+    my_vectorization_sizes = [1, 2, 4, 8, 16]
+    my_vector_sizes = [512, 1024, 2048, 4096]
+    my_map_sizes = [100, 200, 400, 800]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_map_sizes)

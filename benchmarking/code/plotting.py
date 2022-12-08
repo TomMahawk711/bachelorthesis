@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 
-from data_processing import process
-from parameters import Parameters
+from data_processing import process, get_config
 
 
 def create_plots(parameters):
-    energies_plot_data, times_plot_data = process(parameters, "monte-carlo")
+    folder_name = parameters.limit_type + "_" + parameters.start_time
+    energies_plot_data, times_plot_data = process(parameters, "monte-carlo", folder_name)
 
     x = parameters.limits
     mean_power = [e / t for e, t in zip(energies_plot_data, times_plot_data)]
@@ -13,10 +13,10 @@ def create_plots(parameters):
     grid_x_size = 2
     grid_y_size = 2
 
-    # _create_scatter_plot(grid_x_size, grid_y_size, 1, "thread_count/time", "thread_count", "time [s]", x, times_plot_data)
-    # _create_scatter_plot(grid_x_size, grid_y_size, 2, "thread_count/energy", "thread_count", "energy [J]", x, energies_plot_data)
-    # _create_scatter_plot(grid_x_size, grid_y_size, 3, "thread_count/power", "thread_count", "power [W]", x, mean_power)
-    _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", times_plot_data, energies_plot_data)
+    # _create_scatter_plot(grid_x_size, grid_y_size, 1, "frequency/time", "frequency", "time [s]", x, times_plot_data)
+    # _create_scatter_plot(grid_x_size, grid_y_size, 2, "frequency/energy", "frequency", "energy [J]", x, energies_plot_data)
+    _create_scatter_plot(grid_x_size, grid_y_size, 3, "frequency/power", "frequency", "power [W]", x, mean_power)
+    # _create_scatter_plot(grid_x_size, grid_y_size, 4, "execution time/energy", "time [s]", "energy [J]", times_plot_data, energies_plot_data)
 
     plt.tight_layout()
     plt.grid()
@@ -33,19 +33,5 @@ def _create_scatter_plot(x_size, y_size, position, title, x_label, y_label, x, y
     plt.plot(x, y, marker="x")
 
 
-def _get_config(folder_name):
-    limit_type, start_time = folder_name.split("_")
-    lines = open(f"../outputs/{limit_type}_{start_time}/benchmark-config.txt", "w+").readlines()
-    parameters = list()
-
-    for line in lines:
-        start_index = line.index(":")
-        end_index = line.index("\n")
-        parameters.append(line[start_index + 1:end_index])
-
-    return Parameters(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6],
-                      parameters[7], parameters[8])
-
-
 if __name__ == "__main__":
-    create_plots(_get_config())
+    create_plots(get_config("frequency-limit_20221208-214144"))
