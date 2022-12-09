@@ -122,7 +122,13 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                 ], shell=True)
 
         if "stream" in parameters.benchmark_names:
-            pass
+            subprocess.run([
+                f"echo {password}|sudo perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+                f""
+                f"stream_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                f""
+                f"-e power/energy-cores/ ./../benchmarks/stream/stream_c.exe > /dev/null"
+            ], shell=True)
 
 
 def _get_measurement(tokens, unit):
@@ -184,7 +190,7 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil", "stream"]
+    my_benchmark_names = ["stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
