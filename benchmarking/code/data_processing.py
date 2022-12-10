@@ -74,8 +74,8 @@ def _get_data(files_dict, path):
 def _extract_data(parameters, data, files):
     energies = list()
     times = list()
-    print(files)
-    for limit in parameters.limits:     # parameter to iterate over has to be changed here...
+
+    for limit in parameters.vectorization_sizes:     # parameter to iterate over has to be changed here...
         for file in files[str(limit)]:
             energies.append(data[file][0])
             times.append(data[file][1])
@@ -87,7 +87,7 @@ def _get_means(parameters, energies, times):
     energies_plot_data = list()
     times_plot_data = list()
 
-    for index in range(len(parameters.limits)):  # ...and here
+    for index in range(len(parameters.vectorization_sizes)):  # ...and here
         start_index = parameters.iterations * index
         end_index = start_index + parameters.iterations - 1
 
@@ -114,6 +114,7 @@ def get_config(folder_name):
                       _as_list(parameters["thread_counts"]),
                       _as_list(parameters["vectorization_sizes"]),
                       _as_list(parameters["vector_sizes"]),
+                      parameters["datatype"],
                       _as_list(parameters["map_sizes"]))
 
 
@@ -128,6 +129,7 @@ def _build_parameter_dict(folder_name):
         parameters[line[0:middle_index]] = (line[middle_index + 1:end_index])
 
     return parameters
+
 
 def _as_list(list_as_string):
     return list(map(int, list_as_string.strip('][').split(', ')))

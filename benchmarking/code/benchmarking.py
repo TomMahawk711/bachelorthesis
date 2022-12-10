@@ -49,6 +49,7 @@ def _save_config(parameters):
         f"thread_counts:{parameters.thread_counts}\n"
         f"vectorization_sizes:{parameters.vectorization_sizes}\n"
         f"vector_sizes:{parameters.vector_sizes}\n"
+        f"datatype:{parameters.datatype}\n"
         f"map_sizes:{parameters.map_sizes}\n"
     )
 
@@ -100,7 +101,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
         if "vector-operations" in parameters.benchmark_names:
             for vectorization_size in parameters.vectorization_sizes:
                 for vector_size in parameters.vector_sizes:
-                    os.system(f"cd ../benchmarks && make vector_operations VECTORIZATION_SIZE={vectorization_size} > /dev/null")
+                    os.system(f"cd ../benchmarks && make vector_operations_{parameters.datatype} VECTORIZATION_SIZE={vectorization_size} > /dev/null")
 
                     subprocess.run([
                         f"echo {password}|sudo perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
@@ -108,7 +109,7 @@ def _execute_benchmarks(parameters, limit, password, iteration):
                         f"vector-operations_vectorization-size-{vectorization_size}_vector-size-{vector_size}_thread-count-{thread_count}_"
                         f"{limit}MHz_iteration-{iteration}.txt "
                         f""
-                        f"-e power/energy-cores/ ./../benchmarks/vector_operations_float.out {vector_size}"
+                        f"-e power/energy-cores/ ./../benchmarks/vector_operations_{parameters.datatype}.out {vector_size}"
                     ], shell=True)
 
         if "heat-stencil" in parameters.benchmark_names:
@@ -190,7 +191,7 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["stream"]
+    my_benchmark_names = ["vector-operations"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
@@ -198,10 +199,11 @@ def initialize_parameters():
     my_thread_counts = [1, 2, 4, 8]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
+    datatype = "double"
     my_map_sizes = [100, 200, 400, 800]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
-                      my_vectorization_sizes, my_vector_sizes, my_map_sizes)
+                      my_vectorization_sizes, my_vector_sizes, datatype, my_map_sizes)
 
 
 if __name__ == "__main__":
