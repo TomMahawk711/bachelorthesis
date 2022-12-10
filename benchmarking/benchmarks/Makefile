@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=gnu11 -Wall -Werror -Wextra -pedantic -fopenmp
+CFLAGS=-std=gnu11 -Wall -Werror -Wextra -pedantic -fopenmp -O3
 VECTORIZATION_SIZE?=2
 
 all: monte_carlo heat_stencil
