@@ -1,6 +1,8 @@
-CC=gcc
-CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp -O3
 VECTORIZATION_SIZE?=2
+OPTIMIZATION_FLAG?=O1
+
+CC=gcc
+CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp -$(OPTIMIZATION_FLAG)
 
 all: monte_carlo heat_stencil
 vector_operations: vector_operations_float
