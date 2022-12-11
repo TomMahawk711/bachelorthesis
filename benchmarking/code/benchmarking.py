@@ -92,10 +92,11 @@ def frequency_limit_benchmark(parameters, password):
 def _is_intel_system():
     os.system("lscpu > cpuinfo.txt")
     with open("cpuinfo.txt") as file:
-        print("1")
         if "AMD" in file.read():
-            print("2")
+            os.system("rm cpuinfo.txt")
             return False
+
+    os.system("rm cpuinfo.txt")
     return True
 
 
@@ -122,7 +123,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                         os.system(f"cd ../benchmarks && make vector_operations_{parameters.datatype} "
                                   f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
                                   f"> /dev/null")
-                        print(perf_stat_command)
+
                         subprocess.run([
                             f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
                             f""
