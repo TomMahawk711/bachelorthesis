@@ -1,6 +1,7 @@
 class Parameters:
+    # add new parameters here, in benchmarking.save_config() and in data_processing.get_config()
     def __init__(self, benchmark_names, start_time, iterations, limit_type, limits, thread_counts, vectorization_sizes, vector_sizes,
-                 datatype, map_sizes):
+                 datatype, map_sizes, optimization_flags):
         self.benchmark_names = benchmark_names
         self.start_time = start_time
         self.iterations = iterations
@@ -11,3 +12,4 @@ class Parameters:
         self.vector_sizes = vector_sizes
         self.datatype = datatype
         self.map_sizes = map_sizes
+        self.optimization_flags = optimization_flags

@@ -51,6 +51,7 @@ def _save_config(parameters):
         f"vector_sizes:{parameters.vector_sizes}\n"
         f"datatype:{parameters.datatype}\n"
         f"map_sizes:{parameters.map_sizes}\n"
+        f"optimization_flags:{parameters.optimization_flags}"
     )
 
 
