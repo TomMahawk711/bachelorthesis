@@ -115,7 +115,7 @@ def get_config(folder_name):
                       _as_list(parameters["thread_counts"]),
                       _as_list(parameters["vectorization_sizes"]),
                       _as_list(parameters["vector_sizes"]),
-                      parameters["datatype"],
+                      _as_list(parameters["datatypes"]),
                       _as_list(parameters["map_sizes"]),
                       _as_list(parameters["optimization_flags"]))
 

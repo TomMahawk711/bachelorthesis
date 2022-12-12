@@ -49,7 +49,7 @@ def _save_config(parameters):
         f"thread_counts:{parameters.thread_counts}\n"
         f"vectorization_sizes:{parameters.vectorization_sizes}\n"
         f"vector_sizes:{parameters.vector_sizes}\n"
-        f"datatype:{parameters.datatype}\n"
+        f"datatypes:{parameters.datatypes}\n"
         f"map_sizes:{parameters.map_sizes}\n"
         f"optimization_flags:{parameters.optimization_flags}"
     )
@@ -92,12 +92,12 @@ def frequency_limit_benchmark(parameters, password):
 def _is_intel_system():
     os.system("lscpu > cpuinfo.txt")
     with open("cpuinfo.txt") as file:
-        if "AMD" in file.read():
+        if "Intel" in file.read():
             os.system("rm cpuinfo.txt")
-            return False
+            return True
 
     os.system("rm cpuinfo.txt")
-    return True
+    return False
 
 
 def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command):
@@ -112,7 +112,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 subprocess.run([
                     f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
                     f""
-                    f"monte-carlo_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}_optimization-flag-{optimization_flag}.txt "
+                    f"monte-carlo_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
                     f""
                     f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out 100000000 {thread_count}"
                 ], shell=True)
@@ -120,20 +120,22 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
             if "vector-operations" in parameters.benchmark_names:
                 for vectorization_size in parameters.vectorization_sizes:
                     for vector_size in parameters.vector_sizes:
-                        os.system(f"cd ../benchmarks && make vector_operations_{parameters.datatype} "
-                                  f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
-                                  f"> /dev/null")
+                        for datatype in parameters.datatypes:
+                            os.system(f"cd ../benchmarks && make vector_operations_{datatype} "
+                                      f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
+                                      f"> /dev/null")
 
-                        subprocess.run([
-                            f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
-                            f""
-                            f"vector-operations_vectorization-size-{vectorization_size}_vector-size-{vector_size}_thread-count-{thread_count}_"
-                            f"{limit}MHz_iteration-{iteration}.txt "
-                            f""
-                            f"-e power/energy-{perf_stat_command}/ "
-                            f""
-                            f"./../benchmarks/vector_operations_{parameters.datatype}.out {vector_size}"
-                        ], shell=True)
+                            subprocess.run([
+                                f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
+                                f"vector-operations/"
+                                f""
+                                f"vector-operations_datatype-{datatype}_vector-size-{vector_size}_vectorization-size-{vectorization_size}_"
+                                f"optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                                f""
+                                f"-e power/energy-{perf_stat_command}/ "
+                                f""
+                                f"./../benchmarks/vector_operations_{datatype}.out {vector_size}"
+                            ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
                 for map_size in parameters.map_sizes:
@@ -142,8 +144,8 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                         f""
                         f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
                         f""
-                        f"heat-stencil_thread-count-{thread_count}_map-size-{map_size}_{limit}MHz_iteration-{iteration}_"
-                        f"optimization-flag-{optimization_flag}.txt "
+                        f"heat-stencil_map-size-{map_size}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
+                        f"{limit}MHz_iteration-{iteration}.txt "
                         f""
                         f"-e power/energy-{perf_stat_command}/ "
                         f""
@@ -156,7 +158,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                     f""
                     f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
                     f""
-                    f"stream_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}_optimization-flag-{optimization_flag}.txt "
+                    f"stream_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
                     f""
                     f"-e power/energy-{perf_stat_command}/ "
                     f""
@@ -231,12 +233,12 @@ def initialize_parameters():
     my_thread_counts = [1, 2, 4, 8]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
-    datatype = "double"
+    my_datatypes = ["double"]
     my_map_sizes = [100, 200, 400, 800]
     my_optimization_flags = ["O0", "O1"]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
-                      my_vectorization_sizes, my_vector_sizes, datatype, my_map_sizes, my_optimization_flags)
+                      my_vectorization_sizes, my_vector_sizes, my_datatypes, my_map_sizes, my_optimization_flags)
 
 
 if __name__ == "__main__":
