@@ -16,10 +16,14 @@ def main(parameters):
     _save_config(parameters)
     os.system("cd ../benchmarks && make > /dev/null")
 
+    perf_stat_command = "cores"
+    if not _is_intel_system():
+        perf_stat_command = "pkg"
+
     if parameters.limit_type == "power-limit":
-        power_limit_benchmark(parameters, password)
+        power_limit_benchmark(parameters, password, perf_stat_command)
     elif parameters.limit_type == "frequency-limit":
-        frequency_limit_benchmark(parameters, password)
+        frequency_limit_benchmark(parameters, password, perf_stat_command)
     else:
         print("usage: help message not yet created")
         return
@@ -58,7 +62,7 @@ def _save_config(parameters):
 # --------------------BENCHMARK_STUFF--------------------
 
 
-def power_limit_benchmark(parameters, password):
+def power_limit_benchmark(parameters, password, perf_stat_command):
     print("\nrunning power limiting benchmark...")
 
     os.system("modprobe intel_rapl_msr")
@@ -68,18 +72,15 @@ def power_limit_benchmark(parameters, password):
     for iteration in tqdm(range(0, parameters.iterations)):
         for limit in parameters.limits:
             _set_power(limit, password)
-            _execute_benchmarks(parameters, limit, password, iteration)
+            _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
     _set_power(original_power_limit, password)
 
 
-def frequency_limit_benchmark(parameters, password):
+def frequency_limit_benchmark(parameters, password, perf_stat_command):
     print("\nrunning frequency limiting benchmark...")
 
     _set_scaling_governor("userspace", password)
-    perf_stat_command = "cores"
-    if not _is_intel_system():
-        perf_stat_command = "pkg"
 
     for iteration in tqdm(range(0, parameters.iterations)):
         for limit in tqdm(parameters.limits):
@@ -108,7 +109,6 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
         for optimization_flag in parameters.optimization_flags:
 
             if "monte-carlo" in parameters.benchmark_names:
-
                 subprocess.run([
                     f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
                     f""
