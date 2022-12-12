@@ -16,7 +16,8 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
     path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
 
-    # for every benchmark there is a separate list comprehension, one parameter should be variable, the other are fixed
+    # for every benchmark, there is a separate list comprehension, one parameter should be variable, the others are fixed
+    # to group by another parameter, the parameter-collection - over which the for loop iterates - has to be changed
 
     if benchmark_name == "monte-carlo":
         for limit in parameters.limits:
@@ -75,7 +76,7 @@ def _extract_data(parameters, data, files):
     energies = list()
     times = list()
 
-    for limit in parameters.vectorization_sizes:     # parameter to iterate over has to be changed here...
+    for limit in parameters.vectorization_sizes:     # parameter to group by, has to be changed here...
         for file in files[str(limit)]:
             energies.append(data[file][0])
             times.append(data[file][1])
