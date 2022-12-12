@@ -71,10 +71,10 @@ def power_limit_benchmark(parameters, password, perf_stat_command):
 
     for iteration in tqdm(range(0, parameters.iterations)):
         for limit in parameters.limits:
-            _set_power(limit, password)
+            _set_power_limit(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
-    _set_power(original_power_limit, password)
+    _set_power_limit(original_power_limit, password)
 
 
 def frequency_limit_benchmark(parameters, password, perf_stat_command):
@@ -201,10 +201,10 @@ def _get_power_limit():
     return tokens[power_limit_index]
 
 
-def _set_power(power, password):
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 0 -l %s" % power)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 1 -l %s" % power)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -c 0 -l %s" % power)
+def _set_power_limit(power_limit, password):
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -c 0 -l %s" % power_limit)
 
 
 # --------------------CPUFREQ_STUFF--------------------
