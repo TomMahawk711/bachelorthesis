@@ -23,24 +23,26 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
         for limit in parameters.limits:
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-8" in file
-                 and f"{limit}MHz" in file]
+                 if f"thread-count-8_" in file
+                 and f"_{limit}MHz" in file]
 
     elif benchmark_name == "vector-operations":
         for vectorization_size in parameters.vectorization_sizes:
             files_dict[str(vectorization_size)] = \
                 [file for file in os.listdir(path)
-                 if "thread-count-8" in file
-                 and "4100MHz" in file
-                 and f"vectorization-size-{vectorization_size}" in file
-                 and "vector-size-4096" in file]
+                 if "thread-count-8_" in file
+                 and "_2800MHz" in file
+                 and f"vectorization-size-{vectorization_size}_" in file
+                 and "vector-size-4096_" in file
+                 and "optimization-flag-O1_" in file
+                 and "datatype-float_" in file]
 
     if benchmark_name == "stream":
         for limit in parameters.limits:
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-8" in file
-                 and f"{limit}MHz" in file]
+                 if f"thread-count-8_" in file
+                 and f"_{limit}MHz" in file]
 
     data_dict = _get_data(files_dict, path)
     return data_dict, files_dict
