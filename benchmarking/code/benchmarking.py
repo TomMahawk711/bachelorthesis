@@ -114,7 +114,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                     f""
                     f"monte-carlo_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
                     f""
-                    f"-e power/energy-pkg/ ./../benchmarks/monte_carlo.out 100000000 {thread_count}"
+                    f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out 100000000 {thread_count}"
                 ], shell=True)
 
             if "vector-operations" in parameters.benchmark_names:
