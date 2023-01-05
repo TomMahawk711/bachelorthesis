@@ -121,21 +121,23 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 for vectorization_size in parameters.vectorization_sizes:
                     for vector_size in parameters.vector_sizes:
                         for datatype in parameters.datatypes:
-                            os.system(f"cd ../benchmarks && make vector_operations_{datatype} "
-                                      f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
-                                      f"> /dev/null")
+                            for instruction_set in parameters.instruction_sets:
+                                os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{datatype} "
+                                          f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
+                                          f"> /dev/null")
 
-                            subprocess.run([
-                                f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
-                                f"vector-operations/"
-                                f""
-                                f"vector-operations_datatype-{datatype}_vector-size-{vector_size}_vectorization-size-{vectorization_size}_"
-                                f"optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                                f""
-                                f"-e power/energy-{perf_stat_command}/ "
-                                f""
-                                f"./../benchmarks/vector_operations_{datatype}.out {vector_size}"
-                            ], shell=True)
+                                subprocess.run([
+                                    f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
+                                    f"vector-operations/"
+                                    f""
+                                    f"vector-operations_instruction-set-{instruction_set}_datatype-{datatype}_vector-size-{vector_size}_"
+                                    f"vectorization-size-{vectorization_size}_optimization-flag-{optimization_flag}_"
+                                    f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                                    f""
+                                    f"-e power/energy-{perf_stat_command}/ "
+                                    f""
+                                    f"./../benchmarks/vector_operations_{datatype}.out {vector_size}"
+                                ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
                 for map_size in parameters.map_sizes:
