@@ -118,9 +118,10 @@ def get_config(folder_name):
                       _as_list(parameters["thread_counts"]),
                       _as_list(parameters["vectorization_sizes"]),
                       _as_list(parameters["vector_sizes"]),
-                      parameters["datatypes"],
+                      parameters["precisions"],
                       _as_list(parameters["map_sizes"]),
-                      parameters["optimization_flags"])
+                      parameters["optimization_flags"],
+                      _as_list(parameters["instruction_sets"]))
 
 
 def _build_parameter_dict(folder_name):
