@@ -26,9 +26,9 @@ int main(int argc, char** argv){
 	init_array(b, size, 1);
 	init_array(c, size, 2);
 
-	double start_time = omp_get_wtime();
+	//double start_time = omp_get_wtime();
 	calculate_array(a, b, c, size);
-	double end_time = omp_get_wtime();
+	//double end_time = omp_get_wtime();
 
 	// print_output(start_time, end_time, a, size);
 
