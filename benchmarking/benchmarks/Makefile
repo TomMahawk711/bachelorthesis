@@ -5,7 +5,7 @@ CC=gcc
 CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -march=native -fopenmp -$(OPTIMIZATION_FLAG)
 
 all: monte_carlo heat_stencil
-vector_operations: vector_operations_SSE_double vector_operations_SSE_single vector_operations_SSE2_double vector_operations_SSE2_single vector_operations_AVX_double vector_operations_AVX_single
+vector_operations: vector_operations_SSE_double vector_operations_SSE_single vector_operations_SSE2_double vector_operations_SSE2_single vector_operations_AVX_double vector_operations_AVX_single vector_operations_AVX512_double vector_operations_AVX512_single
 
 clean:
 	$(RM) *.out
@@ -34,3 +34,8 @@ vector_operations_AVX_double:
 vector_operations_AVX_single:
 	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_single.c -o vector_operations_AVX_single.out
 
+vector_operations_AVX512_double:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
+
+vector_operations_AVX512_single:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
