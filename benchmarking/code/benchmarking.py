@@ -53,7 +53,7 @@ def _save_config(parameters):
         f"thread_counts:{parameters.thread_counts}\n"
         f"vectorization_sizes:{parameters.vectorization_sizes}\n"
         f"vector_sizes:{parameters.vector_sizes}\n"
-        f"datatypes:{parameters.datatypes}\n"
+        f"precisions:{parameters.precisions}\n"
         f"map_sizes:{parameters.map_sizes}\n"
         f"optimization_flags:{parameters.optimization_flags}\n"
         f"instruction_sets:{parameters.instruction_sets}\n"
@@ -121,9 +121,10 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
             if "vector-operations" in parameters.benchmark_names:
                 for vectorization_size in parameters.vectorization_sizes:
                     for vector_size in parameters.vector_sizes:
-                        for datatype in parameters.datatypes:
+                        for precision in parameters.precisions:
                             for instruction_set in parameters.instruction_sets:
-                                os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{datatype} "
+
+                                os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
                                           f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
                                           f"> /dev/null")
 
@@ -131,13 +132,13 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                                     f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
                                     f"vector-operations/"
                                     f""
-                                    f"vector-operations_instruction-set-{instruction_set}_datatype-{datatype}_vector-size-{vector_size}_"
+                                    f"vector-operations_instruction-set-{instruction_set}_precision-{precision}_vector-size-{vector_size}_"
                                     f"vectorization-size-{vectorization_size}_optimization-flag-{optimization_flag}_"
                                     f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
                                     f""
                                     f"-e power/energy-{perf_stat_command}/ "
                                     f""
-                                    f"./../benchmarks/vector_operations_{datatype}.out {vector_size}"
+                                    f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size}"
                                 ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
@@ -233,7 +234,7 @@ def initialize_parameters():
     my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = get_limits(my_min_value, my_max_value, my_step_size)
-    my_thread_counts = [1, 2, 4, 8]
+    my_thread_counts = [1, 2, 4, 8, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
     my_precisions = ["single", "double"]
