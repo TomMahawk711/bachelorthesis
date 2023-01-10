@@ -41,7 +41,7 @@ void init_array(double* arr, int vector_size, double init_num){
     }
 }
 
-void calculate_array(double* a, double* b, double* c, int vector_size){
+void calculate_array(double* a, double* b, double* c, int size){
     __m128 a_128;
 	__m128 b_128;
 	__m128 c_128;

@@ -13,10 +13,19 @@ clean:
 monte_carlo: 
 	$(CC) $(CFLAGS) monte_carlo.c -o monte_carlo.out
 
-vector_operations_double: 
-	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_double.c -o vector_operations_double.out
+vector_operations_SSE_double:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_double.c -o vector_operations_SSE_double.out
 
-vector_operations_float:
+vector_operations_SSE_float:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_float.c -o vector_operations_SSE_float.out
+
+vector_operations_SSE2_double:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE2_double.c -o vector_operations_SSE2_double.out
+
+vector_operations_SSE2_float:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE2_float.c -o vector_operations_SSE2_float.out
+
+vector_operations_AVX:
 	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_float.c -o vector_operations_float.out
 
 heat_stencil: 

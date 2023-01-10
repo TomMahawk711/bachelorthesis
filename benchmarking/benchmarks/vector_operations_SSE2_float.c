@@ -5,9 +5,9 @@
 
 #define REPETITIONS 1e6
 
-void init_array(double*, int, double);
-void calculate_array(double*, double*, double*, int);
-void print_array(double*, int);
+void init_array(float*, int, float);
+void calculate_array(float*, float*, float*, int);
+void print_array(float*, int);
 void print_output();
 
 int main(int argc, char** argv){
@@ -21,7 +21,7 @@ int main(int argc, char** argv){
 		size = atol(argv[1]);
 	}
 
-	double a[size], b[size], c[size];
+	float a[size], b[size], c[size];
 	init_array(a, size, 0);
 	init_array(b, size, 1);
 	init_array(c, size, 2);
@@ -35,13 +35,13 @@ int main(int argc, char** argv){
 	return EXIT_SUCCESS;
 }
 
-void init_array(double* arr, int vector_size, double init_num){
+void init_array(float* arr, int vector_size, float init_num){
     for(int i = 0; i<vector_size; ++i){
         arr[i] = init_num;
     }
 }
 
-void calculate_array(double* a, double* b, double* c, int vector_size){
+void calculate_array(float* a, float* b, float* c, int size){
     __m128 a_128;
 	__m128 b_128;
 	__m128 c_128;
@@ -57,7 +57,7 @@ void calculate_array(double* a, double* b, double* c, int vector_size){
 	}
 }
 
-void print_array(double* arr, int vector_size){
+void print_array(float* arr, int vector_size){
     printf("[ ");
     for(int i = 0; i<vector_size; i++){
         printf("%.2f ", arr[i]);

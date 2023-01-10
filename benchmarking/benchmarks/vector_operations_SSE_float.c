@@ -41,7 +41,7 @@ void init_array(float* arr, int vector_size, float init_num){
     }
 }
 
-void calculate_array(float* a, float* b, float* c, int vector_size){
+void calculate_array(float* a, float* b, float* c, int ize){
     __m128 a_128;
 	__m128 b_128;
 	__m128 c_128;

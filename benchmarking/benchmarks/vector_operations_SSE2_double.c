@@ -41,18 +41,18 @@ void init_array(double* arr, int vector_size, double init_num){
     }
 }
 
-void calculate_array(double* a, double* b, double* c, int vector_size){
-    __m128 a_128;
-	__m128 b_128;
-	__m128 c_128;
+void calculate_array(double* a, double* b, double* c, int size){
+    __m128d a_128;
+	__m128d b_128;
+	__m128d c_128;
 
 	for(int run = 0; run < REPETITIONS; ++run) {
 		for(int i = 0; i < size; i += 4) {
-			a_128 = _mm_load_ps(&a[i]);
-			b_128 = _mm_load_ps(&b[i]);
-			c_128 = _mm_load_ps(&c[i]);
-			a_128 = _mm_add_ps(a_128, _mm_mul_ps(b_128, c_128));
-			_mm_store_ps(&a[i], a_128);
+			a_128 = _mm_load_pd(&a[i]);
+			b_128 = _mm_load_pd(&b[i]);
+			c_128 = _mm_load_pd(&c[i]);
+			a_128 = _mm_add_pd(a_128, _mm_mul_pd(b_128, c_128));
+			_mm_store_pd(&a[i], a_128);
 		}
 	}
 }

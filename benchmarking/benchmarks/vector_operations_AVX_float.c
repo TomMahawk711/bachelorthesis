@@ -41,18 +41,18 @@ void init_array(float* arr, int vector_size, float init_num){
     }
 }
 
-void calculate_array(float* a, float* b, float* c, int vector_size){
+void calculate_array(float* a, float* b, float* c, int size){
     __m256 a_256;
 	__m256 b_256;
 	__m256 c_256;
 
 	for(int run = 0; run < REPETITIONS; ++run) {
 		for(int i = 0; i < size; i += 4) {
-			a_256 = _mm_load_ps(&a[i]);
-			b_256 = _mm_load_ps(&b[i]);
-			c_256 = _mm_load_ps(&c[i]);
-			a_256 = _mm_add_ps(a_256, _mm_mul_ps(b_256, c_256));
-			_mm_store_ps(&a[i], a_256);
+			a_256 = _mm256_load_ps(&a[i]);
+			b_256 = _mm256_load_ps(&b[i]);
+			c_256 = _mm256_load_ps(&c[i]);
+			a_256 = _mm256_add_ps(a_256, _mm_mul_ps(b_256, c_256));
+			_mm256_store_ps(&a[i], a_256);
 		}
 	}
 }
