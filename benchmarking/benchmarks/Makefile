@@ -25,8 +25,11 @@ vector_operations_SSE2_double:
 vector_operations_SSE2_float:
 	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE2_float.c -o vector_operations_SSE2_float.out
 
-vector_operations_AVX:
-	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_float.c -o vector_operations_float.out
+vector_operations_AVX_double:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
+
+vector_operations_AVX_float:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_float.c -o vector_operations_AVX_float.out
 
 heat_stencil: 
 	$(CC) $(CFLAGS) heat_stencil.c -o heat_stencil.out

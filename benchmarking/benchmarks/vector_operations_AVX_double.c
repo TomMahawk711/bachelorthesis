@@ -1,7 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <xmmintrin.h>
+#include <immintrin.h>
 
 #define REPETITIONS 1e6
 
@@ -26,9 +26,9 @@ int main(int argc, char** argv){
 	init_array(b, size, 1);
 	init_array(c, size, 2);
 
-	double start_time = omp_get_wtime();
+	//double start_time = omp_get_wtime();
 	calculate_array(a, b, c, size);
-	double end_time = omp_get_wtime();
+	//double end_time = omp_get_wtime();
 
 	// print_output(start_time, end_time, a, size);
 
@@ -51,7 +51,7 @@ void calculate_array(double* a, double* b, double* c, int size){
 			a_256 = _mm256_load_pd(&a[i]);
 			b_256 = _mm256_load_pd(&b[i]);
 			c_256 = _mm256_load_pd(&c[i]);
-			a_256 = _mm256_add_pd(a_256, _mm_mul_pd(b_256, c_256));
+			a_256 = _mm256_add_pd(a_256, _mm256_mul_pd(b_256, c_256));
 			_mm256_store_pd(&a[i], a_256);
 		}
 	}
