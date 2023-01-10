@@ -56,6 +56,7 @@ def _save_config(parameters):
         f"datatypes:{parameters.datatypes}\n"
         f"map_sizes:{parameters.map_sizes}\n"
         f"optimization_flags:{parameters.optimization_flags}\n"
+        f"instruction_sets:{parameters.instruction_sets}\n"
     )
 
 
@@ -238,7 +239,7 @@ def initialize_parameters():
     my_precisions = ["single", "double"]
     my_map_sizes = [100, 200, 400, 800]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
-    my_instruction_sets = ["SSE", "SSE4", "AVX", "AVX2"]
+    my_instruction_sets = ["SSE", "SSE2", "AVX"]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_map_sizes, my_optimization_flags, my_instruction_sets)
