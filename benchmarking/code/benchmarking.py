@@ -108,10 +108,15 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     for thread_count in parameters.thread_counts:
 
         if "vector-operations" in parameters.benchmark_names:
+
             for vectorization_size in parameters.vectorization_sizes:
                 for vector_size in parameters.vector_sizes:
                     for precision in parameters.precisions:
                         for instruction_set in parameters.instruction_sets:
+
+                            if instruction_set == "SSE2" and precision == "single":
+                                continue
+
                             os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
                                       f"VECTORIZATION_SIZE={vectorization_size} "
                                       f"> /dev/null")
