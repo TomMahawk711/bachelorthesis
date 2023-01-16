@@ -39,7 +39,7 @@ vector_operations_AVX_double:
 	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
 
 vector_operations_AVX512_single:
-	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
+	$(CC) $(CFLAGS) -mavx512f -O2 -Iinclude -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
 
 vector_operations_AVX512_double:
-	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
+	$(CC) $(CFLAGS) -mavx512f -O2 -Iinclude -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
