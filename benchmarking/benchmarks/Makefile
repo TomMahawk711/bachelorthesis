@@ -4,7 +4,7 @@ OPTIMIZATION_FLAG?=O1
 CC=gcc
 CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp
 SSEFLAGS=-O1
-AVXFLAGS=-march=native -ftree-vectorize
+AVXFLAGS=-O2 -march=native -Iinclude
 OFLAGS=-$(OPTIMIZATION_FLAG)
 
 
@@ -14,7 +14,7 @@ sse: vector_operations_SSE_double vector_operations_SSE_single
 sse2: vector_operations_SSE2_double vector_operations_SSE2_single
 avx: vector_operations_AVX_double vector_operations_AVX_single
 avx512: vector_operations_AVX512_double vector_operations_AVX512_single
-vector_operations: sse sse2 avx avx512
+vector_operations: sse sse2 avx
 
 
 clean:
