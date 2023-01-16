@@ -47,7 +47,7 @@ void calculate_array(float* a, float* b, float* c, int size){
 	__m256 c_256;
 
 	for(int run = 0; run < REPETITIONS; ++run) {
-		for(int i = 0; i < size; i += 4) {
+		for(int i = 0; i < size; i += 8) {
 			a_256 = _mm256_load_ps(&a[i]);
 			b_256 = _mm256_load_ps(&b[i]);
 			c_256 = _mm256_load_ps(&c[i]);

@@ -47,7 +47,7 @@ void calculate_array(double* a, double* b, double* c, int size){
 	__m512d c_512;
 
 	for(int run = 0; run < REPETITIONS; ++run) {
-		for(int i = 0; i < size; i += 4) {
+		for(int i = 0; i < size; i += 8) {
 			a_512 = _mm512_load_pd(&a[i]);
 			b_512 = _mm512_load_pd(&b[i]);
 			c_512 = _mm512_load_pd(&c[i]);

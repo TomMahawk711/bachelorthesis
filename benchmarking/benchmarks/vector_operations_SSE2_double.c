@@ -1,7 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <xmmintrin.h>
+#include <emmintrin.h>
 
 #define REPETITIONS 1e6
 
@@ -47,7 +47,7 @@ void calculate_array(double* a, double* b, double* c, int size){
 	__m128d c_128;
 
 	for(int run = 0; run < REPETITIONS; ++run) {
-		for(int i = 0; i < size; i += 4) {
+		for(int i = 0; i < size; i += 2) {
 			a_128 = _mm_load_pd(&a[i]);
 			b_128 = _mm_load_pd(&b[i]);
 			c_128 = _mm_load_pd(&c[i]);
