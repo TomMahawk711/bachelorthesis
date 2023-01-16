@@ -10,7 +10,7 @@ OFLAGS=-$(OPTIMIZATION_FLAG)
 
 all: monte_carlo heat_stencil
 
-sse: vector_operations_SSE_double vector_operations_SSE_single
+sse: vector_operations_SSE_single
 sse2: vector_operations_SSE2_double
 avx: vector_operations_AVX_double vector_operations_AVX_single
 avx512: vector_operations_AVX512_double vector_operations_AVX512_single
@@ -25,9 +25,6 @@ monte_carlo:
 
 heat_stencil:
 	$(CC) $(CFLAGS) $(OFLAGS) heat_stencil.c -o heat_stencil.out
-
-vector_operations_SSE_double:
-	$(CC) $(CFLAGS) $(SSEFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_double.c -o vector_operations_SSE_double.out
 
 vector_operations_SSE_single:
 	$(CC) $(CFLAGS) $(SSEFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_single.c -o vector_operations_SSE_single.out
