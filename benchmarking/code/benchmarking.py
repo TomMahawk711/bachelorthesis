@@ -114,8 +114,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                     for precision in parameters.precisions:
                         for instruction_set in parameters.instruction_sets:
 
-                            if (instruction_set == "SSE2" and precision == "single") or \
-                                    (instruction_set == "SSE" and precision == "double"):
+                            if instruction_set == "SSE2" and precision == "single":
                                 continue
 
                             os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
