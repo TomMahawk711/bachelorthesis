@@ -19,14 +19,7 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
     # for every benchmark, there is a separate list comprehension, one parameter should be variable, the others are fixed
     # to group by another parameter, the parameter-collection - over which the for loop iterates - has to be changed
 
-    if benchmark_name == "monte-carlo":
-        for limit in parameters.limits:
-            files_dict[str(limit)] = \
-                [file for file in os.listdir(path)
-                 if f"thread-count-8_" in file
-                 and f"_{limit}MHz" in file]
-
-    elif benchmark_name == "vector-operations":
+    if benchmark_name == "vector-operations":
         for vectorization_size in parameters.vectorization_sizes:
             files_dict[str(vectorization_size)] = \
                 [file for file in os.listdir(path)
@@ -34,11 +27,20 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
                  and "_2800MHz" in file
                  and f"vectorization-size-{vectorization_size}_" in file
                  and "vector-size-4096_" in file
-                 and "optimization-flag-O1_" in file
                  and "precision-float_" in file
                  and "instruction-set-AVX_"]
 
-    if benchmark_name == "stream":
+    elif benchmark_name == "monte-carlo":
+        for limit in parameters.limits:
+            files_dict[str(limit)] = \
+                [file for file in os.listdir(path)
+                 if f"thread-count-8_" in file
+                 and f"_{limit}MHz" in file]
+
+    elif benchmark_name == "heat-stencil":
+        pass
+
+    elif benchmark_name == "stream":
         for limit in parameters.limits:
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)

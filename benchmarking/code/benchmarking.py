@@ -106,6 +106,29 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     #  the parameters object
 
     for thread_count in parameters.thread_counts:
+
+        if "vector-operations" in parameters.benchmark_names:
+            for vectorization_size in parameters.vectorization_sizes:
+                for vector_size in parameters.vector_sizes:
+                    for precision in parameters.precisions:
+                        for instruction_set in parameters.instruction_sets:
+                            os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
+                                      f"VECTORIZATION_SIZE={vectorization_size} "
+                                      f"> /dev/null")
+
+                            subprocess.run([
+                                f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
+                                f"vector-operations/"
+                                f""
+                                f"vector-operations_instruction-set-{instruction_set}_precision-{precision}_vector-size-{vector_size}_"
+                                f"vectorization-size-{vectorization_size}_"
+                                f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                                f""
+                                f"-e power/energy-{perf_stat_command}/ "
+                                f""
+                                f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size}"
+                            ], shell=True)
+
         for optimization_flag in parameters.optimization_flags:
 
             if "monte-carlo" in parameters.benchmark_names:
@@ -116,29 +139,6 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                     f""
                     f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out 100000000 {thread_count}"
                 ], shell=True)
-
-            if "vector-operations" in parameters.benchmark_names:
-                for vectorization_size in parameters.vectorization_sizes:
-                    for vector_size in parameters.vector_sizes:
-                        for precision in parameters.precisions:
-                            for instruction_set in parameters.instruction_sets:
-
-                                os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
-                                          f"VECTORIZATION_SIZE={vectorization_size} OPTIMIZATION_FLAG={optimization_flag} "
-                                          f"> /dev/null")
-
-                                subprocess.run([
-                                    f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
-                                    f"vector-operations/"
-                                    f""
-                                    f"vector-operations_instruction-set-{instruction_set}_precision-{precision}_vector-size-{vector_size}_"
-                                    f"vectorization-size-{vectorization_size}_optimization-flag-{optimization_flag}_"
-                                    f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                                    f""
-                                    f"-e power/energy-{perf_stat_command}/ "
-                                    f""
-                                    f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size}"
-                                ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
                 subprocess.run([
