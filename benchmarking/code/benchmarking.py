@@ -54,7 +54,6 @@ def _save_config(parameters):
         f"vectorization_sizes:{parameters.vectorization_sizes}\n"
         f"vector_sizes:{parameters.vector_sizes}\n"
         f"precisions:{parameters.precisions}\n"
-        f"map_sizes:{parameters.map_sizes}\n"
         f"optimization_flags:{parameters.optimization_flags}\n"
         f"instruction_sets:{parameters.instruction_sets}\n"
     )
@@ -142,19 +141,18 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                                 ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
-                for map_size in parameters.map_sizes:
-                    subprocess.run([
-                        f"echo {password}|sudo -S perf stat "
-                        f""
-                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
-                        f""
-                        f"heat-stencil_map-size-{map_size}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
-                        f"{limit}MHz_iteration-{iteration}.txt "
-                        f""
-                        f"-e power/energy-{perf_stat_command}/ "
-                        f""
-                        f"./../benchmarks/heat_stencil.out {map_size} > /dev/null"
-                    ], shell=True)
+                subprocess.run([
+                    f"echo {password}|sudo -S perf stat "
+                    f""
+                    f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
+                    f""
+                    f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
+                    f"{limit}MHz_iteration-{iteration}.txt "
+                    f""
+                    f"-e power/energy-{perf_stat_command}/ "
+                    f""
+                    f"./../benchmarks/heat_stencil.out 400 > /dev/null"
+                ], shell=True)
 
             if "stream" in parameters.benchmark_names:
                 subprocess.run([
@@ -238,12 +236,11 @@ def initialize_parameters():
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
     my_precisions = ["single", "double"]
-    my_map_sizes = [100, 200, 400, 800]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
-                      my_vectorization_sizes, my_vector_sizes, my_precisions, my_map_sizes, my_optimization_flags, my_instruction_sets)
+                      my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets)
 
 
 if __name__ == "__main__":

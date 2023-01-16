@@ -119,7 +119,6 @@ def get_config(folder_name):
                       _as_list(parameters["vectorization_sizes"]),
                       _as_list(parameters["vector_sizes"]),
                       parameters["precisions"],
-                      _as_list(parameters["map_sizes"]),
                       parameters["optimization_flags"],
                       _as_list(parameters["instruction_sets"]))
 
