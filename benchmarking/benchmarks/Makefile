@@ -12,8 +12,8 @@ all: monte_carlo heat_stencil
 
 sse: vector_operations_SSE_single
 sse2: vector_operations_SSE2_double
-avx: vector_operations_AVX_double vector_operations_AVX_single
-avx512: vector_operations_AVX512_double vector_operations_AVX512_single
+avx: vector_operations_AVX_single vector_operations_AVX_double
+avx512: vector_operations_AVX512_single vector_operations_AVX512_double
 vector_operations: sse sse2 avx
 
 
@@ -32,14 +32,14 @@ vector_operations_SSE_single:
 vector_operations_SSE2_double:
 	$(CC) $(CFLAGS) $(SSEFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE2_double.c -o vector_operations_SSE2_double.out
 
-vector_operations_AVX_double:
-	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
-
 vector_operations_AVX_single:
 	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_single.c -o vector_operations_AVX_single.out
 
-vector_operations_AVX512_double:
-	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
+vector_operations_AVX_double:
+	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
 
 vector_operations_AVX512_single:
 	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
+
+vector_operations_AVX512_double:
+	$(CC) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
