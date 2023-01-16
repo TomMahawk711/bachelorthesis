@@ -21,8 +21,6 @@ int main(int argc, char** argv){
 		size = atol(argv[1]);
 	}
 
-vector_operations_SSE_double:
-	$(CC) $(CFLAGS) $(SSEFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_double.c -o vector_operations_SSE_double.out
 	double a[size], b[size], c[size];
 	init_array(a, size, 0);
 	init_array(b, size, 1);
