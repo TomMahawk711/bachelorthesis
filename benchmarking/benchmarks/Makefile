@@ -4,17 +4,17 @@ OPTIMIZATION_FLAG?=O1
 CC=gcc
 CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp
 SSEFLAGS=-O1
-AVXFLAGS=-O2 -march=native -Iinclude
+AVXFLAGS=-O2 -mavx
 OFLAGS=-$(OPTIMIZATION_FLAG)
 
 
-all: monte_carlo heat_stencil
+all: monte_carlo heat_stencil vector_operations
 
 sse: vector_operations_SSE_single
 sse2: vector_operations_SSE2_double
 avx: vector_operations_AVX_single vector_operations_AVX_double
 avx512: vector_operations_AVX512_single vector_operations_AVX512_double
-vector_operations: sse sse2 avx
+vector_operations: sse sse2 avx avx512
 
 
 clean:
