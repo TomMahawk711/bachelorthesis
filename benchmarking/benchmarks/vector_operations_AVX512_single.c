@@ -48,11 +48,11 @@ void calculate_array(float* a, float* b, float* c, int size){
 
 	for(int run = 0; run < REPETITIONS; ++run) {
 		for(int i = 0; i < size; i += 16) {
-			a_512 = _mm512_load_ps(&a[i]);
-			b_512 = _mm512_load_ps(&b[i]);
-			c_512 = _mm512_load_ps(&c[i]);
+			a_512 = _mm512_loadu_ps(&a[i]);
+			b_512 = _mm512_loadu_ps(&b[i]);
+			c_512 = _mm512_loadu_ps(&c[i]);
 			a_512 = _mm512_add_ps(a_512, _mm512_mul_ps(b_512, c_512));
-			_mm512_store_ps(&a[i], a_512);
+			_mm512_storeu_ps(&a[i], a_512);
 		}
 	}
 }

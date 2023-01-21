@@ -48,11 +48,11 @@ void calculate_array(double* a, double* b, double* c, int size){
 
 	for(int run = 0; run < REPETITIONS; ++run) {
 		for(int i = 0; i < size; i += 4) {
-			a_256 = _mm256_load_pd(&a[i]);
-			b_256 = _mm256_load_pd(&b[i]);
-			c_256 = _mm256_load_pd(&c[i]);
+			a_256 = _mm256_loadu_pd(&a[i]);
+			b_256 = _mm256_loadu_pd(&b[i]);
+			c_256 = _mm256_loadu_pd(&c[i]);
 			a_256 = _mm256_add_pd(a_256, _mm256_mul_pd(b_256, c_256));
-			_mm256_store_pd(&a[i], a_256);
+			_mm256_storeu_pd(&a[i], a_256);
 		}
 	}
 }
