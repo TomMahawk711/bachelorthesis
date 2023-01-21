@@ -2,9 +2,10 @@ VECTORIZATION_SIZE?=2
 OPTIMIZATION_FLAG?=O1
 
 CC=gcc
-CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp
+CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp -march=native
 SSEFLAGS=-O1
-AVXFLAGS=-O2 -mavx
+AVXFLAGS=-O2
+AVX512FLAGS=-O2
 OFLAGS=-$(OPTIMIZATION_FLAG)
 
 
@@ -14,7 +15,7 @@ sse: vector_operations_SSE_single
 sse2: vector_operations_SSE2_double
 avx: vector_operations_AVX_single vector_operations_AVX_double
 avx512: vector_operations_AVX512_single vector_operations_AVX512_double
-vector_operations: sse sse2 avx avx512
+vector_operations: sse sse2 avx
 
 
 clean:
@@ -39,7 +40,7 @@ vector_operations_AVX_double:
 	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
 
 vector_operations_AVX512_single:
-	$(CC) $(CFLAGS) -mavx512f -O2 -Iinclude -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
+	$(CC) $(CFLAGS) $(AVX512FLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
 
 vector_operations_AVX512_double:
-	$(CC) $(CFLAGS) -mavx512f -O2 -Iinclude -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
+	$(CC) $(CFLAGS) $(AVX512FLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
