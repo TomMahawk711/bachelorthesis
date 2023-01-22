@@ -124,7 +124,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                     for precision in parameters.precisions:
                         for instruction_set in parameters.instruction_sets:
 
-                            if not _valid_parameters(vectorization_size, precision, instruction_set):
+                            if not _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
                                 continue
 
                             os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
@@ -183,7 +183,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 ], shell=True)
 
 
-def _valid_parameters(vectorization_size, precision, instruction_set):
+def _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
     if instruction_set == "SSE" and (precision == "double" or vectorization_size > 4):
         return False
 
