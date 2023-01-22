@@ -201,10 +201,6 @@ def _valid_parameters_for_vectorization(vectorization_size, precision, instructi
     return True
 
 
-def get_limits(min_value, max_value, step_size):
-    return [x for x in range(min_value, max_value, step_size)]
-
-
 # --------------------POWERCAP_STUFF--------------------
 
 
@@ -248,7 +244,7 @@ def initialize_parameters():
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
-    my_limits = get_limits(my_min_value, my_max_value, my_step_size)
+    my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
     my_thread_counts = [1, 2, 4, 8, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096]
