@@ -1,8 +1,9 @@
+.DS_STORE
 .idea
 .vscode
+*.asm
 *.out
 *.png
 *.txt
 venv
-.DS_STORE
 __pycache__
