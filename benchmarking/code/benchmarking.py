@@ -37,6 +37,16 @@ def _read_password():
     return password
 
 
+def _delete_old_outputs(parameters):
+    # TODO: update for new directory structure
+
+    print("\n deleting old outputs...")
+    for benchmark_name in parameters.benchmark_names:
+        files = glob.glob(f"outputs/{benchmark_name}/{parameters.limit_type}/*")
+        for f in files:
+            os.remove(f)
+
+
 def _create_output_directory(parameters):
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
@@ -115,8 +125,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                     for precision in parameters.precisions:
                         for instruction_set in parameters.instruction_sets:
 
-                            if (instruction_set == "SSE2" and precision == "single") or \
-                                    (instruction_set == "SSE" and precision == "double"):
+                            if not _valid_parameters(vectorization_size, precision, instruction_set):
                                 continue
 
                             os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
@@ -175,20 +184,22 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 ], shell=True)
 
 
-def _get_measurement(tokens, unit):
-    measurement_index = tokens.index(unit) - 1
-    measurement = tokens[measurement_index]
-    return float(measurement)
+def _valid_parameters(vectorization_size, precision, instruction_set):
+    if instruction_set == "SSE" and (precision == "double" or vectorization_size > 4):
+        return False
 
+    elif instruction_set == "SSE2" and (precision == "single" or vectorization_size > 2):
+        return False
 
-def _delete_old_outputs(parameters):
-    # TODO: update for new directory structure
+    elif instruction_set == "AVX" and ((precision == "single" and vectorization_size > 8) or
+                                       (precision == "double" and vectorization_size > 4)):
+        return False
 
-    print("\n deleting old outputs...")
-    for benchmark_name in parameters.benchmark_names:
-        files = glob.glob(f"outputs/{benchmark_name}/{parameters.limit_type}/*")
-        for f in files:
-            os.remove(f)
+    elif instruction_set == "AVX512" and ((precision == "single" and vectorization_size > 16) or
+                                          (precision == "double" and vectorization_size > 8)):
+        return False
+
+    return True
 
 
 def get_limits(min_value, max_value, step_size):
