@@ -2,9 +2,9 @@ VECTORIZATION_SIZE?=2
 OPTIMIZATION_FLAG?=O1
 
 CC=gcc
-CFLAGS=-std=gnu11 -Wall -Wextra -pedantic -fopenmp -march=native
+CFLAGS=-std=gnu11 -Wall -Wextra -Wpedantic -fopenmp -march=native -fno-tree-vectorize
 SSEFLAGS=-O1
-AVXFLAGS=-O2
+AVXFLAGS=-O1
 AVX512FLAGS=-O2
 OFLAGS=-$(OPTIMIZATION_FLAG)
 
@@ -28,19 +28,19 @@ heat_stencil:
 	$(CC) $(CFLAGS) $(OFLAGS) heat_stencil.c -o heat_stencil.out
 
 vector_operations_SSE_single:
-	$(CC) $(CFLAGS) $(SSEFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_single.c -o vector_operations_SSE_single.out
+	$(CC) $(SSEFLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE_single.c -o vector_operations_SSE_single.out
 
 vector_operations_SSE2_double:
-	$(CC) $(CFLAGS) $(SSEFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE2_double.c -o vector_operations_SSE2_double.out
+	$(CC) $(SSEFLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_SSE2_double.c -o vector_operations_SSE2_double.out
 
 vector_operations_AVX_single:
-	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_single.c -o vector_operations_AVX_single.out
+	$(CC) $(AVXFLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_single.c -o vector_operations_AVX_single.out
 
 vector_operations_AVX_double:
-	$(CC) $(CFLAGS) $(AVXFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
+	$(CC) $(AVXFLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX_double.c -o vector_operations_AVX_double.out
 
 vector_operations_AVX512_single:
-	$(CC) $(CFLAGS) $(AVX512FLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
+	$(CC) $(AVX512FLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_single.c -o vector_operations_AVX512_single.out
 
 vector_operations_AVX512_double:
-	$(CC) $(CFLAGS) $(AVX512FLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
+	$(CC) $(AVX512FLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector_operations_AVX512_double.c -o vector_operations_AVX512_double.out
