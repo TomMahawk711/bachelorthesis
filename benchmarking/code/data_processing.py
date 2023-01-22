@@ -27,7 +27,7 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
                  and "_2800MHz" in file
                  and f"vectorization-size-{vectorization_size}_" in file
                  and "vector-size-4096_" in file
-                 and "precision-float_" in file
+                 and "precision-single_" in file
                  and "instruction-set-AVX_"]
 
     elif benchmark_name == "monte-carlo":
