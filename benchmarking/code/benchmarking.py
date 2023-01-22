@@ -109,6 +109,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
 
         if "vector-operations" in parameters.benchmark_names:
 
+            # TODO: analyze which vectorization sizes are reasonable for different instruction sets and precisions
             for vectorization_size in parameters.vectorization_sizes:
                 for vector_size in parameters.vector_sizes:
                     for precision in parameters.precisions:
