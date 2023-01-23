@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>
+#include <malloc.h>
 #include "vector_operations_aux.h"
 
 void calculate_array(double*, double*, double*, int, int);
@@ -18,7 +19,10 @@ int main(int argc, char** argv){
 		size = atol(argv[1]);
 	}
 
-	double a[size], b[size], c[size];
+	double* a = (double*) memalign(sizeof(double)*8, sizeof(double)*size);
+	double* b = (double*) memalign(sizeof(double)*8, sizeof(double)*size);
+	double* c = (double*) memalign(sizeof(double)*8, sizeof(double)*size);
+
 	init_array_double_precision(a, size, 0);
 	init_array_double_precision(b, size, 1);
 	init_array_double_precision(c, size, 2);
@@ -31,6 +35,10 @@ int main(int argc, char** argv){
 	//print_array_double_precision(a, size);
     //check_result_double_precision(a, size);
 
+    free(a);
+    free(b);
+    free(c);
+
 	return EXIT_SUCCESS;
 }
 
@@ -41,11 +49,11 @@ void calculate_array(double* a, double* b, double* c, int size, int repetitions)
 
     for(int run = 0; run < repetitions; ++run) {
 		for(int i = 0; i < size; i += 4) {
-			a_256 = _mm256_loadu_pd(&a[i]);
-			b_256 = _mm256_loadu_pd(&b[i]);
-			c_256 = _mm256_loadu_pd(&c[i]);
+			a_256 = _mm256_load_pd(&a[i]);
+			b_256 = _mm256_load_pd(&b[i]);
+			c_256 = _mm256_load_pd(&c[i]);
 			a_256 = _mm256_add_pd(a_256, _mm256_mul_pd(b_256, c_256));
-			_mm256_storeu_pd(&a[i], a_256);
+			_mm256_store_pd(&a[i], a_256);
 		}
 	}
 }

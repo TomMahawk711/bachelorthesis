@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>
+#include <malloc.h>
 #include "vector_operations_aux.h"
 
 void calculate_array(float*, float*, float*, int, int);
@@ -18,7 +19,10 @@ int main(int argc, char** argv){
 		size = atol(argv[1]);
 	}
 
-	float a[size], b[size], c[size];
+	float* a = (float*) memalign(sizeof(float)*8, sizeof(float)*size);
+	float* b = (float*) memalign(sizeof(float)*8, sizeof(float)*size);
+	float* c = (float*) memalign(sizeof(float)*8, sizeof(float)*size);
+
 	init_array_single_precision(a, size, 0);
 	init_array_single_precision(b, size, 1);
 	init_array_single_precision(c, size, 2);
@@ -31,6 +35,10 @@ int main(int argc, char** argv){
 	//print_array_single_precision(a, size);
     //check_result_single_precision(a, size);
 
+    free(a);
+    free(b);
+    free(c);
+
 	return EXIT_SUCCESS;
 }
 
@@ -41,11 +49,11 @@ void calculate_array(float* a, float* b, float* c, int size, int repetitions){
 
 	for(int run = 0; run < repetitions; ++run) {
 		for(int i = 0; i < size; i += 16) {
-			a_512 = _mm512_loadu_ps(&a[i]);
-			b_512 = _mm512_loadu_ps(&b[i]);
-			c_512 = _mm512_loadu_ps(&c[i]);
+			a_512 = _mm512_load_ps(&a[i]);
+			b_512 = _mm512_load_ps(&b[i]);
+			c_512 = _mm512_load_ps(&c[i]);
 			a_512 = _mm512_add_ps(a_512, _mm512_mul_ps(b_512, c_512));
-			_mm512_storeu_ps(&a[i], a_512);
+			_mm512_store_ps(&a[i], a_512);
 		}
 	}
 }
