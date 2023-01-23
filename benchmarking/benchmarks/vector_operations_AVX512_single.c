@@ -4,7 +4,7 @@
 #include <immintrin.h>
 #include "vector_operations_aux.h"
 
-void calculate_array(float*, float*, float*, int);
+void calculate_array(float*, float*, float*, int, int);
 
 int main(int argc, char** argv){
 
@@ -24,7 +24,7 @@ int main(int argc, char** argv){
 	init_array_single_precision(c, size, 2);
 
 	//double start_time = omp_get_wtime();
-	calculate_array(a, b, c, size);
+	calculate_array(a, b, c, size, repetitions);
 	//double end_time = omp_get_wtime();
 
 	//printf("time: %f seconds\n", end_time - start_time);
@@ -34,7 +34,7 @@ int main(int argc, char** argv){
 	return EXIT_SUCCESS;
 }
 
-void calculate_array(float* a, float* b, float* c, int size){
+void calculate_array(float* a, float* b, float* c, int size, int repetitions){
     __m512 a_512;
 	__m512 b_512;
 	__m512 c_512;

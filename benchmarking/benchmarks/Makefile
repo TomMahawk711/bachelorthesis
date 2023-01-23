@@ -5,7 +5,7 @@ CC=gcc
 CFLAGS=-std=gnu11 -Wall -Wextra -Wpedantic -fopenmp -march=native
 SSEFLAGS=-O1
 AVXFLAGS=-O1
-AVX512FLAGS=-O2
+AVX512FLAGS=-O2 -mavx512f
 OFLAGS=-$(OPTIMIZATION_FLAG)
 
 
