@@ -2,16 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <immintrin.h>
+#include "vector_operations_aux.h"
 
-#define REPETITIONS 1e6
-
-void init_array(float*, int, float);
 void calculate_array(float*, float*, float*, int);
-void print_array(float*, int);
-void print_output();
 
 int main(int argc, char** argv){
 
+    int const repetitions = 1e6;
     int size = 0;
 
 	if(argc < 2) {
@@ -22,23 +19,19 @@ int main(int argc, char** argv){
 	}
 
 	float a[size], b[size], c[size];
-	init_array(a, size, 0);
-	init_array(b, size, 1);
-	init_array(c, size, 2);
+	init_array_single_precision(a, size, 0);
+	init_array_single_precision(b, size, 1);
+	init_array_single_precision(c, size, 2);
 
 	//double start_time = omp_get_wtime();
 	calculate_array(a, b, c, size);
 	//double end_time = omp_get_wtime();
 
-	// print_output(start_time, end_time, a, size);
+	//printf("time: %f seconds\n", end_time - start_time);
+	//print_array_single_precision(a, size);
+    //check_result_single_precision(a, size);
 
 	return EXIT_SUCCESS;
-}
-
-void init_array(float* arr, int vector_size, float init_num){
-    for(int i = 0; i<vector_size; ++i){
-        arr[i] = init_num;
-    }
 }
 
 void calculate_array(float* a, float* b, float* c, int size){
@@ -46,7 +39,7 @@ void calculate_array(float* a, float* b, float* c, int size){
 	__m512 b_512;
 	__m512 c_512;
 
-	for(int run = 0; run < REPETITIONS; ++run) {
+	for(int run = 0; run < repetitions; ++run) {
 		for(int i = 0; i < size; i += 16) {
 			a_512 = _mm512_loadu_ps(&a[i]);
 			b_512 = _mm512_loadu_ps(&b[i]);
@@ -55,12 +48,4 @@ void calculate_array(float* a, float* b, float* c, int size){
 			_mm512_storeu_ps(&a[i], a_512);
 		}
 	}
-}
-
-void print_array(float* arr, int vector_size){
-    printf("[ ");
-    for(int i = 0; i<vector_size; i++){
-        printf("%.2f ", arr[i]);
-    }
-    printf("]\n");
 }
