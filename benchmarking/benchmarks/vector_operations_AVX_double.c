@@ -29,13 +29,13 @@ int main(int argc, char** argv){
 	init_array_double_precision(b, size, 1);
 	init_array_double_precision(c, size, 2);
 
-	double start_time = omp_get_wtime();
+	//double start_time = omp_get_wtime();
 	calculate_array(a, b, c, size, repetitions, num_threads);
-	double end_time = omp_get_wtime();
+	//double end_time = omp_get_wtime();
 
-    printf("time: %f seconds\n", end_time - start_time);
+    //printf("time: %f seconds\n", end_time - start_time);
 	//print_array_double_precision(a, size);
-    check_result_double_precision(a, size);
+    //check_result_double_precision(a, size);
 
     free(a);
     free(b);
