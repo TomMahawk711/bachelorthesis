@@ -141,7 +141,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                                 f""
                                 f"-e power/energy-{perf_stat_command}/ "
                                 f""
-                                f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size}"
+                                f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count}"
                             ], shell=True)
 
         for optimization_flag in parameters.optimization_flags:
