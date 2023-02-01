@@ -247,9 +247,10 @@ def initialize_parameters():
     my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
+    my_limits = [2200, 2800, 3800]
     my_thread_counts = [1, 2, 4, 8, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
-    my_vector_sizes = [512, 1024, 2048, 4096]
+    my_vector_sizes = [512, 1024, 2048, 4096, 16384, 65536]
     my_precisions = ["single", "double"]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
