@@ -66,6 +66,8 @@ def _save_config(parameters):
         f"precisions:{parameters.precisions}\n"
         f"optimization_flags:{parameters.optimization_flags}\n"
         f"instruction_sets:{parameters.instruction_sets}\n"
+        f"stream_array_sizes:{parameters.stream_array_sizes}\n"
+        f"map_sizes:{parameters.map_sizes}\n"
     )
 
 
@@ -92,8 +94,8 @@ def frequency_limit_benchmark(parameters, password, perf_stat_command):
 
     _set_scaling_governor("userspace", password)
 
-    for iteration in tqdm(range(0, parameters.iterations)):
-        for limit in tqdm(parameters.limits):
+    for iteration in tqdm(range(0, parameters.iterations), position=0, desc="iterations         ", leave=False, colour="red"):
+        for limit in tqdm(parameters.limits, position=1, desc="frequency limits   ", leave=False, colour="#ff8800"):
             _set_frequency(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
@@ -115,14 +117,14 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through, also add it in the benchmarks attribute of
     #  the parameters object
 
-    for thread_count in parameters.thread_counts:
+    for thread_count in tqdm(parameters.thread_counts, position=2, desc="thread counts      ", leave=False, colour="yellow"):
+        for precision in tqdm(parameters.precisions, position=3, desc="precisions         ", leave=False, colour="green"):
 
-        if "vector-operations" in parameters.benchmark_names:
+            if "vector-operations" in parameters.benchmark_names:
 
-            for vectorization_size in parameters.vectorization_sizes:
-                for vector_size in parameters.vector_sizes:
-                    for precision in parameters.precisions:
-                        for instruction_set in parameters.instruction_sets:
+                for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False, colour="blue"):
+                    for vector_size in tqdm(parameters.vector_sizes, position=5, desc="vector_size         ", leave=False, colour="indigo"):
+                        for instruction_set in tqdm(parameters.instruction_sets, position=4, desc="instruction_sets   ", leave=False, colour="violet"):
 
                             if not _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
                                 continue
@@ -144,7 +146,27 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                                 f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count}"
                             ], shell=True)
 
-        for optimization_flag in parameters.optimization_flags:
+            if "stream" in parameters.benchmark_names:
+                stream_type = ""
+                if precision == "single":
+                    stream_type = " -DSTREAM_TYPE=float"
+
+                for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc="array_size         ", leave=False, colour="blue"):
+                    subprocess.run([
+                        f"echo {password}|sudo -S perf stat "
+                        f""
+                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+                        f""
+                        f"stream_precision-{precision}_stream-array-size-{stream_array_size}_"
+                        f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                        f""
+                        f"-e power/energy-{perf_stat_command}/ "
+                        f""
+                        f"./../benchmarks/stream/stream_c.exe -DSTREAM_ARRAY_SIZE {stream_array_size} -DNUM_THREADS {thread_count}"
+                        f"{stream_type} > /dev/null"  # TODO: get output of stream
+                    ], shell=True)
+
+        for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc="optimization       ", leave=False, colour="green"):
 
             if "monte-carlo" in parameters.benchmark_names:
                 subprocess.run([
@@ -156,32 +178,18 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
-                subprocess.run([
-                    f"echo {password}|sudo -S perf stat "
-                    f""
-                    f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
-                    f""
-                    f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
-                    f"{limit}MHz_iteration-{iteration}.txt "
-                    f""
-                    f"-e power/energy-{perf_stat_command}/ "
-                    f""
-                    f"./../benchmarks/heat_stencil.out 400 > /dev/null"
-                ], shell=True)
-
-            if "stream" in parameters.benchmark_names:
-                for stream_array_size in parameters.stream_array_sizes:
+                for map_size in tqdm(parameters.map_sizes, position=4, desc="map_sizes          ", leave=False, colour="blue"):
                     subprocess.run([
                         f"echo {password}|sudo -S perf stat "
                         f""
-                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
                         f""
-                        f"stream_stream-array-size-{stream_array_size}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
+                        f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
                         f"{limit}MHz_iteration-{iteration}.txt "
                         f""
                         f"-e power/energy-{perf_stat_command}/ "
                         f""
-                        f"./../benchmarks/stream/stream_c.exe > /dev/null"
+                        f"./../benchmarks/heat_stencil.out {map_size} > /dev/null"
                     ], shell=True)
 
 
@@ -242,9 +250,9 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["monte-carlo", "vector-operations", "heat-stencil"]
+    my_benchmark_names = ["heat-stencil", "monte-carlo"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
-    my_iterations = 10
+    my_iterations = 5
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
     my_limits = [2200, 2800, 3800]
@@ -254,11 +262,12 @@ def initialize_parameters():
     my_precisions = ["single", "double"]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
-    my_stream_array_sizes = [1e5, 1e6, 1e7, 1e8, 1e9, 1e10]
+    my_stream_array_sizes = [1e3, 1e4, 1e5, 1e6, 1e7, 1e8]
+    my_map_sizes = [100, 200, 400, 800]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
-                      my_stream_array_sizes)
+                      my_stream_array_sizes, my_map_sizes)
 
 
 if __name__ == "__main__":
