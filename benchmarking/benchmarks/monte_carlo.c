@@ -19,7 +19,7 @@ int main(int argc, char** argv){
     unsigned int seed = 0;
     long total_inside = 0;
     omp_set_num_threads(num_threads);
-    double start_time = omp_get_wtime();
+    //double start_time = omp_get_wtime();
 
     #pragma omp parallel private(seed)
     {
@@ -41,8 +41,8 @@ int main(int argc, char** argv){
         }
     }
 
-    double end_time = omp_get_wtime();
-    printf("sum: %f time: %2.6f \n", 4 * (float) total_inside / n, end_time-start_time);
+    //double end_time = omp_get_wtime();
+    //printf("sum: %f time: %2.6f \n", 4 * (float) total_inside / n, end_time-start_time);
 
 
     return EXIT_SUCCESS;
