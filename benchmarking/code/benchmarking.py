@@ -148,9 +148,6 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                             ], shell=True)
 
             if "stream" in parameters.benchmark_names:
-                stream_type = ""
-                if precision == "single":
-                    stream_type = " -DSTREAM_TYPE=float"
 
                 for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc="array_size\t\t ", leave=False, colour="blue"):
                     subprocess.run([
@@ -168,6 +165,7 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
 
         for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc="optimization\t   ", leave=False, colour="green"):
 
+            # TODO: add parameter for problem size (1e6-1e10 maybe?)
             if "monte-carlo" in parameters.benchmark_names:
                 subprocess.run([
                     f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
