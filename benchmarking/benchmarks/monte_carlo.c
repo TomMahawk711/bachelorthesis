@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv){
 
-    int n = 0;
+    long n = 0;
     int num_threads = 1;
 
     if(argc < 3){
@@ -26,7 +26,7 @@ int main(int argc, char** argv){
         long partial_inside = 0;
         seed = time(NULL);
         #pragma omp for schedule(static)
-        for(int i = 0; i < n; i++){
+        for(long i = 0; i < n; i++){
             float x = ((float) rand_r(&seed) / (RAND_MAX));
             float y = ((float) rand_r(&seed) / (RAND_MAX));
             if((x*x + y*y)<= 1){
