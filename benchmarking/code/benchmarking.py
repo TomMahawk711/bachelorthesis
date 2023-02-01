@@ -117,13 +117,14 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through, also add it in the benchmarks attribute of
     #  the parameters object
 
-    for thread_count in tqdm(parameters.thread_counts, position=2, desc="thread counts\t  ", leave=False, colour="yellow"):
-        for precision in tqdm(parameters.precisions, position=3, desc="precisions\t\t ", leave=False, colour="green"):
+    for thread_count in tqdm(parameters.thread_counts, position=2, desc="thread counts      ", leave=False, colour="yellow"):
+        for precision in tqdm(parameters.precisions, position=3, desc="precisions         ", leave=False, colour="green"):
 
             if "vector-operations" in parameters.benchmark_names:
 
-                for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False, colour="blue"):
-                    for vector_size in tqdm(parameters.vector_sizes, position=5, desc="vector_size\t\t ", leave=False, colour="indigo"):
+                for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False,
+                                               colour="blue"):
+                    for vector_size in tqdm(parameters.vector_sizes, position=5, desc="vector_size         ", leave=False, colour="indigo"):
                         for instruction_set in tqdm(parameters.instruction_sets, position=6,
                                                     desc="instruction_sets   ", leave=False, colour="violet"):
 
@@ -149,7 +150,8 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
 
             if "stream" in parameters.benchmark_names:
 
-                for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc="array_size\t\t ", leave=False, colour="blue"):
+                for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc="array_size         ",
+                                              leave=False, colour="blue"):
                     subprocess.run([
                         f"echo {password}|sudo -S perf stat "
                         f""
@@ -163,20 +165,21 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                         f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream, set parameters via Makefile
                     ], shell=True)
 
-        for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc="optimization\t   ", leave=False, colour="green"):
+        for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc="optimization       ", leave=False, colour="green"):
 
-            # TODO: add parameter for problem size (1e6-1e10 maybe?)
-            if "monte-carlo" in parameters.benchmark_names:
-                subprocess.run([
-                    f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
-                    f""
-                    f"monte-carlo_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                    f""
-                    f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out 100000000 {thread_count}"
-                ], shell=True)
+            for dot_count in tqdm(parameters.dot_counts, position=4, desc="dot_counts         ", leave=False, colour="blue"):
+                if "monte-carlo" in parameters.benchmark_names:
+                    subprocess.run([
+                        f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
+                        f""
+                        f"monte-carlo_dot-count-{dot_count}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
+                        f"{limit}MHz_iteration-{iteration}.txt "
+                        f""
+                        f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out {dot_count} {thread_count}"
+                    ], shell=True)
 
             if "heat-stencil" in parameters.benchmark_names:
-                for map_size in tqdm(parameters.map_sizes, position=4, desc="map_sizes\t\t  ", leave=False, colour="blue"):
+                for map_size in tqdm(parameters.map_sizes, position=4, desc="map_sizes          ", leave=False, colour="blue"):
                     subprocess.run([
                         f"echo {password}|sudo -S perf stat "
                         f""
@@ -262,10 +265,11 @@ def initialize_parameters():
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
     my_stream_array_sizes = [1e3, 1e4, 1e5, 1e6, 1e7, 1e8]
     my_map_sizes = [100, 200, 400, 800]
+    my_dot_counts = [1e6, 1e7, 1e8, 1e9]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
-                      my_stream_array_sizes, my_map_sizes)
+                      my_stream_array_sizes, my_map_sizes, my_dot_counts)
 
 
 if __name__ == "__main__":

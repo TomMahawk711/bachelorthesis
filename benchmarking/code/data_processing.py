@@ -129,7 +129,8 @@ def get_config(folder_name):
                       parameters["optimization_flags"],
                       _as_list(parameters["instruction_sets"]),
                       _as_list(parameters["stream_array_sizes"]),
-                      _as_list(parameters["map_sizes"]))
+                      _as_list(parameters["map_sizes"]),
+                      _as_list(parameters["dot_counts"]))
 
 
 def _build_parameter_dict(folder_name):
