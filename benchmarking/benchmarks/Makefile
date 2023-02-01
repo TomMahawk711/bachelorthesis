@@ -45,5 +45,4 @@ vector_operations_AVX512_double:
 	$(CC) $(AVX512FLAGS) $(CFLAGS) -DVECTORIZATION_SIZE=$(VECTORIZATION_SIZE) vector-operations/vector_operations_AVX512_double.c vector-operations/vector_operations_aux.c -o vector_operations_AVX512_double.out
 
 stream:
-	cd stream
-	make
+	cd stream && make  # does not work
