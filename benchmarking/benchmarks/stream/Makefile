@@ -4,7 +4,7 @@ CFLAGS = -O2 -fopenmp
 FC = gfortran
 FFLAGS = -O2 -fopenmp
 
-all: stream_f.exe stream_c.exe
+all: stream_c.exe
 
 stream_f.exe: stream.f mysecond.o
 	$(CC) $(CFLAGS) -c mysecond.c
