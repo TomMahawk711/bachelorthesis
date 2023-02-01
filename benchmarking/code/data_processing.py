@@ -49,7 +49,8 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-8_" in file
-                 and f"_{limit}MHz" in file]
+                 and f"_{limit}MHz" in file
+                 and f"stream-array-size-100000000"]
 
     data_dict = _get_data(files_dict, path)
     return data_dict, files_dict
@@ -126,7 +127,8 @@ def get_config(folder_name):
                       _as_list(parameters["vector_sizes"]),
                       parameters["precisions"],
                       parameters["optimization_flags"],
-                      _as_list(parameters["instruction_sets"]))
+                      _as_list(parameters["instruction_sets"]),
+                      _as_list(parameters["stream_array_sizes"]))
 
 
 def _build_parameter_dict(folder_name):
