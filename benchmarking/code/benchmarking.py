@@ -170,17 +170,19 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 ], shell=True)
 
             if "stream" in parameters.benchmark_names:
-                subprocess.run([
-                    f"echo {password}|sudo -S perf stat "
-                    f""
-                    f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
-                    f""
-                    f"stream_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                    f""
-                    f"-e power/energy-{perf_stat_command}/ "
-                    f""
-                    f"./../benchmarks/stream/stream_c.exe > /dev/null"
-                ], shell=True)
+                for stream_array_size in parameters.stream_array_sizes:
+                    subprocess.run([
+                        f"echo {password}|sudo -S perf stat "
+                        f""
+                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+                        f""
+                        f"stream_stream-array-size-{stream_array_size}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
+                        f"{limit}MHz_iteration-{iteration}.txt "
+                        f""
+                        f"-e power/energy-{perf_stat_command}/ "
+                        f""
+                        f"./../benchmarks/stream/stream_c.exe > /dev/null"
+                    ], shell=True)
 
 
 def _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
@@ -251,9 +253,11 @@ def initialize_parameters():
     my_precisions = ["single", "double"]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
+    my_stream_array_sizes = [1e5, 1e6, 1e7, 1e8, 1e9, 1e10]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
-                      my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets)
+                      my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
+                      my_stream_array_sizes)
 
 
 if __name__ == "__main__":
