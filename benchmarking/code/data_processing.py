@@ -38,7 +38,11 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
                  and f"_{limit}MHz" in file]
 
     elif benchmark_name == "heat-stencil":
-        pass
+        for limit in parameters.limits:
+            files_dict[str(limit)] = \
+                [file for file in os.listdir(path)
+                 if f"thread-count-8_" in file
+                 and f"_{limit}MHz" in file]
 
     elif benchmark_name == "stream":
         for limit in parameters.limits:
