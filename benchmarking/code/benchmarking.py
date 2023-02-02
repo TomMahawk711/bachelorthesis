@@ -150,15 +150,14 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
 
                 subprocess.run([
                     f"echo {password}|sudo -S perf stat "
-                    f""
+                    +
                     f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
-                    f""
+                    +
                     f"vector-operations_instruction-set-{instruction_set}_precision-{precision}_vector-size-{vector_size}_"
-                    f"vectorization-size-{vectorization_size}_"
-                    f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                    f""
+                    f"vectorization-size-{vectorization_size}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                    +
                     f"-e power/energy-{perf_stat_command}/ "
-                    f""
+                    +
                     f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count}"
                 ], shell=True)
 
@@ -167,14 +166,14 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
     for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="blue"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
-            f""
+            +
             f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
-            f""
+            +
             f"stream_precision-{precision}_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
             f"iteration-{iteration}.txt "
-            f""
+            +
             f"-e power/energy-{perf_stat_command}/ "
-            f""
+            +
             f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream, set parameters via Makefile
         ], shell=True)
 
@@ -183,13 +182,15 @@ def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, 
     for dot_count in tqdm(parameters.dot_counts, position=4, desc=f"dot_counts{9 * ' '}", leave=False, colour="blue"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
-            f""
+            +
             f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
-            f""
+            +
             f"monte-carlo_dot-count-{dot_count}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_"
             f"iteration-{iteration}.txt "
-            f""
-            f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out {dot_count} {thread_count}"
+            +
+            f"-e power/energy-{perf_stat_command}/ "
+            +
+            f"./../benchmarks/monte_carlo.out {dot_count} {thread_count}"
         ], shell=True)
 
 
@@ -197,13 +198,13 @@ def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password,
     for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10 * ' '}", leave=False, colour="blue"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
-            f""
+            +
             f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
-            f""
+            +
             f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-            f""
+            +
             f"-e power/energy-{perf_stat_command}/ "
-            f""
+            +
             f"./../benchmarks/heat_stencil.out {map_size} > /dev/null"
         ], shell=True)
 
