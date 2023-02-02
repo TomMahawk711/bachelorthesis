@@ -39,7 +39,7 @@ def _create_output_directory(parameters):
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
         if benchmark_name == "stream":
-            os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}-output/")
+            os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}-temp/")
 
 
 def _save_config(parameters):
@@ -109,13 +109,14 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     # also add it in the benchmarks attribute of the parameters object
 
     for thread_count in tqdm(parameters.thread_counts, position=2, desc=f"thread counts{6 * ' '}", leave=False, colour="#ffff00"):
+
+        if "stream" in parameters.benchmark_names:
+            _run_stream(iteration, limit, parameters, password, perf_stat_command, thread_count)
+
         for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9 * ' '}", leave=False, colour="#00ff00"):
 
             if "vector-operations" in parameters.benchmark_names:
                 _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
-
-            if "stream" in parameters.benchmark_names:
-                _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
 
         for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc=f"optimization_flags{1 * ' '}", leave=False,
                                       colour="#00ff00"):
@@ -154,23 +155,19 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
                 ], shell=True)
 
 
-def _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
+def _run_stream(iteration, limit, parameters, password, perf_stat_command, thread_count):
     for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="#0000ff"):
 
-        stream_type = ""
-        if precision == "single":
-            stream_type = "-DSTREAM_TYPE=float"
-
         os.system(f"cd ../benchmarks/stream && "
-                  f"gcc -fopenmp {stream_type} -DSTREAM_ARRAY_SIZE={stream_array_size} -D_OPENMP stream.c -o stream_c.exe >/dev/null && "
+                  f"gcc -fopenmp -D_OPENMP -DSTREAM_ARRAY_SIZE={stream_array_size} stream.c -o stream_c.exe >/dev/null && "
                   f"export OMP_NUM_THREADS={thread_count} >/dev/null")
 
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
-            f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+            f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream-temp/"
             +
-            f"stream_precision-{precision}_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
+            f"stream-temp_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
             f"iteration-{iteration}.txt "
             +
             f"-e power/energy-{perf_stat_command}/ "
@@ -181,11 +178,21 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
         subprocess.run([
             f"./../benchmarks/stream/stream_c.exe "
             +
-            f"> ../outputs/{parameters.limit_type}_{parameters.start_time}/stream-output/"
+            f"> ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
             +
-            f"stream-output_precision-{precision}_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
+            f"stream_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
             f"iteration-{iteration}.txt"
         ], shell=True)
+
+        os.system(f"cat ../outputs/{parameters.limit_type}_{parameters.start_time}/stream-temp/"
+                  +
+                  f"stream-temp_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
+                  f"iteration-{iteration}.txt"
+                  +
+                  f" >> ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+                  +
+                  f"stream_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
+                  f"iteration-{iteration}.txt")
 
 
 def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count):
@@ -287,7 +294,7 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["vector-operations", "stream", "monte-carlo", "heat-stencil"]
+    my_benchmark_names = ["stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
@@ -299,7 +306,7 @@ def initialize_parameters():
     my_precisions = ["single", "double"]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
-    my_stream_array_sizes = [1000000, 5000000, 10000000, 50000000, 100000000]
+    my_stream_array_sizes = [1250000, 2500000, 5000000, 10000000, 20000000, 40000000]
     my_map_sizes = [100, 200, 400, 800]
     my_dot_counts = [10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]
 
