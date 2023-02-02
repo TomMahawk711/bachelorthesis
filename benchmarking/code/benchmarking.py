@@ -37,16 +37,6 @@ def _read_password():
     return password
 
 
-def _delete_old_outputs(parameters):
-    # TODO: update for new directory structure
-
-    print("\n deleting old outputs...")
-    for benchmark_name in parameters.benchmark_names:
-        files = glob.glob(f"outputs/{benchmark_name}/{parameters.limit_type}/*")
-        for f in files:
-            os.remove(f)
-
-
 def _create_output_directory(parameters):
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
