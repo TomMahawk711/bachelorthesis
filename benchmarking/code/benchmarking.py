@@ -66,7 +66,7 @@ def _save_config(parameters):
 def power_limit_benchmark(parameters, password, perf_stat_command):
     print("\nrunning power limiting benchmark...")
 
-    os.system("modprobe intel_rapl_msr")
+    os.system("modprobe intel_rapl_msr > /dev/null")
     _enable_cpu_zones(password)
     original_power_limit = _get_power_limit()
 
@@ -146,12 +146,14 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
                     +
                     f"-e power/energy-{perf_stat_command}/ "
                     +
-                    f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count}"
+                    f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count} > /dev/null"
                 ], shell=True)
 
 
 def _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
     for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="#0000ff"):
+        os.system(f"")  # TODO: make stream with new parameters
+
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
@@ -162,7 +164,7 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream, set parameters via Makefile
+            f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream
         ], shell=True)
 
 
@@ -178,7 +180,7 @@ def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, 
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/monte_carlo.out {dot_count} {thread_count}"
+            f"./../benchmarks/monte_carlo.out {dot_count} {thread_count} > /dev/null"
         ], shell=True)
 
 
