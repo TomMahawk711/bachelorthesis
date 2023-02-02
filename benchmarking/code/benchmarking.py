@@ -94,8 +94,8 @@ def frequency_limit_benchmark(parameters, password, perf_stat_command):
 
     _set_scaling_governor("userspace", password)
 
-    for iteration in tqdm(range(0, parameters.iterations), position=0, desc=f"iterations{9*' '}", leave=False, colour="red"):
-        for limit in tqdm(parameters.limits, position=1, desc=f"frequency limits{3*' '}", leave=False, colour="#ff8800"):
+    for iteration in tqdm(range(0, parameters.iterations), position=0, desc=f"iterations{9 * ' '}", leave=False, colour="#ff0000"):
+        for limit in tqdm(parameters.limits, position=1, desc=f"frequency limits{3 * ' '}", leave=False, colour="#ff8000"):
             _set_frequency(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
@@ -117,8 +117,8 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     # add new benchmarks in here, in a for loop if there is a parameter to loop through,
     # also add it in the benchmarks attribute of the parameters object
 
-    for thread_count in tqdm(parameters.thread_counts, position=2, desc=f"thread counts{6*' '}", leave=False, colour="yellow"):
-        for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9*' '}", leave=False, colour="green"):
+    for thread_count in tqdm(parameters.thread_counts, position=2, desc=f"thread counts{6*' '}", leave=False, colour="#ffff00"):
+        for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9*' '}", leave=False, colour="#00ff00"):
 
             if "vector-operations" in parameters.benchmark_names:
                 _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
@@ -137,10 +137,10 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
 
 
 def _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
-    for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False, colour="blue"):
-        for vector_size in tqdm(parameters.vector_sizes, position=5, desc=f"vector_size{8 * ' '}", leave=False, colour="cyan"):
+    for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False, colour="#0000ff"):
+        for vector_size in tqdm(parameters.vector_sizes, position=5, desc=f"vector_size{8 * ' '}", leave=False, colour="#4b0082"):
             for instruction_set in tqdm(parameters.instruction_sets, position=6, desc=f"instruction_sets{3 * ' '}", leave=False,
-                                        colour="magenta"):
+                                        colour="#8000ff"):
                 if not _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
                     continue
 
@@ -162,7 +162,7 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
 
 
 def _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
-    for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="blue"):
+    for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="#0000ff"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
@@ -178,7 +178,7 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
 
 
 def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count):
-    for dot_count in tqdm(parameters.dot_counts, position=4, desc=f"dot_counts{9 * ' '}", leave=False, colour="blue"):
+    for dot_count in tqdm(parameters.dot_counts, position=4, desc=f"dot_counts{9 * ' '}", leave=False, colour="#0000ff"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
@@ -194,7 +194,7 @@ def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, 
 
 
 def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count):
-    for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10 * ' '}", leave=False, colour="blue"):
+    for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10 * ' '}", leave=False, colour="cyan"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
@@ -219,21 +219,21 @@ def _valid_parameters_for_vectorization(vectorization_size, precision, instructi
 
 
 def _invalid_sse_parameters(instruction_set, precision, vectorization_size):
-    return instruction_set == "SSE" and (precision == "double" or vectorization_size > 4)
+    return instruction_set == "SSE" and (precision == "double" or vectorization_size != 4)
 
 
 def _invalid_sse2_parameters(instruction_set, precision, vectorization_size):
-    return instruction_set == "SSE2" and (precision == "single" or vectorization_size > 2)
+    return instruction_set == "SSE2" and (precision == "single" or vectorization_size != 2)
 
 
 def _invalid_avx_parameters(instruction_set, precision, vectorization_size):
-    return instruction_set == "AVX" and ((precision == "single" and vectorization_size > 8) or
-                                         (precision == "double" and vectorization_size > 4))
+    return instruction_set == "AVX" and ((precision == "single" and vectorization_size != 8) or
+                                         (precision == "double" and vectorization_size != 4))
 
 
 def _invalid_avx512_parameters(instruction_set, precision, vectorization_size):
-    return instruction_set == "AVX512" and ((precision == "single" and vectorization_size > 16) or
-                                            (precision == "double" and vectorization_size > 8))
+    return instruction_set == "AVX512" and ((precision == "single" and vectorization_size != 16) or
+                                            (precision == "double" and vectorization_size != 8))
 
 
 # --------------------POWERCAP_STUFF--------------------
@@ -275,21 +275,21 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["stream"]
+    my_benchmark_names = ["vector-operations"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
-    my_iterations = 5
+    my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
-    my_limits = [2800, 3800]
-    my_thread_counts = [8, 16]
-    my_vectorization_sizes = [8, 16]
-    my_vector_sizes = [512, 1024]
+    my_limits = [2200, 2800, 3800]
+    my_thread_counts = [1, 2, 4, 8, 16]
+    my_vectorization_sizes = [1, 2, 4, 8, 16]
+    my_vector_sizes = [512, 1024, 2048, 4096, 8192]
     my_precisions = ["single", "double"]
-    my_optimization_flags = ["O1", "O2"]
-    my_instruction_sets = ["SSE2", "AVX"]
-    my_stream_array_sizes = [1e3, 1e4]
-    my_map_sizes = [100, 200]
-    my_dot_counts = [1e6, 1e7]
+    my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
+    my_instruction_sets = ["SSE", "SSE2", "AVX"]
+    my_stream_array_sizes = [1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10]
+    my_map_sizes = [100, 200, 400, 800]
+    my_dot_counts = [1e5, 1e6, 1e7, 1e8]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
