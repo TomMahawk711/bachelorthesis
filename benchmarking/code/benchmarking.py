@@ -1,6 +1,5 @@
 import os
 import subprocess
-import glob
 import time
 import nltk
 from parameters import Parameters
