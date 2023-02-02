@@ -2,7 +2,7 @@ VECTORIZATION_SIZE?=2
 OPTIMIZATION_FLAG?=O1
 
 CC=gcc
-CFLAGS=-std=gnu11 -Wall -Wextra -Wpedantic -fopenmp -march=native
+CFLAGS=-std=gnu11 -fopenmp -march=native
 SSEFLAGS=-O1
 AVXFLAGS=-O1
 AVX512FLAGS=-O2 -mavx512f
