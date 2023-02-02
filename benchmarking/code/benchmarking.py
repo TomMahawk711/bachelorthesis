@@ -53,8 +53,8 @@ def _create_output_directory(parameters):
 
 
 def _save_config(parameters):
-    file = open(f"../outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
-    file.write(
+    config_file = open(f"../outputs/{parameters.limit_type}_{parameters.start_time}/benchmark-config.txt", "w+")
+    config_file.write(
         f"benchmark_names:{parameters.benchmark_names}\n"
         f"start_time:{parameters.start_time}\n"
         f"iterations:{parameters.iterations}\n"
@@ -121,97 +121,119 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
         for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9*' '}", leave=False, colour="green"):
 
             if "vector-operations" in parameters.benchmark_names:
-
-                for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False,
-                                               colour="blue"):
-                    for vector_size in tqdm(parameters.vector_sizes, position=5, desc=f"vector_size{8*' '}", leave=False, colour="cyan"):
-                        for instruction_set in tqdm(parameters.instruction_sets, position=6, desc=f"instruction_sets{3*' '}", leave=False,
-                                                    colour="magenta"):
-                            if not _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
-                                continue
-
-                            os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
-                                      f"VECTORIZATION_SIZE={vectorization_size} "
-                                      f"> /dev/null")
-
-                            subprocess.run([
-                                f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/"
-                                f"vector-operations/"
-                                f""
-                                f"vector-operations_instruction-set-{instruction_set}_precision-{precision}_vector-size-{vector_size}_"
-                                f"vectorization-size-{vectorization_size}_"
-                                f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                                f""
-                                f"-e power/energy-{perf_stat_command}/ "
-                                f""
-                                f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count}"
-                            ], shell=True)
+                _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
 
             if "stream" in parameters.benchmark_names:
-
-                for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9*' '}", leave=False,
-                                              colour="blue"):
-                    subprocess.run([
-                        f"echo {password}|sudo -S perf stat "
-                        f""
-                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
-                        f""
-                        f"stream_precision-{precision}_stream-array-size-{stream_array_size}_"
-                        f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
-                        f""
-                        f"-e power/energy-{perf_stat_command}/ "
-                        f""
-                        f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream, set parameters via Makefile
-                    ], shell=True)
+                _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
 
         for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc=f"optimization_flags{1*' '}", leave=False,
                                       colour="green"):
 
             if "monte-carlo" in parameters.benchmark_names:
-
-                for dot_count in tqdm(parameters.dot_counts, position=4, desc=f"dot_counts{9 * ' '}", leave=False, colour="blue"):
-                    subprocess.run([
-                        f"echo {password}|sudo -S perf stat -o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
-                        f""
-                        f"monte-carlo_dot-count-{dot_count}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
-                        f"{limit}MHz_iteration-{iteration}.txt "
-                        f""
-                        f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out {dot_count} {thread_count}"
-                    ], shell=True)
+                _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count)
 
             if "heat-stencil" in parameters.benchmark_names:
+                _run_heat_stencil(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count)
 
-                for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10*' '}", leave=False, colour="blue"):
-                    subprocess.run([
-                        f"echo {password}|sudo -S perf stat "
-                        f""
-                        f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
-                        f""
-                        f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_"
-                        f"{limit}MHz_iteration-{iteration}.txt "
-                        f""
-                        f"-e power/energy-{perf_stat_command}/ "
-                        f""
-                        f"./../benchmarks/heat_stencil.out {map_size} > /dev/null"
-                    ], shell=True)
+
+def _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
+    for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False, colour="blue"):
+        for vector_size in tqdm(parameters.vector_sizes, position=5, desc=f"vector_size{8 * ' '}", leave=False, colour="cyan"):
+            for instruction_set in tqdm(parameters.instruction_sets, position=6, desc=f"instruction_sets{3 * ' '}", leave=False,
+                                        colour="magenta"):
+                if not _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
+                    continue
+
+                os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
+                          f"VECTORIZATION_SIZE={vectorization_size} "
+                          f"> /dev/null")
+
+                subprocess.run([
+                    f"echo {password}|sudo -S perf stat "
+                    f""
+                    f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
+                    f""
+                    f"vector-operations_instruction-set-{instruction_set}_precision-{precision}_vector-size-{vector_size}_"
+                    f"vectorization-size-{vectorization_size}_"
+                    f"thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+                    f""
+                    f"-e power/energy-{perf_stat_command}/ "
+                    f""
+                    f"./../benchmarks/vector_operations_{instruction_set}_{precision}.out {vector_size} {thread_count}"
+                ], shell=True)
+
+
+def _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
+    for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="blue"):
+        subprocess.run([
+            f"echo {password}|sudo -S perf stat "
+            f""
+            f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/stream/"
+            f""
+            f"stream_precision-{precision}_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
+            f"iteration-{iteration}.txt "
+            f""
+            f"-e power/energy-{perf_stat_command}/ "
+            f""
+            f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream, set parameters via Makefile
+        ], shell=True)
+
+
+def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count):
+    for dot_count in tqdm(parameters.dot_counts, position=4, desc=f"dot_counts{9 * ' '}", leave=False, colour="blue"):
+        subprocess.run([
+            f"echo {password}|sudo -S perf stat "
+            f""
+            f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/monte-carlo/"
+            f""
+            f"monte-carlo_dot-count-{dot_count}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_"
+            f"iteration-{iteration}.txt "
+            f""
+            f"-e power/energy-{perf_stat_command}/ ./../benchmarks/monte_carlo.out {dot_count} {thread_count}"
+        ], shell=True)
+
+
+def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count):
+    for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10 * ' '}", leave=False, colour="blue"):
+        subprocess.run([
+            f"echo {password}|sudo -S perf stat "
+            f""
+            f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
+            f""
+            f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+            f""
+            f"-e power/energy-{perf_stat_command}/ "
+            f""
+            f"./../benchmarks/heat_stencil.out {map_size} > /dev/null"
+        ], shell=True)
 
 
 def _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
-    if instruction_set == "SSE" and (precision == "double" or vectorization_size > 4):
-        return False
-
-    elif instruction_set == "SSE2" and (precision == "single" or vectorization_size > 2):
-        return False
-
-    elif instruction_set == "AVX" and ((precision == "single" and vectorization_size > 8) or
-                                       (precision == "double" and vectorization_size > 4)):
-        return False
-
-    elif instruction_set == "AVX512" and ((precision == "single" and vectorization_size > 16) or
-                                          (precision == "double" and vectorization_size > 8)):
+    if _invalid_sse_parameters(instruction_set, precision, vectorization_size) or \
+            _invalid_sse2_parameters(instruction_set, precision, vectorization_size) or \
+            _invalid_avx_parameters(instruction_set, precision, vectorization_size) or \
+            _invalid_avx512_parameters(instruction_set, precision, vectorization_size):
         return False
 
     return True
+
+
+def _invalid_sse_parameters(instruction_set, precision, vectorization_size):
+    return instruction_set == "SSE" and (precision == "double" or vectorization_size > 4)
+
+
+def _invalid_sse2_parameters(instruction_set, precision, vectorization_size):
+    return instruction_set == "SSE2" and (precision == "single" or vectorization_size > 2)
+
+
+def _invalid_avx_parameters(instruction_set, precision, vectorization_size):
+    return instruction_set == "AVX" and ((precision == "single" and vectorization_size > 8) or
+                                         (precision == "double" and vectorization_size > 4))
+
+
+def _invalid_avx512_parameters(instruction_set, precision, vectorization_size):
+    return instruction_set == "AVX512" and ((precision == "single" and vectorization_size > 16) or
+                                            (precision == "double" and vectorization_size > 8))
 
 
 # --------------------POWERCAP_STUFF--------------------
@@ -253,21 +275,21 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["vector-operations"]
+    my_benchmark_names = ["stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 5
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
-    my_limits = [2200, 2800, 3800]
-    my_thread_counts = [1, 2, 4, 8, 16]
-    my_vectorization_sizes = [1, 2, 4, 8, 16]
-    my_vector_sizes = [512, 1024, 2048, 4096, 16384, 65536]
+    my_limits = [2800, 3800]
+    my_thread_counts = [8, 16]
+    my_vectorization_sizes = [8, 16]
+    my_vector_sizes = [512, 1024]
     my_precisions = ["single", "double"]
-    my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
-    my_instruction_sets = ["SSE", "SSE2", "AVX"]
-    my_stream_array_sizes = [1e3, 1e4, 1e5, 1e6, 1e7, 1e8]
-    my_map_sizes = [100, 200, 400, 800]
-    my_dot_counts = [1e6, 1e7, 1e8, 1e9]
+    my_optimization_flags = ["O1", "O2"]
+    my_instruction_sets = ["SSE2", "AVX"]
+    my_stream_array_sizes = [1e3, 1e4]
+    my_map_sizes = [100, 200]
+    my_dot_counts = [1e6, 1e7]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
