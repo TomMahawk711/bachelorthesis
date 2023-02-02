@@ -106,8 +106,8 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
     # add new benchmarks in here, in a for loop if there is a parameter to loop through,
     # also add it in the benchmarks attribute of the parameters object
 
-    for thread_count in tqdm(parameters.thread_counts, position=2, desc=f"thread counts{6*' '}", leave=False, colour="#ffff00"):
-        for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9*' '}", leave=False, colour="#00ff00"):
+    for thread_count in tqdm(parameters.thread_counts, position=2, desc=f"thread counts{6 * ' '}", leave=False, colour="#ffff00"):
+        for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9 * ' '}", leave=False, colour="#00ff00"):
 
             if "vector-operations" in parameters.benchmark_names:
                 _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
@@ -115,8 +115,10 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
             if "stream" in parameters.benchmark_names:
                 _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
 
-        for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc=f"optimization_flags{1*' '}", leave=False,
-                                      colour="green"):
+        for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc=f"optimization_flags{1 * ' '}", leave=False,
+                                      colour="00ff00"):
+
+            # TODO: compile with new optimization flag
 
             if "monte-carlo" in parameters.benchmark_names:
                 _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count)
