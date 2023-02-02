@@ -306,7 +306,7 @@ def initialize_parameters():
     my_precisions = ["single", "double"]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
-    my_stream_array_sizes = [1250000, 2500000, 5000000, 10000000, 20000000, 40000000]
+    my_stream_array_sizes = [100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 51200000]
     my_map_sizes = [100, 200, 400, 800]
     my_dot_counts = [10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]
 
