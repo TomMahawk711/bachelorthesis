@@ -114,8 +114,8 @@ def _is_intel_system():
 
 
 def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command):
-    # TODO: add new benchmarks in here, in a for loop if there is a parameter to loop through, also add it in the benchmarks attribute of
-    #  the parameters object
+    # add new benchmarks in here, in a for loop if there is a parameter to loop through,
+    # also add it in the benchmarks attribute of the parameters object
 
     for thread_count in tqdm(parameters.thread_counts, position=2, desc=f"thread counts{6*' '}", leave=False, colour="yellow"):
         for precision in tqdm(parameters.precisions, position=3, desc=f"precisions{9*' '}", leave=False, colour="green"):
@@ -145,8 +145,7 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
                     continue
 
                 os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
-                          f"VECTORIZATION_SIZE={vectorization_size} "
-                          f"> /dev/null")
+                          f"VECTORIZATION_SIZE={vectorization_size} > /dev/null")
 
                 subprocess.run([
                     f"echo {password}|sudo -S perf stat "
