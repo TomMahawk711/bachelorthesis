@@ -13,7 +13,6 @@ def main(parameters):
     password = _read_password()
     _create_output_directory(parameters)
     _save_config(parameters)
-    # os.system("cd ../benchmarks && make > /dev/null")
 
     perf_stat_command = "cores"
     if not _is_intel_system():
@@ -39,6 +38,8 @@ def _read_password():
 def _create_output_directory(parameters):
     for benchmark_name in parameters.benchmark_names:
         os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}/")
+        if benchmark_name == "stream":
+            os.makedirs(f"../outputs/{parameters.limit_type}_{parameters.start_time}/{benchmark_name}-output/")
 
 
 def _save_config(parameters):
@@ -161,7 +162,7 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
 
         os.system(f"cd ../benchmarks/stream && "
                   f"gcc -fopenmp {stream_type} -DSTREAM_ARRAY_SIZE={stream_array_size} -D_OPENMP stream.c -o stream_c.exe >/dev/null && "
-                  f"export OMP_NUM_THREADS={thread_count} >/dev/null")  # TODO: compile with different parameters
+                  f"export OMP_NUM_THREADS={thread_count} >/dev/null")
 
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
@@ -173,7 +174,16 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/stream/stream_c.exe >/dev/null"  # TODO: get output of stream
+            f"./../benchmarks/stream/stream_c.exe >/dev/null"
+        ], shell=True)
+
+        subprocess.run([
+            f"./../benchmarks/stream/stream_c.exe "
+            +
+            f"> ../outputs/{parameters.limit_type}_{parameters.start_time}/stream-output/"
+            +
+            f"stream-output_precision-{precision}_stream-array-size-{stream_array_size}_thread-count-{thread_count}_{limit}MHz_"
+            f"iteration-{iteration}.txt"
         ], shell=True)
 
 
@@ -261,35 +271,36 @@ def _set_power_limit(power_limit, password):
 
 
 def _set_scaling_governor(governor, password):
-    os.system(f"echo {password}|sudo cpupower frequency-set --governor %s 2>&1 > /dev/null" % governor)
+    os.system(f"echo {password}|sudo cpupower frequency-set --governor %s 2>&1 >/dev/null" % governor)
 
 
 def _set_frequency(frequency, password):
-    os.system(f"echo {password}|sudo cpupower --cpu all frequency-set --freq %sMHz 2>&1 > /dev/null" % frequency)
+    os.system(f"echo {password}|sudo cpupower --cpu all frequency-set --freq %sMHz 2>&1 >/dev/null" % frequency)
 
 
 # --------------------RUN--------------------
+
 
 def initialize_parameters():
     my_min_value = 1600
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["stream"]
+    my_benchmark_names = ["vector-operations", "stream", "monte-carlo", "heat-stencil"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
-    my_limits = [2800, 3800]
+    my_limits = [2200, 2800, 3800]
     my_thread_counts = [1, 2, 4, 8, 16]
-    my_vectorization_sizes = [8, 16]
-    my_vector_sizes = [512, 1024]
+    my_vectorization_sizes = [1, 2, 4, 8, 16]
+    my_vector_sizes = [512, 1024, 2048, 4096]
     my_precisions = ["single", "double"]
-    my_optimization_flags = ["O1", "O2"]
+    my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
-    my_stream_array_sizes = [10000000, 100000000]
-    my_map_sizes = [100, 200]
-    my_dot_counts = [1e5, 1e6]
+    my_stream_array_sizes = [1000000, 5000000, 10000000, 50000000, 100000000]
+    my_map_sizes = [100, 200, 400, 800]
+    my_dot_counts = [100000, 1000000]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
