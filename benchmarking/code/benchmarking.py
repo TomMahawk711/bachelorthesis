@@ -58,6 +58,7 @@ def _save_config(parameters):
         f"instruction_sets:{parameters.instruction_sets}\n"
         f"stream_array_sizes:{parameters.stream_array_sizes}\n"
         f"map_sizes:{parameters.map_sizes}\n"
+        f"dot_counts:{parameters.dot_counts}\n"
     )
 
 
@@ -300,7 +301,7 @@ def initialize_parameters():
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
     my_stream_array_sizes = [1000000, 5000000, 10000000, 50000000, 100000000]
     my_map_sizes = [100, 200, 400, 800]
-    my_dot_counts = [100000, 1000000]
+    my_dot_counts = [10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
