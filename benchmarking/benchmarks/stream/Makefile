@@ -1,8 +1,12 @@
 CC = gcc
 CFLAGS = -O2 -fopenmp
+STREAM_SIZE? = 100000000
+STREAM_TYPE? = float
+
 
 FC = gfortran
 FFLAGS = -O2 -fopenmp
+SIZE=-DSTREAM_ARRAY_SIZE=$(STREAM_SIZE)
 
 all: stream_c.exe
 
@@ -12,7 +16,7 @@ stream_f.exe: stream.f mysecond.o
 	$(FC) $(FFLAGS) stream.o mysecond.o -o stream_f.exe
 
 stream_c.exe: stream.c
-	$(CC) $(CFLAGS) stream.c -o stream_c.exe
+	$(CC) $(CFLAGS) $(SIZE) $(STREAM_TYPE) stream.c -o stream_c.exe
 
 clean:
 	rm -f stream_f.exe stream_c.exe *.o

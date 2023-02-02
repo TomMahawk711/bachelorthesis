@@ -13,7 +13,7 @@ def main(parameters):
     password = _read_password()
     _create_output_directory(parameters)
     _save_config(parameters)
-    os.system("cd ../benchmarks && make > /dev/null")
+    # os.system("cd ../benchmarks && make > /dev/null")
 
     perf_stat_command = "cores"
     if not _is_intel_system():
@@ -66,7 +66,7 @@ def _save_config(parameters):
 def power_limit_benchmark(parameters, password, perf_stat_command):
     print("\nrunning power limiting benchmark...")
 
-    os.system("modprobe intel_rapl_msr > /dev/null")
+    os.system("modprobe intel_rapl_msr >/dev/null")
     _enable_cpu_zones(password)
     original_power_limit = _get_power_limit()
 
@@ -116,14 +116,14 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
                 _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count)
 
         for optimization_flag in tqdm(parameters.optimization_flags, position=3, desc=f"optimization_flags{1 * ' '}", leave=False,
-                                      colour="00ff00"):
-
-            # TODO: compile with new optimization flag
+                                      colour="#00ff00"):
 
             if "monte-carlo" in parameters.benchmark_names:
+                os.system(f"cd ../benchmarks && make monte_carlo OPTIMIZATION_FLAG={optimization_flag} >/dev/null")
                 _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count)
 
             if "heat-stencil" in parameters.benchmark_names:
+                os.system(f"cd ../benchmarks && make heat_stencil OPTIMIZATION_FLAG={optimization_flag} >/dev/null")
                 _run_heat_stencil(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count)
 
 
@@ -136,7 +136,7 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
                     continue
 
                 os.system(f"cd ../benchmarks && make vector_operations_{instruction_set}_{precision} "
-                          f"VECTORIZATION_SIZE={vectorization_size} > /dev/null")
+                          f"VECTORIZATION_SIZE={vectorization_size} >/dev/null")
 
                 subprocess.run([
                     f"echo {password}|sudo -S perf stat "
@@ -154,7 +154,14 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
 
 def _run_stream(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
     for stream_array_size in tqdm(parameters.stream_array_sizes, position=4, desc=f"array_size{9 * ' '}", leave=False, colour="#0000ff"):
-        os.system(f"")  # TODO: make stream with new parameters
+
+        stream_type = ""
+        if precision == "single":
+            stream_type = "-DSTREAM_TYPE=float"
+
+        os.system(f"cd ../benchmarks/stream && "
+                  f"gcc -fopenmp {stream_type} -DSTREAM_ARRAY_SIZE={stream_array_size} -D_OPENMP stream.c -o stream_c.exe >/dev/null && "
+                  f"export OMP_NUM_THREADS={thread_count} >/dev/null")  # TODO: compile with different parameters
 
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
@@ -166,7 +173,7 @@ def _run_stream(iteration, limit, parameters, password, perf_stat_command, preci
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/stream/stream_c.exe > /dev/null"  # TODO: get output of stream
+            f"./../benchmarks/stream/stream_c.exe >/dev/null"  # TODO: get output of stream
         ], shell=True)
 
 
@@ -182,12 +189,12 @@ def _run_monte_carlo(iteration, limit, optimization_flag, parameters, password, 
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/monte_carlo.out {dot_count} {thread_count} > /dev/null"
+            f"./../benchmarks/monte_carlo.out {dot_count} {thread_count} >/dev/null"
         ], shell=True)
 
 
 def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password, perf_stat_command, thread_count):
-    for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10 * ' '}", leave=False, colour="cyan"):
+    for map_size in tqdm(parameters.map_sizes, position=4, desc=f"map_sizes{10 * ' '}", leave=False, colour="#0000ff"):
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
@@ -197,7 +204,7 @@ def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password,
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/heat_stencil.out {map_size} > /dev/null"
+            f"./../benchmarks/heat_stencil.out {map_size} >/dev/null"
         ], shell=True)
 
 
@@ -268,21 +275,21 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["vector-operations"]
+    my_benchmark_names = ["stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
-    my_limits = [2200, 2800, 3800]
+    my_limits = [2800, 3800]
     my_thread_counts = [1, 2, 4, 8, 16]
-    my_vectorization_sizes = [1, 2, 4, 8, 16]
-    my_vector_sizes = [512, 1024, 2048, 4096, 8192]
+    my_vectorization_sizes = [8, 16]
+    my_vector_sizes = [512, 1024]
     my_precisions = ["single", "double"]
-    my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
+    my_optimization_flags = ["O1", "O2"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
-    my_stream_array_sizes = [1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10]
-    my_map_sizes = [100, 200, 400, 800]
-    my_dot_counts = [1e5, 1e6, 1e7, 1e8]
+    my_stream_array_sizes = [10000000, 100000000]
+    my_map_sizes = [100, 200]
+    my_dot_counts = [1e5, 1e6]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
                       my_vectorization_sizes, my_vector_sizes, my_precisions, my_optimization_flags, my_instruction_sets,
