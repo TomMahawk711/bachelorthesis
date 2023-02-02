@@ -70,8 +70,8 @@ def power_limit_benchmark(parameters, password, perf_stat_command):
     _enable_cpu_zones(password)
     original_power_limit = _get_power_limit()
 
-    for iteration in tqdm(range(0, parameters.iterations)):
-        for limit in parameters.limits:
+    for iteration in tqdm(range(0, parameters.iterations), position=0, desc=f"iterations{9 * ' '}", leave=False, colour="#ff0000"):
+        for limit in tqdm(parameters.limits, position=1, desc=f"frequency limits{3 * ' '}", leave=False, colour="#ff8000"):
             _set_power_limit(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
