@@ -41,7 +41,7 @@ void calculate_array(float* a, float* b, float* c, int size, int repetitions, in
 #pragma omp parallel
     for(int run = 0; run < repetitions; ++run) {
 #pragma omp for
-		for(int i = 0; i < size; i += 8) {
+		for(int i = 0; i < size; ++i) {
 			a[i] += b[i] * c[i];
 		}
 	}
