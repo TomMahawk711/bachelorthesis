@@ -131,8 +131,13 @@ def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_comman
 
 
 def _run_vector_operations(iteration, limit, parameters, password, perf_stat_command, precision, thread_count):
-    for vectorization_size in tqdm(parameters.vectorization_sizes, position=4, desc="vectorization_sizes", leave=False, colour="#0000ff"):
-        for vector_size in tqdm(parameters.vector_sizes, position=5, desc=f"vector_size{8 * ' '}", leave=False, colour="#4b0082"):
+
+    for vector_size in tqdm(parameters.vector_sizes, position=4, desc=f"vector_size{8 * ' '}", leave=False, colour="#0000ff"):
+
+        # TODO: run without vectorization
+
+        for vectorization_size in tqdm(parameters.vectorization_sizes, position=5, desc="vectorization_sizes", leave=False,
+                                       colour="#4b0082"):
             for instruction_set in tqdm(parameters.instruction_sets, position=6, desc=f"instruction_sets{3 * ' '}", leave=False,
                                         colour="#8000ff"):
                 if not _valid_parameters_for_vectorization(vectorization_size, precision, instruction_set):
