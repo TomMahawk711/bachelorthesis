@@ -4,14 +4,11 @@
 #include <string.h>
 #include "vector_operations_aux.h"
 
-void init_array(float*, int, float);
-void calculate_array(float*, float*, float*, int);
-void print_array(float*, int);
-void print_output();
+void calculate_array(float*, float*, float*, int, int, int);
 
 int main(int argc, char** argv){
 
-    int const repetitions = 1e6
+    int const repetitions = 1e6;
     int size = 0;
     int num_threads = 1;
 
@@ -29,7 +26,7 @@ int main(int argc, char** argv){
     init_array_single_precision(c, size, 2);
 
     //double start_time = omp_get_wtime();
-    calculate_array(a, b, c, size);
+    calculate_array(a, b, c, size, repetitions, num_threads);
     //double end_time = omp_get_wtime();
 
     //printf("time: %f seconds\n", end_time - start_time);
@@ -38,7 +35,6 @@ int main(int argc, char** argv){
 
     return EXIT_SUCCESS;
 }
-
 
 void calculate_array(float* a, float* b, float* c, int size, int repetitions, int num_threads){
     omp_set_num_threads(num_threads);

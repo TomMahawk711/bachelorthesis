@@ -4,14 +4,11 @@
 #include <string.h>
 #include "vector_operations_aux.h"
 
-void init_array(double*, int, double);
-void calculate_array(double*, double*, double*, int);
-void print_array(double*, int);
-void print_output();
+void calculate_array(double*, double*, double*, int, int, int);
 
 int main(int argc, char** argv){
 
-    int const repetitions = 1e6
+    int const repetitions = 1e6;
     int size = 0;
     int num_threads = 1;
 
