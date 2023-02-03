@@ -134,6 +134,8 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
 
     for vector_size in tqdm(parameters.vector_sizes, position=4, desc=f"vector_size{8 * ' '}", leave=False, colour="#0000ff"):
 
+        os.system(f"cd ../benchmarks && make vector_operations_{precision} >/dev/null")
+
         subprocess.run([
             f"echo {password}|sudo -S perf stat "
             +
@@ -310,7 +312,7 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["vector-operations"]
+    my_benchmark_names = ["vector-operations", "monte-carlo", "heat-stencil", "stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
