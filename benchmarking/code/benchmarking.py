@@ -134,7 +134,18 @@ def _run_vector_operations(iteration, limit, parameters, password, perf_stat_com
 
     for vector_size in tqdm(parameters.vector_sizes, position=4, desc=f"vector_size{8 * ' '}", leave=False, colour="#0000ff"):
 
-        # TODO: run without vectorization
+        subprocess.run([
+            f"echo {password}|sudo -S perf stat "
+            +
+            f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/vector-operations/"
+            +
+            f"vector-operations_instruction-set-NO-SPECIFIC_precision-{precision}_vector-size-{vector_size}_"
+            f"vectorization-size-1_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+            +
+            f"-e power/energy-{perf_stat_command}/ "
+            +
+            f"./../benchmarks/vector_operations_{precision}.out {vector_size} {thread_count} > /dev/null"
+        ], shell=True)
 
         for vectorization_size in tqdm(parameters.vectorization_sizes, position=5, desc="vectorization_sizes", leave=False,
                                        colour="#4b0082"):
@@ -299,7 +310,7 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["stream"]
+    my_benchmark_names = ["vector-operations"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
@@ -307,7 +318,7 @@ def initialize_parameters():
     my_limits = [2200, 2800, 3800]
     my_thread_counts = [1, 2, 4, 8, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
-    my_vector_sizes = [512, 1024, 2048, 4096]
+    my_vector_sizes = [512, 1024, 2048, 4096, 8192]
     my_precisions = ["single", "double"]
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
