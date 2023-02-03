@@ -19,8 +19,8 @@ int main(int argc, char** argv){
         printf("usage: task1.out <vector_size>\n");
         return EXIT_FAILURE;
     }else{
-        num_threads = atol(argv[2])
-        size = atol(argv[1])
+        num_threads = atol(argv[2]);
+        size = atol(argv[1]);
     }
 
     float a[size], b[size], c[size];
