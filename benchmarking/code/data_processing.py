@@ -6,14 +6,18 @@ from statistics import mean
 from parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name, grouping_metric):
-    data, files = _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name)
-    energies, times = _extract_data(data, files, grouping_metric)
+def process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set):
+    data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, instruction_set)
 
-    return _get_means(parameters, energies, times, grouping_metric)
+    if benchmark_name == "stream":
+        energies, times, copy, scale, add, triad = _extract_stream_data(data, files, grouping_metric)
+        return _get_stream_means(parameters, energies, times, copy, scale, add, triad, grouping_metric)
+    else:
+        energies, times = _extract_data(data, files, grouping_metric)
+        return _get_means(parameters, energies, times, grouping_metric)
 
 
-def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
+def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, parameter_4):
     path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
 
@@ -21,17 +25,19 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
     # to group by another parameter, the parameter-collection - over which the for loop iterates - has to be changed
 
     if benchmark_name == "vector-operations":
-        for instruction_set in parameters.instruction_sets:
-            files_dict[str(instruction_set)] = \
+        for frequency in grouping_metric:
+
+            files_dict[str(frequency)] = \
                 [file for file in os.listdir(path)
-                 if "thread-count-8_" in file
-                 and f"_3600MHz" in file
+                 if "thread-count-1_" in file
+                 and f"_{frequency}MHz" in file
                  and f"instruction-set-{instruction_set}_" in file
                  and "vector-size-4096_" in file
                  and "precision-single_" in file]
 
     elif benchmark_name == "monte-carlo":
-        for limit in parameters.limits:
+        for limit in grouping_metric:
+
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-8_" in file
@@ -40,7 +46,8 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
                  and f"_dot-count-640000000_" in file]
 
     elif benchmark_name == "heat-stencil":
-        for limit in parameters.limits:
+        for limit in grouping_metric:
+
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-8_" in file
@@ -49,14 +56,19 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
                  and f"_map-size-800_" in file]
 
     elif benchmark_name == "stream":
-        for limit in parameters.limits:
+        for limit in grouping_metric:
+
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-8_" in file
-                 and f"_{limit}MHz" in file
-                 and f"_stream-array-size-100000000_" in file]
+                 if f"thread-count-{thread_count}_" in file
+                 and f"_{limit}MHz_" in file
+                 and f"_stream-array-size-6400000_" in file]
 
-    data_dict = _get_data(files_dict, path)
+    if benchmark_name == "stream":
+        data_dict = _get_stream_data(files_dict, path)
+    else:
+        data_dict = _get_energy_time_data(files_dict, path)
+
     return data_dict, files_dict
 
 
@@ -64,10 +76,10 @@ def _get_path(folder_name, benchmark_name):
     path = f"../outputs/{folder_name}/"
     folders = [folder for folder in os.listdir(path) if benchmark_name in folder]
 
-    return f"{path}{folders[-1]}"
+    return f"{path}{folders[0]}"
 
 
-def _get_data(files_dict, path):
+def _get_energy_time_data(files_dict, path):
     plot_data_dict = dict()
 
     for key, value in files_dict.items():
@@ -85,6 +97,28 @@ def _get_data(files_dict, path):
 
     return plot_data_dict
 
+def _get_stream_data(files_dict, path):
+    plot_data_dict = dict()
+
+    for key, value in files_dict.items():
+        files_dict[key].sort()
+
+        for file in files_dict[key]:
+            with open(path + "/" + file) as f:
+                output = f.read()
+
+            tokens = nltk.word_tokenize(output)
+            energy_measurement = _get_measurement(tokens, "Joules")
+            time_measurement = _get_measurement(tokens, "seconds")
+            copy_measurement = _get_stream_measurement(tokens, "Copy")
+            scale_measurement = _get_stream_measurement(tokens, "Scale")
+            add_measurement = _get_stream_measurement(tokens, "Add")
+            triad_measurement = _get_stream_measurement(tokens, "Triad")
+
+            plot_data_dict[file] = \
+                (energy_measurement, time_measurement, copy_measurement, scale_measurement, add_measurement, triad_measurement)
+
+    return plot_data_dict
 
 def _extract_data(data, files, grouping_metric):
     energies = list()
@@ -96,6 +130,27 @@ def _extract_data(data, files, grouping_metric):
             times.append(data[file][1])
 
     return energies, times
+
+
+def _extract_stream_data(data, files, grouping_metric):
+    energies = list()
+    times = list()
+    copy = list()
+    scale = list()
+    add = list()
+    triad = list()
+
+    for limit in grouping_metric:
+        print(files)
+        for file in files[str(limit)]:
+            energies.append(data[file][0])
+            times.append(data[file][1])
+            copy.append(data[file][2])
+            scale.append(data[file][3])
+            add.append(data[file][4])
+            triad.append(data[file][5])
+
+    return energies, times, copy, scale, add, triad
 
 
 def _get_means(parameters, energies, times, grouping_metric):
@@ -112,8 +167,35 @@ def _get_means(parameters, energies, times, grouping_metric):
     return energies_plot_data, times_plot_data
 
 
-def _get_measurement(tokens, unit):
-    measurement_index = tokens.index(unit) - 1
+def _get_stream_means(parameters, energies, times, copy, scale, add, triad, grouping_metric):
+    energies_plot_data = list()
+    times_plot_data = list()
+    copy_plot_data = list()
+    scale_plot_data = list()
+    add_plot_data = list()
+    triad_plot_data = list()
+
+    for index in range(len(grouping_metric)):
+        start_index = parameters.iterations * index
+        end_index = start_index + parameters.iterations - 1
+
+        energies_plot_data.append(mean(energies[start_index:end_index]))
+        times_plot_data.append(mean(times[start_index:end_index]))
+        copy_plot_data.append(mean(copy[start_index:end_index]))
+        scale_plot_data.append(mean(scale[start_index:end_index]))
+        add_plot_data.append(mean(add[start_index:end_index]))
+        triad_plot_data.append(mean(triad[start_index:end_index]))
+
+    return energies_plot_data, times_plot_data, copy_plot_data, scale_plot_data, add_plot_data, triad_plot_data
+
+def _get_measurement(tokens, metric):
+    measurement_index = tokens.index(metric) - 1
+    measurement = tokens[measurement_index]
+    return float(measurement)
+
+
+def _get_stream_measurement(tokens, metric):
+    measurement_index = tokens.index(metric) + 2
     measurement = tokens[measurement_index]
     return float(measurement)
 
