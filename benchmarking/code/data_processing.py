@@ -35,14 +35,18 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-8_" in file
-                 and f"_{limit}MHz" in file]
+                 and f"_{limit}MHz_" in file
+                 and f"_optimization-flag-O1_" in file
+                 and f"_dot-count-640000000_" in file]
 
     elif benchmark_name == "heat-stencil":
         for limit in parameters.limits:
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-8_" in file
-                 and f"_{limit}MHz" in file]
+                 and f"_{limit}MHz_" in file
+                 and f"_optimization-flag-O1_" in file
+                 and f"_map-size-800_" in file]
 
     elif benchmark_name == "stream":
         for limit in parameters.limits:
@@ -86,7 +90,7 @@ def _extract_data(parameters, data, files):
     energies = list()
     times = list()
 
-    for limit in parameters.vectorization_sizes:     # parameter to group by, has to be changed here...
+    for limit in parameters.limits:     # parameter to group by, has to be changed here...
         for file in files[str(limit)]:
             energies.append(data[file][0])
             times.append(data[file][1])
@@ -98,7 +102,7 @@ def _get_means(parameters, energies, times):
     energies_plot_data = list()
     times_plot_data = list()
 
-    for index in range(len(parameters.vectorization_sizes)):  # ...and here
+    for index in range(len(parameters.limits)):  # ...and here
         start_index = parameters.iterations * index
         end_index = start_index + parameters.iterations - 1
 
@@ -127,15 +131,15 @@ def get_config(folder_name):
                       _as_list(parameters["vector_sizes"]),
                       parameters["precisions"],
                       parameters["optimization_flags"],
-                      _as_list(parameters["instruction_sets"]),
+                      parameters["instruction_sets"],
                       _as_list(parameters["stream_array_sizes"]),
                       _as_list(parameters["map_sizes"]),
                       _as_list(parameters["dot_counts"]))
 
 
 def _build_parameter_dict(folder_name):
-    limit_type, start_time = folder_name.split("_")
-    lines = open(f"../outputs/{limit_type}_{start_time}/benchmark-config.txt", "r").readlines()
+    # limit_type, start_time = folder_name.split("_")
+    lines = open(f"../outputs/{folder_name}/benchmark-config.txt", "r").readlines()
 
     parameters = dict()
     for line in lines:

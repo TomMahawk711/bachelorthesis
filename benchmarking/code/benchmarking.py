@@ -236,7 +236,7 @@ def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password,
             +
             f"-o ../outputs/{parameters.limit_type}_{parameters.start_time}/heat-stencil/"
             +
-            f"heat-stencil_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
+            f"heat-stencil_map-size-{map_size}_optimization-flag-{optimization_flag}_thread-count-{thread_count}_{limit}MHz_iteration-{iteration}.txt "
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
