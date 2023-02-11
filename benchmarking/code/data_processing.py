@@ -1,15 +1,16 @@
 import nltk
 import os
+import ast
 
 from statistics import mean
 from parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name):
+def process(parameters, benchmark_name, folder_name, grouping_metric):
     data, files = _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name)
-    energies, times = _extract_data(parameters, data, files)
+    energies, times = _extract_data(data, files, grouping_metric)
 
-    return _get_means(parameters, energies, times)
+    return _get_means(parameters, energies, times, grouping_metric)
 
 
 def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
@@ -20,15 +21,14 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
     # to group by another parameter, the parameter-collection - over which the for loop iterates - has to be changed
 
     if benchmark_name == "vector-operations":
-        for vectorization_size in parameters.vectorization_sizes:
-            files_dict[str(vectorization_size)] = \
+        for instruction_set in parameters.instruction_sets:
+            files_dict[str(instruction_set)] = \
                 [file for file in os.listdir(path)
                  if "thread-count-8_" in file
-                 and "_2800MHz" in file
-                 and f"vectorization-size-{vectorization_size}_" in file
+                 and f"_3600MHz" in file
+                 and f"instruction-set-{instruction_set}_" in file
                  and "vector-size-4096_" in file
-                 and "precision-single_" in file
-                 and "instruction-set-AVX_"]
+                 and "precision-single_" in file]
 
     elif benchmark_name == "monte-carlo":
         for limit in parameters.limits:
@@ -54,7 +54,7 @@ def _get_data_per_benchmark_per_system(parameters, benchmark_name, folder_name):
                 [file for file in os.listdir(path)
                  if f"thread-count-8_" in file
                  and f"_{limit}MHz" in file
-                 and f"stream-array-size-100000000"]
+                 and f"_stream-array-size-100000000_" in file]
 
     data_dict = _get_data(files_dict, path)
     return data_dict, files_dict
@@ -86,11 +86,11 @@ def _get_data(files_dict, path):
     return plot_data_dict
 
 
-def _extract_data(parameters, data, files):
+def _extract_data(data, files, grouping_metric):
     energies = list()
     times = list()
 
-    for limit in parameters.limits:     # parameter to group by, has to be changed here...
+    for limit in grouping_metric:
         for file in files[str(limit)]:
             energies.append(data[file][0])
             times.append(data[file][1])
@@ -98,11 +98,11 @@ def _extract_data(parameters, data, files):
     return energies, times
 
 
-def _get_means(parameters, energies, times):
+def _get_means(parameters, energies, times, grouping_metric):
     energies_plot_data = list()
     times_plot_data = list()
 
-    for index in range(len(parameters.limits)):  # ...and here
+    for index in range(len(grouping_metric)):
         start_index = parameters.iterations * index
         end_index = start_index + parameters.iterations - 1
 
@@ -121,7 +121,7 @@ def _get_measurement(tokens, unit):
 def get_config(folder_name):
     parameters = _build_parameter_dict(folder_name)
 
-    return Parameters(parameters["benchmark_names"],
+    return Parameters(ast.literal_eval(parameters["benchmark_names"]),
                       parameters["start_time"],
                       int(parameters["iterations"]),
                       parameters["limit_type"],
@@ -129,9 +129,9 @@ def get_config(folder_name):
                       _as_list(parameters["thread_counts"]),
                       _as_list(parameters["vectorization_sizes"]),
                       _as_list(parameters["vector_sizes"]),
-                      parameters["precisions"],
-                      parameters["optimization_flags"],
-                      parameters["instruction_sets"],
+                      ast.literal_eval(parameters["precisions"]),
+                      ast.literal_eval(parameters["optimization_flags"]),
+                      ast.literal_eval(parameters["instruction_sets"]),
                       _as_list(parameters["stream_array_sizes"]),
                       _as_list(parameters["map_sizes"]),
                       _as_list(parameters["dot_counts"]))
