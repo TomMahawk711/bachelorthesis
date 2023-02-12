@@ -221,7 +221,6 @@ def get_config(folder_name):
 
 
 def _build_parameter_dict(folder_name):
-    # limit_type, start_time = folder_name.split("_")
     lines = open(f"../outputs/{folder_name}/benchmark-config.txt", "r").readlines()
 
     parameters = dict()

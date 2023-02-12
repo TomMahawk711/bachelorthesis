@@ -3,9 +3,9 @@ from plotting_templates import create_bar_plot, create_heatmap, create_scatter_p
 
 
 # TODO
-def _create_heat_stencil_plots(parameters):
+def _create_heat_stencil_plots(folder_name):
     pass
 
 
 if __name__ == "__main__":
-    _create_heat_stencil_plots(get_config("i7-3770"))
+    _create_heat_stencil_plots("i7-3770")

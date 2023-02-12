@@ -2,10 +2,11 @@ from data_processing import process, get_config
 from plotting_templates import create_bar_plot, create_heatmap, create_scatter_plot
 
 
-def _create_vectorization_heatmaps(parameters):
+def _create_vectorization_heatmaps(folder_name):
+    paramters = get_config(folder_name)
     benchmark_name = "vector-operations"
-    folder_name = "R7-5800X"
     grouping_metric = parameters.limits
+
     x_labels = parameters.limits
     y_labels = parameters.instruction_sets
     y_labels.remove("SSE2")
@@ -21,9 +22,9 @@ def _create_vectorization_heatmaps(parameters):
     create_heatmap(times_data, x_labels, y_labels, "title_b")
 
 
-def _create_vectorization_scatter_plots(parameters):
+def _create_vectorization_scatter_plots(folder_name):
+    parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
-    folder_name = "R7-5800X"
     grouping_metric = parameters.limits
 
     sse_energies, sse_times = process(parameters, benchmark_name, folder_name, grouping_metric, "SSE")
@@ -41,4 +42,4 @@ def _create_vectorization_scatter_plots(parameters):
 
 
 if __name__ == "__main__":
-    _create_vectorization_scatter_plots(get_config("R7-5800X"))
+    _create_vectorization_scatter_plots("R7-5800X")
