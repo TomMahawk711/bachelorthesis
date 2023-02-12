@@ -2,7 +2,8 @@ from data_processing import process, get_config
 from plotting_templates import create_bar_plot, create_heatmap, create_scatter_plot
 
 
-def _create_vectorization_heatmaps(folder_name):
+def _create_vectorization_heatmaps():
+    folder_name = "R7-5800X"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
@@ -42,4 +43,4 @@ def _create_vectorization_scatter_plots(folder_name):
 
 
 if __name__ == "__main__":
-    _create_vectorization_scatter_plots("R7-5800X")
+    _create_vectorization_scatter_plots()

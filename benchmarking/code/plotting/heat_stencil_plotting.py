@@ -2,7 +2,8 @@ from data_processing import process, get_config
 from plotting_templates import create_bar_plot, create_heatmap, create_scatter_plot
 
 
-def _create_heat_stencil_plots(folder_name):
+def _create_heat_stencil_plots():
+    folder_name = "i7-3770"
     parameters = get_config(folder_name)
     benchmark_name = "heat-stencil"
     grouping_metric = parameters.limits

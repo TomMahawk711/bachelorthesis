@@ -2,7 +2,8 @@ from data_processing import process, get_config
 from plotting_templates import create_bar_plot, create_heatmap, create_scatter_plot
 
 
-def _create_monte_carlo_plots(folder_name):
+def _create_monte_carlo_plots():
+    folder_name = "i7-3770"
     parameters = get_config(folder_name)
     benchmark_name = "monte-carlo"
     grouping_metric = parameters.limits
@@ -37,4 +38,4 @@ def _create_monte_carlo_plots(folder_name):
 
 
 if __name__ == "__main__":
-    _create_monte_carlo_plots("i7-3770")
+    _create_monte_carlo_plots()
