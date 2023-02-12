@@ -6,8 +6,11 @@ from statistics import mean
 from benchmarking.code.parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name, grouping_metric, parameter_4=""):
-    data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, parameter_4)
+def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="AVX", precision="double",
+            frequency=3600, vector_size=1024, optimization_flag="O1"):
+
+    data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
+                                                     frequency, vector_size, optimization_flag)
 
     if benchmark_name == "stream":
         energies, times, copy, scale, add, triad = _extract_stream_data(data, files, grouping_metric)
@@ -17,7 +20,8 @@ def process(parameters, benchmark_name, folder_name, grouping_metric, parameter_
         return _get_means(parameters, energies, times, grouping_metric)
 
 
-def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, parameter_4):
+def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision, frequency,
+                                       vector_size, optimization_flag):
     # for every benchmark there is a separate list comprehension to get the corresponding files with measurements in it, there is one
     # variable parameter (grouping_metric) in the list comprehension by which the files will be grouped, all other parameters are fixed or
     # get fixed by passing additional parameters (e.g. parameter_4)
@@ -26,24 +30,24 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
     files_dict = dict()
 
     if benchmark_name == "vector-operations":
-        for frequency in grouping_metric:
+        for limit in grouping_metric:
 
-            files_dict[str(frequency)] = \
+            files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if "thread-count-1_" in file
-                 and f"_{frequency}MHz" in file
-                 and f"instruction-set-{parameter_4}_" in file
-                 and "vector-size-2048_" in file
-                 and "precision-single_" in file]
+                 if f"thread-count-{thread_count}_" in file
+                 and f"_{limit}MHz" in file
+                 and f"instruction-set-{instruction_set}_" in file
+                 and f"vector-size-{vector_size}_" in file
+                 and f"precision-{precision}_" in file]
 
     elif benchmark_name == "monte-carlo":
         for limit in grouping_metric:
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-8_" in file
+                 if f"thread-count-{thread_count}_" in file
                  and f"_{limit}MHz_" in file
-                 and f"_optimization-flag-O1_" in file
+                 and f"_optimization-flag-{optimization_flag}_" in file
                  and f"_dot-count-640000000_" in file]
 
     elif benchmark_name == "heat-stencil":
@@ -51,9 +55,9 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-8_" in file
+                 if f"thread-count-{thread_count}_" in file
                  and f"_{limit}MHz_" in file
-                 and f"_optimization-flag-O1_" in file
+                 and f"_optimization-flag-{optimization_flag}_" in file
                  and f"_map-size-800_" in file]
 
     elif benchmark_name == "stream":
@@ -61,7 +65,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{parameter_4}_" in file
+                 if f"thread-count-{thread_count}_" in file
                  and f"_{limit}MHz_" in file
                  and f"_stream-array-size-6400000_" in file]
 
