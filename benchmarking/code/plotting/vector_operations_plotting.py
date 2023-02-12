@@ -23,7 +23,8 @@ def _create_vectorization_heatmaps():
     create_heatmap(times_data, x_labels, y_labels, "title_b")
 
 
-def _create_vectorization_scatter_plots(folder_name):
+def _create_vectorization_scatter_plots():
+    folder_name = "R7-5800X"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
