@@ -1,6 +1,6 @@
 class Parameters:
-    # add new parameters here, in benchmarking.save_config() and in data_processing.get_config()
-    # TODO: check if different vector sizes are relevant
+    # add new parameters here, in benchmarking.save_config(), data_processing.get_config() and the list comprehensions in
+    # data_processing._get_data_per_benchmark_per_system()
     def __init__(self, benchmark_names, start_time, iterations, limit_type, limits, thread_counts, vectorization_sizes, vector_sizes,
                  precisions, optimization_flags, instruction_sets, stream_array_sizes, map_sizes, dot_counts):
         self.benchmark_names = benchmark_names
