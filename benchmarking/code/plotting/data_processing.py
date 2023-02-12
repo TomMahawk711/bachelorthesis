@@ -7,7 +7,7 @@ from benchmarking.code.parameters import Parameters
 
 
 def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="AVX", precision="double",
-            frequency=3600, vector_size=1024, optimization_flag="O1"):
+            frequency=3800, vector_size=1024, optimization_flag="O1"):
 
     data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
                                                      frequency, vector_size, optimization_flag)
@@ -29,6 +29,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
     path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
 
+    # TODO: make separate to group by threads or to group by frequencies/power limits
     if benchmark_name == "vector-operations":
         for limit in grouping_metric:
 
@@ -45,8 +46,8 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{thread_count}_" in file
-                 and f"_{limit}MHz_" in file
+                 if f"thread-count-{limit}_" in file
+                 and f"_{frequency}MHz_" in file
                  and f"_optimization-flag-{optimization_flag}_" in file
                  and f"_dot-count-640000000_" in file]
 
@@ -55,9 +56,9 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{thread_count}_" in file
-                 and f"_{limit}MHz_" in file
-                 and f"_optimization-flag-{optimization_flag}_" in file
+                 if f"thread-count-{limit}_" in file
+                 and f"_{frequency}MHz_" in file
+                 and f"_optimization-flag-O2_" in file
                  and f"_map-size-800_" in file]
 
     elif benchmark_name == "stream":
@@ -73,6 +74,8 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
         data_dict = _get_stream_data(files_dict, path)
     else:
         data_dict = _get_energy_time_data(files_dict, path)
+
+    # print(files_dict)
 
     return data_dict, files_dict
 
