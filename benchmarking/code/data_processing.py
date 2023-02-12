@@ -6,8 +6,8 @@ from statistics import mean
 from parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set):
-    data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, instruction_set)
+def process(parameters, benchmark_name, folder_name, grouping_metric, parameter_4=""):
+    data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, parameter_4)
 
     if benchmark_name == "stream":
         energies, times, copy, scale, add, triad = _extract_stream_data(data, files, grouping_metric)
