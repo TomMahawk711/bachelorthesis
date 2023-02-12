@@ -3,7 +3,7 @@ import os
 import ast
 
 from statistics import mean
-from parameters import Parameters
+from benchmarking.code.parameters import Parameters
 
 
 def process(parameters, benchmark_name, folder_name, grouping_metric, parameter_4=""):

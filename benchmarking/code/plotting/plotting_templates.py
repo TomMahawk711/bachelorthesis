@@ -19,6 +19,7 @@ def create_heatmap(data, x_labels, y_labels, title):
     plt.show()
 
 
+# TODO: fix xticks
 def create_scatter_plot(data, x_label, y_label, title, legend):
     plt.title(title)
     plt.xlabel(x_label)
@@ -36,6 +37,6 @@ def create_bar_plot(x, y, x_label, y_label, title):
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
-    plt.bar(x,y, width=200, tick_label=x)
+    plt.bar(x, y, width=200, tick_label=x)
     plt.show()
 
