@@ -240,7 +240,7 @@ def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password,
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"./../benchmarks/heat_stencil.out {map_size} >/dev/null"
+            f"OMP_NUM_THREADS={thread_count} ./../benchmarks/heat_stencil.out {map_size} >/dev/null"
         ], shell=True)
 
 
