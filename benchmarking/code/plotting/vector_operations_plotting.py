@@ -3,7 +3,7 @@ from plotting_templates import create_bar_plot, create_heatmap, create_scatter_p
 
 
 def _create_vectorization_heatmaps(folder_name):
-    paramters = get_config(folder_name)
+    parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
 
