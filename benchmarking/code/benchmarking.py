@@ -240,7 +240,7 @@ def _run_heat_stencil(iteration, limit, optimization_flag, parameters, password,
             +
             f"-e power/energy-{perf_stat_command}/ "
             +
-            f"OMP_NUM_THREADS={thread_count} ./../benchmarks/heat_stencil.out {map_size} >/dev/null"
+            f"./../benchmarks/heat_stencil.out {map_size} {thread_count} >/dev/null"
         ], shell=True)
 
 
@@ -312,17 +312,17 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["vector-operations", "monte-carlo", "heat-stencil", "stream"]
+    my_benchmark_names = ["heat-stencil"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 10
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
     my_limits = [2200, 2800, 3800]
-    my_thread_counts = [1, 2, 4, 8, 16]
+    my_thread_counts = [4, 8, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096, 8192]
     my_precisions = ["single", "double"]
-    my_optimization_flags = ["O0", "O1", "O2", "O3", "Os"]
+    my_optimization_flags = ["O1", "O2"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
     my_stream_array_sizes = [100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 51200000]
     my_map_sizes = [100, 200, 400, 800]

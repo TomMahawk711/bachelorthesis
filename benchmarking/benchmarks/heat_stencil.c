@@ -27,8 +27,10 @@ double getValue(int x, int y, double* array, int N);
 int main(int argc, char **argv) {
     // 'parsing' optional input parameter = problem size
     int N = 200;
-    if (argc > 1) {
+    int number_of_threads = 1;
+    if (argc > 2) {
         N = atoi(argv[1]);
+        number_of_threads = atoi(argv[2]);
     }
     int T = N * 10;
     //printf("Computing heat-distribution for room size %dX%d for T=%d timesteps\n", N, N, T);
@@ -65,6 +67,7 @@ int main(int argc, char **argv) {
     //double k = 1.0 / (h*h);
     if(!B) PERROR_GOTO(error_b);
     // for each time step ..
+    omp_set_num_threads(number_of_threads);
     for (int t = 0; t < T; t++) {
         #pragma omp parallel for default(none) shared(A,B) firstprivate(source_x, source_y,N) collapse(2)
         for (int i = 0; i < N; i++){
