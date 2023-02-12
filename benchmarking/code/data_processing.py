@@ -18,11 +18,12 @@ def process(parameters, benchmark_name, folder_name, grouping_metric, instructio
 
 
 def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, parameter_4):
+    # for every benchmark there is a separate list comprehension to get the corresponding files with measurements in it, there is one
+    # variable parameter (grouping_metric) in the list comprehension by which the files will be grouped, all other parameters are fixed or
+    # get fixed by passing additional parameters (e.g. parameter_4)
+
     path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
-
-    # for every benchmark, there is a separate list comprehension, one parameter should be variable, the others are fixed
-    # to group by another parameter, the parameter-collection - over which the for loop iterates - has to be changed
 
     if benchmark_name == "vector-operations":
         for frequency in grouping_metric:
@@ -31,8 +32,8 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
                 [file for file in os.listdir(path)
                  if "thread-count-1_" in file
                  and f"_{frequency}MHz" in file
-                 and f"instruction-set-{instruction_set}_" in file
-                 and "vector-size-4096_" in file
+                 and f"instruction-set-{parameter_4}_" in file
+                 and "vector-size-2048_" in file
                  and "precision-single_" in file]
 
     elif benchmark_name == "monte-carlo":
@@ -60,7 +61,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{thread_count}_" in file
+                 if f"thread-count-{parameter_4}_" in file
                  and f"_{limit}MHz_" in file
                  and f"_stream-array-size-6400000_" in file]
 
