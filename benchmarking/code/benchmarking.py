@@ -62,6 +62,17 @@ def _save_config(parameters):
     )
 
 
+def _is_intel_system():
+    os.system("lscpu > cpuinfo.txt")
+    with open("cpuinfo.txt") as file:
+        if "Intel" in file.read():
+            os.system("rm cpuinfo.txt")
+            return True
+
+    os.system("rm cpuinfo.txt")
+    return False
+
+
 # --------------------BENCHMARK_STUFF--------------------
 
 
@@ -91,17 +102,6 @@ def frequency_limit_benchmark(parameters, password, perf_stat_command):
             _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
     _set_scaling_governor("ondemand", password)
-
-
-def _is_intel_system():
-    os.system("lscpu > cpuinfo.txt")
-    with open("cpuinfo.txt") as file:
-        if "Intel" in file.read():
-            os.system("rm cpuinfo.txt")
-            return True
-
-    os.system("rm cpuinfo.txt")
-    return False
 
 
 def _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command):
