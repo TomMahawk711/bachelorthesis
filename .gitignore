@@ -6,5 +6,7 @@
 *.out
 *.png
 *.zip
+test.py
+output.txt
 venv
 __pycache__
