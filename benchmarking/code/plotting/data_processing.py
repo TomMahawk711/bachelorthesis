@@ -6,8 +6,8 @@ from statistics import mean
 from benchmarking.code.parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="AVX", precision="double",
-            frequency=3800, vector_size=1024, optimization_flag="O1"):
+def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="SSE", precision="double",
+            frequency=3800, vector_size=4096, optimization_flag="O1"):
 
     data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
                                                      frequency, vector_size, optimization_flag)
@@ -35,11 +35,11 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{thread_count}_" in file
-                 and f"_{limit}MHz" in file
-                 and f"instruction-set-{instruction_set}_" in file
-                 and f"vector-size-{vector_size}_" in file
-                 and f"precision-{precision}_" in file]
+                 if f"_thread-count-{limit}_" in file
+                 and f"_{frequency}MHz_" in file
+                 and f"_instruction-set-{instruction_set}_" in file
+                 and f"_vector-size-{vector_size}_" in file
+                 and f"_precision-{precision}_" in file]
 
     elif benchmark_name == "monte-carlo":
         for limit in grouping_metric:
@@ -56,10 +56,10 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{limit}_" in file
-                 and f"_{frequency}MHz_" in file
+                 if f"thread-count-{thread_count}_" in file
+                 and f"_{limit}MHz_" in file
                  and f"_optimization-flag-O2_" in file
-                 and f"_map-size-800_" in file]
+                 and f"_map-size-400_" in file]
 
     elif benchmark_name == "stream":
         for limit in grouping_metric:
@@ -67,8 +67,8 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-{thread_count}_" in file
-                 and f"_{limit}MHz_" in file
-                 and f"_stream-array-size-6400000_" in file]
+                 and f"_{frequency}MHz_" in file
+                 and f"_stream-array-size-{limit}_" in file]
 
     if benchmark_name == "stream":
         data_dict = _get_stream_data(files_dict, path)
