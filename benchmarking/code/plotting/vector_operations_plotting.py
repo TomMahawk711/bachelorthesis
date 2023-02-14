@@ -3,7 +3,7 @@ from plotting_templates import create_bar_plot, create_heatmap, create_scatter_p
 
 
 def _create_vectorization_heatmaps():
-    folder_name = "R7-5800X"
+    folder_name = "R7-5800X_old"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
@@ -24,7 +24,7 @@ def _create_vectorization_heatmaps():
 
 
 def _create_vectorization_scatter_plots_grouping_frequencies():
-    folder_name = "i7-3770"
+    folder_name = "i7-3770_old"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
@@ -54,7 +54,7 @@ def _create_vectorization_scatter_plots_grouping_frequencies():
 
 
 def _create_vectorization_scatter_plots_i7_grouping_threads():
-    folder_name = "i7-3770"
+    folder_name = "i7-3770_old"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
@@ -75,19 +75,20 @@ def _create_vectorization_scatter_plots_i7_grouping_threads():
                      (grouping_metric, energies_3100Mhz), (grouping_metric, sse_energies_3100Mhz), (grouping_metric, avx_energies_3100Mhz),
                      (grouping_metric, energies_4100Mhz), (grouping_metric, sse_energies_4100Mhz), (grouping_metric, avx_energies_4100Mhz)]
 
-    times_data = [(grouping_metric, times_2100Mhz), (grouping_metric, sse_times_2100Mhz), (grouping_metric, avx_times_2100Mhz),
-                  (grouping_metric, times_3100Mhz), (grouping_metric, sse_times_3100Mhz), (grouping_metric, avx_times_3100Mhz),
-                  (grouping_metric, times_4100Mhz), (grouping_metric, sse_times_4100Mhz), (grouping_metric, avx_times_4100Mhz)]
+    times_data = [(grouping_metric, sse_times_2100Mhz), (grouping_metric, avx_times_2100Mhz),
+                  (grouping_metric, sse_times_3100Mhz), (grouping_metric, avx_times_3100Mhz),
+                  (grouping_metric, sse_times_4100Mhz), (grouping_metric, avx_times_4100Mhz)]
 
     relative_energies = [1 - (e1 / e2) for e1, e2 in zip(sse_energies_2100Mhz, avx_energies_2100Mhz)]
 
     #create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison of instruction sets", ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
-    create_scatter_plot(times_data, "thread count", "time [s]", "time comparison of instruction sets", ["none - 2100MHz", "SSE - 2100MHz", "AVX - 2100MHz", "none - 3100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "none - 4100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
+    # TODO: show Philipp
+    create_scatter_plot(times_data, "thread count", "time [s]", "time comparison of instruction sets", ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
 
 
 def _create_vectorization_scatter_plots_r7_grouping_threads():
-    folder_name = "R7-5800X"
+    folder_name = "R7-5800X_old"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
@@ -104,18 +105,19 @@ def _create_vectorization_scatter_plots_r7_grouping_threads():
     sse_energies_4100Mhz, sse_times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=3800)
     avx_energies_4100Mhz, avx_times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=3800)
 
-    energies_data = [(grouping_metric, energies_2100Mhz), (grouping_metric, sse_energies_2100Mhz), (grouping_metric, avx_energies_2100Mhz),
-                     (grouping_metric, energies_3100Mhz), (grouping_metric, sse_energies_3100Mhz), (grouping_metric, avx_energies_3100Mhz),
-                     (grouping_metric, energies_4100Mhz), (grouping_metric, sse_energies_4100Mhz), (grouping_metric, avx_energies_4100Mhz)]
+    energies_data = [(grouping_metric, sse_energies_2100Mhz), (grouping_metric, avx_energies_2100Mhz),
+                     (grouping_metric, sse_energies_3100Mhz), (grouping_metric, avx_energies_3100Mhz),
+                     (grouping_metric, sse_energies_4100Mhz), (grouping_metric, avx_energies_4100Mhz)]
 
-    times_data = [(grouping_metric, times_2100Mhz), (grouping_metric, sse_times_2100Mhz), (grouping_metric, avx_times_2100Mhz),
-                  (grouping_metric, times_3100Mhz), (grouping_metric, sse_times_3100Mhz), (grouping_metric, avx_times_3100Mhz),
-                  (grouping_metric, times_4100Mhz), (grouping_metric, sse_times_4100Mhz), (grouping_metric, avx_times_4100Mhz)]
+    times_data = [(grouping_metric, sse_times_2100Mhz), (grouping_metric, avx_times_2100Mhz),
+                  (grouping_metric, sse_times_3100Mhz), (grouping_metric, avx_times_3100Mhz),
+                  (grouping_metric, sse_times_4100Mhz), (grouping_metric, avx_times_4100Mhz)]
 
     relative_energies = [1 - (e1 / e2) for e1, e2 in zip(sse_energies_2100Mhz, avx_energies_2100Mhz)]
 
-    #create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison of instruction sets", ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
-    create_scatter_plot(times_data, "thread count", "time [s]", "time comparison of instruction sets", ["none - 2100MHz", "SSE - 2100MHz", "AVX - 2100MHz", "none - 3100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "none - 4100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
+    create_scatter_plot(energies_data, "thread count", "consumed energy [Joules]", "energy comparison of instruction sets", ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
+    # TODO: show this Philipp
+    #create_scatter_plot(times_data, "thread count", "time [s]", "time comparison of instruction sets", ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
 
 
