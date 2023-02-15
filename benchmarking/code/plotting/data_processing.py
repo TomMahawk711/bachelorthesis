@@ -6,8 +6,8 @@ from statistics import mean
 from benchmarking.code.parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="SSE", precision="double",
-            frequency=3800, vector_size=4096, optimization_flag="O1"):
+def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="AVX", precision="double",
+            frequency=3800, vector_size=1048576, optimization_flag="O1"):
 
     data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
                                                      frequency, vector_size, optimization_flag)
@@ -105,6 +105,7 @@ def _get_energy_time_data(files_dict, path):
 
     return plot_data_dict
 
+
 def _get_stream_data(files_dict, path):
     plot_data_dict = dict()
 
@@ -127,6 +128,7 @@ def _get_stream_data(files_dict, path):
                 (energy_measurement, time_measurement, copy_measurement, scale_measurement, add_measurement, triad_measurement)
 
     return plot_data_dict
+
 
 def _extract_data(data, files, grouping_metric):
     energies = list()
@@ -169,8 +171,8 @@ def _get_means(parameters, energies, times, grouping_metric):
         start_index = parameters.iterations * index
         end_index = start_index + parameters.iterations - 1
 
-        energies_plot_data.append(mean(energies[start_index:end_index]))
-        times_plot_data.append(mean(times[start_index:end_index]))
+        energies_plot_data.append(mean(energies[start_index:end_index+1]))
+        times_plot_data.append(mean(times[start_index:end_index+1]))
 
     return energies_plot_data, times_plot_data
 
@@ -196,15 +198,18 @@ def _get_stream_means(parameters, energies, times, copy, scale, add, triad, grou
 
     return energies_plot_data, times_plot_data, copy_plot_data, scale_plot_data, add_plot_data, triad_plot_data
 
+
 def _get_measurement(tokens, metric):
     measurement_index = tokens.index(metric) - 1
     measurement = tokens[measurement_index]
+    measurement = measurement.replace(",", "")
     return float(measurement)
 
 
 def _get_stream_measurement(tokens, metric):
     measurement_index = tokens.index(metric) + 2
     measurement = tokens[measurement_index]
+    measurement = measurement.replace(",", "")
     return float(measurement)
 
 
