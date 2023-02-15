@@ -6,7 +6,7 @@ from plotting_templates import create_bar_plot, create_heatmap, create_scatter_p
 
 
 def _create_stream_plots_i7_grouping_array_sizes():
-    folder_name = "i7-3770_old"
+    folder_name = "i7-3770"
     benchmark_name = "stream"
     parameters = get_config(folder_name)
     grouping_metric = parameters.stream_array_sizes
@@ -29,7 +29,7 @@ def _create_stream_plots_i7_grouping_array_sizes():
 
 
 def _create_stream_plots_r7_grouping_array_sizes():
-    folder_name = "R7-5800X_old"
+    folder_name = "R7-5800X"
     benchmark_name = "stream"
     parameters = get_config(folder_name)
     grouping_metric = parameters.stream_array_sizes
@@ -48,7 +48,7 @@ def _create_stream_plots_r7_grouping_array_sizes():
 
 
 def _create_stream_plots_grouping_frequencies():
-    folder_name = "i7-3770_old"
+    folder_name = "i7-3770"
     benchmark_name = "stream"
     parameters = get_config(folder_name)
     grouping_metric = parameters.limits

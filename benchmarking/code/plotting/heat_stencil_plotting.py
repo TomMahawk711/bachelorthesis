@@ -3,7 +3,7 @@ from plotting_templates import create_bar_plot, create_heatmap, create_scatter_p
 
 
 def _create_heat_stencil_plots():
-    folder_name = "i7-3770_old"
+    folder_name = "i7-3770"
     parameters = get_config(folder_name)
     benchmark_name = "heat-stencil"
     grouping_metric = parameters.limits
@@ -20,9 +20,9 @@ def _create_heat_stencil_plots():
     #create_scatter_plot(powers_data, "frequencies", "power", "power consumption heat stencil", folder_name)
     #create_scatter_plot(energies_times_data, "times", "energies", "energy/time heat stencil", folder_name)
 
-    r7_parameters = get_config("R7-5800X_old")
+    r7_parameters = get_config("R7-5800X")
     r7_grouping_metric = r7_parameters.limits
-    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_old", r7_grouping_metric, frequency=2200)
+    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X", r7_grouping_metric, frequency=2200)
     r7_powers = [energy / time for energy, time in zip(r7_energies, r7_times)]
 
     r7_energies_data = [(r7_grouping_metric, r7_energies)]
