@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 #include "vector_operations_aux.h"
 
 void calculate_array(double*, double*, double*, int, int, int);
@@ -20,7 +21,10 @@ int main(int argc, char** argv){
         size = atol(argv[1]);
     }
 
-    double a[size], b[size], c[size];
+    double* a = (double*) memalign(sizeof(double), sizeof(double)*size);
+	double* b = (double*) memalign(sizeof(double), sizeof(double)*size);
+	double* c = (double*) memalign(sizeof(double), sizeof(double)*size);
+
     init_array_double_precision(a, size, 0);
     init_array_double_precision(b, size, 1);
     init_array_double_precision(c, size, 2);
@@ -32,6 +36,10 @@ int main(int argc, char** argv){
     //printf("time: %f seconds\n", end_time - start_time);
 	//print_array_double_precision(a, size);
     //check_result_double_precision(a, size);
+
+    free(a);
+    free(b);
+    free(c);
 
     return EXIT_SUCCESS;
 }
