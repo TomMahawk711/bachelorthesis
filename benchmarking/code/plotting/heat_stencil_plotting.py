@@ -6,7 +6,7 @@ def _create_heat_stencil_plots():
     folder_name = "i7-3770"
     parameters = get_config(folder_name)
     benchmark_name = "heat-stencil"
-    grouping_metric = parameters.limits
+    grouping_metric = parameters.thread_counts
     energies, times = process(parameters, benchmark_name, folder_name, grouping_metric, frequency=2100)
     powers = [energy / time for energy, time in zip(energies, times)]
 
@@ -44,5 +44,31 @@ def _create_heat_stencil_plots():
     #create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper left")
 
 
+def _create_heat_stencil_plots_r7_grouping_by_threads():
+    folder_name = "R7-5800X"
+    parameters = get_config(folder_name)
+    benchmark_name = "heat-stencil"
+    grouping_metric = parameters.thread_counts
+
+    energies, times = process(parameters, benchmark_name, folder_name, grouping_metric, frequency=2200)
+    powers = [energy / time for energy, time in zip(energies, times)]
+
+    energies_data = [(grouping_metric, energies)]
+    times_data = [(grouping_metric, times)]
+    powers_data = [(grouping_metric, powers)]
+    energies_times_data = [(times, energies)]
+
+    # create_scatter_plot(r7_energies_data, "frequencies", "energy [J]", "energy consumption heat stencil", ["R7 5800X"], "upper left")
+    # create_scatter_plot(times_data, "frequencies", "time", "time heat stencil", folder_name)
+    # create_scatter_plot(powers_data, "frequencies", "power", "power consumption heat stencil", folder_name)
+    # create_scatter_plot(energies_times_data, "times", "energies", "energy/time heat stencil", folder_name)
+
+
+    create_scatter_plot(powers_data, "thread count", "power consumption [W]", "power consumption heat stencil", ["R7 5800X - 2200MHz"], "upper left")
+    create_scatter_plot(times_data, "thread count", "time [s]", "time heat stencil", ["R7 5800X - 2200MHz"], "upper right")
+    create_scatter_plot(energies_data, "thread count", "energy consumption [J]", "energy heat stencil", ["R7 5800X - 2200MHz"], "upper right")
+    #create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper left")
+
+
 if __name__ == "__main__":
-    _create_heat_stencil_plots()
+    _create_heat_stencil_plots_r7_grouping_by_threads()
