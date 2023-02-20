@@ -6,11 +6,11 @@ from statistics import mean
 from benchmarking.code.parameters import Parameters
 
 
-def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=8, instruction_set="AVX", precision="double",
-            frequency=3800, vector_size=1048576, optimization_flag="O1"):
+def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=4, instruction_set="AVX", precision="double",
+            frequency=3800, vector_size=2097152, optimization_flag="O2", map_size=400, dot_count=640000000):
 
     data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
-                                                     frequency, vector_size, optimization_flag)
+                                                     frequency, vector_size, optimization_flag, map_size, dot_count)
 
     if benchmark_name == "stream":
         energies, times, copy, scale, add, triad = _extract_stream_data(data, files, grouping_metric)
@@ -21,7 +21,7 @@ def process(parameters, benchmark_name, folder_name, grouping_metric, thread_cou
 
 
 def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision, frequency,
-                                       vector_size, optimization_flag):
+                                       vector_size, optimization_flag, map_size, dot_count):
     # for every benchmark there is a separate list comprehension to get the corresponding files with measurements in it, there is one
     # variable parameter (grouping_metric) in the list comprehension by which the files will be grouped, all other parameters are fixed or
     # get fixed by passing additional parameters (e.g. parameter_4)
@@ -35,7 +35,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"_thread-count-{limit}_" in file
+                 if f"_thread-count-{thread_count}_" in file
                  and f"_{frequency}MHz_" in file
                  and f"_instruction-set-{instruction_set}_" in file
                  and f"_vector-size-{vector_size}_" in file
@@ -46,10 +46,10 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
-                 if f"thread-count-{limit}_" in file
+                 if f"thread-count-{thread_count}_" in file
                  and f"_{frequency}MHz_" in file
                  and f"_optimization-flag-{optimization_flag}_" in file
-                 and f"_dot-count-640000000_" in file]
+                 and f"_dot-count-{dot_count}" in file]
 
     elif benchmark_name == "heat-stencil":
         for limit in grouping_metric:
@@ -57,9 +57,9 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-{thread_count}_" in file
-                 and f"_{limit}MHz_" in file
-                 and f"_optimization-flag-O2_" in file
-                 and f"_map-size-400_" in file]
+                 and f"_{frequency}MHz_" in file
+                 and f"_optimization-flag-{optimization_flag}_" in file
+                 and f"_map-size-{map_size}_" in file]
 
     elif benchmark_name == "stream":
         for limit in grouping_metric:
@@ -75,7 +75,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
     else:
         data_dict = _get_energy_time_data(files_dict, path)
 
-    # print(files_dict)
+    print(files_dict)
 
     return data_dict, files_dict
 
@@ -83,6 +83,9 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 def _get_path(folder_name, benchmark_name):
     path = f"../outputs/{folder_name}/"
     folders = [folder for folder in os.listdir(path) if benchmark_name in folder]
+
+    print(path)
+    print(folders)
 
     return f"{path}{folders[0]}"
 
