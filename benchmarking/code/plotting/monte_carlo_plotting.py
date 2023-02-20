@@ -1,5 +1,6 @@
 from data_processing import process, get_config
-from plotting_templates import create_bar_plot, create_heatmap, create_scatter_plot
+from plotting_templates import create_scatter_plot
+# TODO: R7 not faster than i7
 
 
 def _create_monte_carlo_plots_by_thread_counts():
