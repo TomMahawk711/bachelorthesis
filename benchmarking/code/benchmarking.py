@@ -312,7 +312,7 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["heat-stencil"]
+    my_benchmark_names = ["monte-carlo", "heat-stencil", "stream"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 5
     my_limit_type = "frequency-limit"
@@ -324,7 +324,7 @@ def initialize_parameters():
     my_optimization_flags = ["O0", "O1", "O2", "O3", "Os", "Ofast"]
     my_instruction_sets = ["SSE", "SSE2", "AVX"]
     my_stream_array_sizes = [100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 51200000]
-    my_map_sizes = [100, 200, 400, 800]
+    my_map_sizes = [100, 200, 300, 400, 500]
     my_dot_counts = [10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]
 
     return Parameters(my_benchmark_names, my_start_time, my_iterations, my_limit_type, my_limits, my_thread_counts,
