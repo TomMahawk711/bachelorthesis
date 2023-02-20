@@ -7,10 +7,10 @@ from benchmarking.code.parameters import Parameters
 
 
 def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=4, instruction_set="AVX", precision="double",
-            frequency=3800, vector_size=2097152, optimization_flag="O2", map_size=400, dot_count=640000000):
+            frequency=3800, vector_size=2097152, optimization_flag="O2", map_size=400, dot_count=640000000, array_size=400000):
 
     data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
-                                                     frequency, vector_size, optimization_flag, map_size, dot_count)
+                                                     frequency, vector_size, optimization_flag, map_size, dot_count, array_size)
 
     if benchmark_name == "stream":
         energies, times, copy, scale, add, triad = _extract_stream_data(data, files, grouping_metric)
@@ -21,7 +21,7 @@ def process(parameters, benchmark_name, folder_name, grouping_metric, thread_cou
 
 
 def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision, frequency,
-                                       vector_size, optimization_flag, map_size, dot_count):
+                                       vector_size, optimization_flag, map_size, dot_count, array_size):
     # for every benchmark there is a separate list comprehension to get the corresponding files with measurements in it, there is one
     # variable parameter (grouping_metric) in the list comprehension by which the files will be grouped, all other parameters are fixed or
     # get fixed by passing additional parameters (e.g. parameter_4)
@@ -68,7 +68,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
                 [file for file in os.listdir(path)
                  if f"thread-count-{thread_count}_" in file
                  and f"_{frequency}MHz_" in file
-                 and f"_stream-array-size-{limit}_" in file]
+                 and f"_stream-array-size-{array_size}_" in file]
 
     if benchmark_name == "stream":
         data_dict = _get_stream_data(files_dict, path)
