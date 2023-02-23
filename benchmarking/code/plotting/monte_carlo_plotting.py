@@ -6,9 +6,9 @@ from plotting_templates import create_scatter_plot
 def _create_monte_carlo_plots_by_thread_counts():
     benchmark_name = "monte-carlo"
 
-    parameters = get_config("i7-3770")
+    parameters = get_config("i7-3770_smaller-vectors")
     grouping_metric = parameters.thread_counts
-    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770", grouping_metric, frequency=2100)
+    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770_smaller-vectors", grouping_metric, frequency=2100)
     i7_powers = [energy / time for energy, time in zip(i7_energies, i7_times)]
 
     i7_energies_data = [(grouping_metric, i7_energies)]
@@ -16,9 +16,9 @@ def _create_monte_carlo_plots_by_thread_counts():
     i7_powers_data = [(grouping_metric, i7_powers)]
     i7_energies_times_data = [(i7_times, i7_energies)]
 
-    r7_parameters = get_config("R7-5800X")
+    r7_parameters = get_config("R7-5800X_smaller-vectors")
     r7_grouping_metric = r7_parameters.thread_counts
-    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X", r7_grouping_metric, frequency=2200)
+    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_smaller-vectors", r7_grouping_metric, frequency=2200)
     r7_powers = [energy / time for energy, time in zip(r7_energies, r7_times)]
 
     r7_energies_data = [(r7_grouping_metric, r7_energies)]
@@ -40,9 +40,9 @@ def _create_monte_carlo_plots_by_thread_counts():
 def _create_monte_carlo_plots_by_frequencies():
     benchmark_name = "monte-carlo"
 
-    parameters = get_config("i7-3770")
+    parameters = get_config("i7-3770_smaller-vectors")
     grouping_metric = parameters.limits
-    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770", grouping_metric, thread_count=4)
+    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770_smaller-vectors", grouping_metric, thread_count=4)
     i7_powers = [energy / time for energy, time in zip(i7_energies, i7_times)]
 
     i7_energies_data = [(grouping_metric, i7_energies)]
@@ -50,9 +50,9 @@ def _create_monte_carlo_plots_by_frequencies():
     i7_powers_data = [(grouping_metric, i7_powers)]
     i7_energies_times_data = [(i7_times, i7_energies)]
 
-    r7_parameters = get_config("R7-5800X")
+    r7_parameters = get_config("R7-5800X_smaller-vectors")
     r7_grouping_metric = r7_parameters.limits
-    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X", r7_grouping_metric, thread_count=4)
+    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_smaller-vectors", r7_grouping_metric, thread_count=4)
     r7_powers = [energy / time for energy, time in zip(r7_energies, r7_times)]
 
     r7_energies_data = [(r7_grouping_metric, r7_energies)]
@@ -74,9 +74,9 @@ def _create_monte_carlo_plots_by_frequencies():
 def _create_monte_carlo_plots_by_problem_size():
     benchmark_name = "monte-carlo"
 
-    parameters = get_config("i7-3770")
+    parameters = get_config("i7-3770_smaller-vectors")
     grouping_metric = parameters.map_sizes
-    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770", grouping_metric, thread_count=4, frequency=2100)
+    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770_smaller-vectors", grouping_metric, thread_count=4, frequency=2100)
     i7_powers = [energy / time for energy, time in zip(i7_energies, i7_times)]
 
     i7_energies_data = [(grouping_metric, i7_energies)]
@@ -84,9 +84,9 @@ def _create_monte_carlo_plots_by_problem_size():
     i7_powers_data = [(grouping_metric, i7_powers)]
     i7_energies_times_data = [(i7_times, i7_energies)]
 
-    r7_parameters = get_config("R7-5800X")
+    r7_parameters = get_config("R7-5800X_smaller-vectors")
     r7_grouping_metric = r7_parameters.map_sizes
-    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X", r7_grouping_metric, thread_count=4, frequency=2200)
+    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_smaller-vectors", r7_grouping_metric, thread_count=4, frequency=2200)
     r7_powers = [energy / time for energy, time in zip(r7_energies, r7_times)]
 
     r7_energies_data = [(r7_grouping_metric, r7_energies)]
@@ -108,9 +108,9 @@ def _create_monte_carlo_plots_by_problem_size():
 def _create_monte_carlo_plots_by_optimization():
     benchmark_name = "monte-carlo"
 
-    parameters = get_config("i7-3770")
+    parameters = get_config("i7-3770_smaller-vectors")
     grouping_metric = parameters.optimization_flags
-    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770", grouping_metric, thread_count=4, frequency=2100)
+    i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770_smaller-vectors", grouping_metric, thread_count=4, frequency=2100)
     i7_powers = [energy / time for energy, time in zip(i7_energies, i7_times)]
 
     i7_energies_data = [(grouping_metric, i7_energies)]
@@ -118,9 +118,9 @@ def _create_monte_carlo_plots_by_optimization():
     i7_powers_data = [(grouping_metric, i7_powers)]
     i7_energies_times_data = [(i7_times, i7_energies)]
 
-    r7_parameters = get_config("R7-5800X")
+    r7_parameters = get_config("R7-5800X_smaller-vectors")
     r7_grouping_metric = r7_parameters.optimization_flags
-    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X", r7_grouping_metric, thread_count=4, frequency=2200)
+    r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_smaller-vectors", r7_grouping_metric, thread_count=4, frequency=2200)
     r7_powers = [energy / time for energy, time in zip(r7_energies, r7_times)]
 
     r7_energies_data = [(r7_grouping_metric, r7_energies)]
