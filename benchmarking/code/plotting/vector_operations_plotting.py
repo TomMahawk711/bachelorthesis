@@ -3,7 +3,7 @@ from plotting_templates import create_heatmap, create_scatter_plot
 
 
 def _create_vectorization_heatmaps():
-    folder_name = "R7-5800X"
+    folder_name = "R7-5800X_smaller-vectors"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
@@ -23,7 +23,7 @@ def _create_vectorization_heatmaps():
 
 
 def _create_vectorization_scatter_plots_grouping_frequencies():
-    folder_name = "i7-3770"
+    folder_name = "i7-3770_smaller-vectors"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
@@ -55,7 +55,7 @@ def _create_vectorization_scatter_plots_grouping_frequencies():
 
 
 def _create_vectorization_scatter_plots_i7_grouping_threads():
-    folder_name = "i7-3770"
+    folder_name = "i7-3770_smaller-vectors"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
@@ -126,7 +126,7 @@ def _create_vectorization_scatter_plots_r7_grouping_threads():
 
 
 def _create_vectorization_scatter_plots_r9_grouping_threads():
-    folder_name = "R9-7900X_bigger-vectors"
+    folder_name = "R9-7900X_big-vector"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
