@@ -8,6 +8,23 @@ from benchmarking.code.parameters import Parameters
 
 def process(parameters, benchmark_name, folder_name, grouping_metric, thread_count=4, instruction_set="AVX", precision="double",
             frequency=3800, vector_size=2097152, optimization_flag="O2", map_size=400, dot_count=640000000, array_size=400000):
+    """
+
+    :param parameters:
+    :param benchmark_name:
+    :param folder_name:
+    :param grouping_metric:
+    :param thread_count:
+    :param instruction_set:
+    :param precision:
+    :param frequency:
+    :param vector_size:
+    :param optimization_flag:
+    :param map_size:
+    :param dot_count:
+    :param array_size:
+    :return: a list of energy measurements and a list of time measurements
+    """
 
     data, files = _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision,
                                                      frequency, vector_size, optimization_flag, map_size, dot_count, array_size)
@@ -22,10 +39,28 @@ def process(parameters, benchmark_name, folder_name, grouping_metric, thread_cou
 
 def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_metric, thread_count, instruction_set, precision, frequency,
                                        vector_size, optimization_flag, map_size, dot_count, array_size):
-    # for every benchmark there is a separate list comprehension to get the corresponding files with measurements in it, there is one
-    # variable parameter (grouping_metric) in the list comprehension by which the files will be grouped, all other parameters are fixed or
-    # get fixed by passing additional parameters (e.g. parameter_4)
+    """
+    :param benchmark_name: defines of which benchmark data will be used
+    :param folder_name: defines of which folder or CPU data will be used
+    :param grouping_metric: a list by which elements the data gets grouped by
+    :param thread_count: fixed value for thread_count
+    :param instruction_set: fixed value for instruction_set
+    :param precision: fixed value for precision
+    :param frequency: fixed value for frequency
+    :param vector_size: fixed value for vector_size
+    :param optimization_flag: fixed value for optimization_flag
+    :param map_size: fixed value for map_size
+    :param dot_count: fixed value for dot_count
+    :param array_size: fixed value for array_size
+    :return: a data_dict where each file name acts as a key and the data/measurements of the file are stored in the value,
+            a file_dict where each element of the grouping_metric acts as a key and the file names which are related to the element are stored in the value
 
+    For every benchmark there is a separate list comprehension to get the corresponding files with measurements in it,
+    there is one variable parameter (grouping_metric) in the list comprehension which the files will be grouped by,
+    all other parameters are fixed or get fixed by passing additional parameters (e.g. frequency, thread_count),
+    the parameters have default values from the call in the process function,
+    to group the files the limit variable has to be used in the string in the list comprehension
+    """
     path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
 
@@ -67,7 +102,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-{thread_count}_" in file
-                 and f"_{frequency}MHz_" in file
+                 and f"_{limit}MHz_" in file
                  and f"_stream-array-size-{array_size}_" in file]
 
     if benchmark_name == "stream":
@@ -75,7 +110,8 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
     else:
         data_dict = _get_energy_time_data(files_dict, path)
 
-    print(files_dict)
+    print(f"files:{files_dict}")
+    print(f"data:{data_dict}")
 
     return data_dict, files_dict
 
@@ -83,9 +119,6 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
 def _get_path(folder_name, benchmark_name):
     path = f"../outputs/{folder_name}/"
     folders = [folder for folder in os.listdir(path) if benchmark_name in folder]
-
-    print(path)
-    print(folders)
 
     return f"{path}{folders[0]}"
 
