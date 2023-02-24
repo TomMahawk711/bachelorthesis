@@ -61,10 +61,10 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
     the parameters have default values from the call in the process function,
     to group the files the limit variable has to be used in the string in the list comprehension
     """
+
     path = _get_path(folder_name, benchmark_name)
     files_dict = dict()
 
-    # TODO: make separate to group by threads or to group by frequencies/power limits
     if benchmark_name == "vector-operations":
         for limit in grouping_metric:
 
@@ -102,7 +102,7 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
             files_dict[str(limit)] = \
                 [file for file in os.listdir(path)
                  if f"thread-count-{thread_count}_" in file
-                 and f"_{limit}MHz_" in file
+                 and f"_{frequency}MHz_" in file
                  and f"_stream-array-size-{array_size}_" in file]
 
     if benchmark_name == "stream":
