@@ -22,35 +22,133 @@ def _create_vectorization_heatmaps():
     create_heatmap(times_data, x_labels, y_labels, "title_b")
 
 
-def _create_vectorization_scatter_plots_grouping_frequencies():
+def _create_vectorization_scatter_plots_i7_grouping_frequencies():
     folder_name = "i7-3770_smaller-vectors"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.limits
 
-    sse_energies_2t, sse_times_2t = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", thread_count=2)
-    avx_energies_2t, avx_times_2t = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", thread_count=2)
+    energies_2t, times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", thread_count=2, vector_size=512)
+    sse_energies_2t, sse_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=2, vector_size=512)
+    avx_energies_2t, avx_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=2, vector_size=512)
 
-    sse_energies_4t, sse_times_4t = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", thread_count=4)
-    avx_energies_4t, avx_times_4t = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", thread_count=4)
+    energies_4t, times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", thread_count=4, vector_size=512)
+    sse_energies_4t, sse_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=4, vector_size=512)
+    avx_energies_4t, avx_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=4, vector_size=512)
 
-    sse_energies_8t, sse_times_8t = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", thread_count=8)
-    avx_energies_8t, avx_times_8t = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", thread_count=8)
+    energies_8t, times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", thread_count=8, vector_size=512)
+    sse_energies_8t, sse_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=8, vector_size=512)
+    avx_energies_8t, avx_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=8, vector_size=512)
 
-    energies_data = [(grouping_metric, sse_energies_2t), (grouping_metric, avx_energies_2t),
-                     (grouping_metric, sse_energies_4t), (grouping_metric, avx_energies_4t),
-                     (grouping_metric, sse_energies_8t), (grouping_metric, avx_energies_8t)]
+    powers_2t = [e / t for e, t in zip(energies_2t, times_2t)]
+    sse_powers_2t = [e / t for e, t in zip(sse_energies_2t, sse_times_2t)]
+    avx_powers_2t = [e / t for e, t in zip(avx_energies_2t, avx_times_2t)]
 
-    times_data = [(grouping_metric, sse_times_2t), (grouping_metric, avx_times_2t),
-                  (grouping_metric, sse_times_4t), (grouping_metric, avx_times_4t),
-                  (grouping_metric, sse_times_8t), (grouping_metric, avx_times_8t)]
+    powers_4t = [e/t for e, t in zip(energies_4t, times_4t)]
+    sse_powers_4t = [e/t for e, t in zip(sse_energies_4t, sse_times_4t)]
+    avx_powers_4t = [e/t for e, t in zip(avx_energies_4t, avx_times_4t)]
+
+    powers_8t = [e / t for e, t in zip(energies_8t, times_8t)]
+    sse_powers_8t = [e / t for e, t in zip(sse_energies_8t, sse_times_8t)]
+    avx_powers_8t = [e / t for e, t in zip(avx_energies_8t, avx_times_8t)]
+
+    energies_data = [(grouping_metric, energies_2t), (grouping_metric, sse_energies_2t), (grouping_metric, avx_energies_2t),
+                     (grouping_metric, energies_4t), (grouping_metric, sse_energies_4t), (grouping_metric, avx_energies_4t),
+                     (grouping_metric, energies_8t), (grouping_metric, sse_energies_8t), (grouping_metric, avx_energies_8t)]
+
+    times_data = [(grouping_metric, times_2t), (grouping_metric, sse_times_2t), (grouping_metric, avx_times_2t),
+                  (grouping_metric, times_4t), (grouping_metric, sse_times_4t), (grouping_metric, avx_times_4t),
+                  (grouping_metric, times_8t), (grouping_metric, sse_times_8t), (grouping_metric, avx_times_8t)]
+
+    powers_data = [(grouping_metric, powers_2t), (grouping_metric, sse_powers_2t), (grouping_metric, avx_powers_2t),
+                   (grouping_metric, powers_4t), (grouping_metric, sse_powers_4t), (grouping_metric, avx_powers_4t),
+                   (grouping_metric, powers_8t), (grouping_metric, sse_powers_8t), (grouping_metric, avx_powers_8t)]
 
     relative_energies = [1-(e1/e2) for e1, e2 in zip(sse_energies_2t, avx_energies_2t)]
 
-    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison of instruction sets",
-                        ["SSE - 2 threads", "AVX - 2 threads", "SSE - 4 threads", "AVX - 4 threads", "SSE - 8 threads", "AVX - 8 threads"], "upper center")
-    # create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison of instruction sets",
-    #                     ["SSE - 2 threads", "AVX - 2 threads", "SSE - 4 threads", "AVX - 4 threads", "SSE - 8 threads", "AVX - 8 threads"], "upper right")
+    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison using SIMD instruction sets",
+                        ["None - 2 threads", "SSE2 - 2 threads", "AVX - 2 threads", "None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads"],
+                        "center right", x_ticks=grouping_metric)
+    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison using SIMD instruction sets",
+                        ["None - 2 threads", "SSE2 - 2 threads", "AVX - 2 threads", "None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads"],
+                        "upper right", x_ticks=grouping_metric)
+    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "power draw using SIMD instruction sets",
+                        ["None - 2 threads", "SSE2 - 2 threads", "AVX - 2 threads", "None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads"],
+                        "upper left", x_ticks=grouping_metric)
+    # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
+
+
+def _create_vectorization_scatter_plots_r7_grouping_frequencies():
+    folder_name = "R7-5800X_smaller-vectors"
+    parameters = get_config(folder_name)
+    benchmark_name = "vector-operations"
+    grouping_metric = parameters.limits
+
+    energies_2t, times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", thread_count=4, vector_size=8192)
+    sse_energies_2t, sse_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=4, vector_size=8192)
+    avx_energies_2t, avx_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=4, vector_size=8192)
+
+    energies_4t, times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", thread_count=8, vector_size=8192)
+    sse_energies_4t, sse_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=8, vector_size=8192)
+    avx_energies_4t, avx_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=8, vector_size=8192)
+
+    energies_8t, times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", thread_count=16, vector_size=8192)
+    sse_energies_8t, sse_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=16, vector_size=8192)
+    avx_energies_8t, avx_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=16, vector_size=8192)
+
+    powers_2t = [e / t for e, t in zip(energies_2t, times_2t)]
+    sse_powers_2t = [e / t for e, t in zip(sse_energies_2t, sse_times_2t)]
+    avx_powers_2t = [e / t for e, t in zip(avx_energies_2t, avx_times_2t)]
+
+    powers_4t = [e/t for e, t in zip(energies_4t, times_4t)]
+    sse_powers_4t = [e/t for e, t in zip(sse_energies_4t, sse_times_4t)]
+    avx_powers_4t = [e/t for e, t in zip(avx_energies_4t, avx_times_4t)]
+
+    powers_8t = [e / t for e, t in zip(energies_8t, times_8t)]
+    sse_powers_8t = [e / t for e, t in zip(sse_energies_8t, sse_times_8t)]
+    avx_powers_8t = [e / t for e, t in zip(avx_energies_8t, avx_times_8t)]
+
+    energies_data = [(grouping_metric, energies_2t), (grouping_metric, sse_energies_2t), (grouping_metric, avx_energies_2t),
+                     (grouping_metric, energies_4t), (grouping_metric, sse_energies_4t), (grouping_metric, avx_energies_4t),
+                     (grouping_metric, energies_8t), (grouping_metric, sse_energies_8t), (grouping_metric, avx_energies_8t)]
+
+    times_data = [(grouping_metric, times_2t), (grouping_metric, sse_times_2t), (grouping_metric, avx_times_2t),
+                  (grouping_metric, times_4t), (grouping_metric, sse_times_4t), (grouping_metric, avx_times_4t),
+                  (grouping_metric, times_8t), (grouping_metric, sse_times_8t), (grouping_metric, avx_times_8t)]
+
+    powers_data = [(grouping_metric, powers_2t), (grouping_metric, sse_powers_2t), (grouping_metric, avx_powers_2t),
+                   (grouping_metric, powers_4t), (grouping_metric, sse_powers_4t), (grouping_metric, avx_powers_4t),
+                   (grouping_metric, powers_8t), (grouping_metric, sse_powers_8t), (grouping_metric, avx_powers_8t)]
+
+    relative_energies = [1-(e1/e2) for e1, e2 in zip(sse_energies_2t, avx_energies_2t)]
+
+    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison using SIMD instruction sets",
+                        ["None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads", "None - 16 threads", "SSE2 - 16 threads", "AVX - 16 threads"],
+                        "center right", x_ticks=grouping_metric)
+    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison using SIMD instruction sets",
+                        ["None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads", "None - 16 threads", "SSE2 - 16 threads", "AVX - 16 threads"],
+                        "upper right", x_ticks=grouping_metric)
+    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "power draw using SIMD instruction sets",
+                        ["None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads", "None - 16 threads", "SSE2 - 16 threads", "AVX - 16 threads"],
+                        "upper left", x_ticks=grouping_metric)
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
 
 
@@ -60,17 +158,26 @@ def _create_vectorization_scatter_plots_i7_grouping_threads():
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
 
-    energies_2100Mhz, times_2100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=2100)
-    sse_energies_2100Mhz, sse_times_2100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=2100)
-    avx_energies_2100Mhz, avx_times_2100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=2100)
+    energies_2100Mhz, times_2100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=2100, vector_size=512)
+    sse_energies_2100Mhz, sse_times_2100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=2100, vector_size=512)
+    avx_energies_2100Mhz, avx_times_2100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=2100, vector_size=512)
 
-    energies_3100Mhz, times_3100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=3100)
-    sse_energies_3100Mhz, sse_times_3100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=3100)
-    avx_energies_3100Mhz, avx_times_3100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=3100)
+    energies_3100Mhz, times_3100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=3100, vector_size=512)
+    sse_energies_3100Mhz, sse_times_3100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=3100, vector_size=512)
+    avx_energies_3100Mhz, avx_times_3100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=3100, vector_size=512)
 
-    energies_4100Mhz, times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=4100)
-    sse_energies_4100Mhz, sse_times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=4100)
-    avx_energies_4100Mhz, avx_times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=4100)
+    energies_4100Mhz, times_4100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=4100, vector_size=512)
+    sse_energies_4100Mhz, sse_times_4100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=4100, vector_size=512)
+    avx_energies_4100Mhz, avx_times_4100Mhz = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=4100, vector_size=512)
 
     energies_data = [(grouping_metric, energies_2100Mhz), (grouping_metric, sse_energies_2100Mhz), (grouping_metric, avx_energies_2100Mhz),
                      (grouping_metric, energies_3100Mhz), (grouping_metric, sse_energies_3100Mhz), (grouping_metric, avx_energies_3100Mhz),
@@ -91,7 +198,7 @@ def _create_vectorization_scatter_plots_i7_grouping_threads():
 
 
 def _create_vectorization_scatter_plots_r7_grouping_threads():
-    folder_name = "R7-5800X_bigger-vectors"
+    folder_name = "R7-5800X_smaller-vectors"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
@@ -106,9 +213,9 @@ def _create_vectorization_scatter_plots_r7_grouping_threads():
 
     # energies_4100Mhz, times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="double", frequency=3800)
     sse_energies_4100Mhz, sse_times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric,
-                                                      instruction_set="SSE2", precision="double", frequency=3800, vector_size=262144)
+                                                      instruction_set="SSE2", precision="double", frequency=3800, vector_size=512)
     avx_energies_4100Mhz, avx_times_4100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric,
-                                                      instruction_set="AVX", precision="double", frequency=3800, vector_size=262144)
+                                                      instruction_set="AVX", precision="double", frequency=3800, vector_size=512)
 
     sse_powers = [energy / time for energy, time in zip(sse_energies_4100Mhz, sse_times_4100Mhz)]
     avx_powers = [energy / time for energy, time in zip(avx_energies_4100Mhz, avx_times_4100Mhz)]
@@ -129,8 +236,73 @@ def _create_vectorization_scatter_plots_r7_grouping_threads():
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
 
 
+def _create_vectorization_scatter_plots_r9_grouping_frequencies():
+    folder_name = "R9-7900X_smaller-vectors"
+    parameters = get_config(folder_name)
+    benchmark_name = "vector-operations"
+    grouping_metric = parameters.limits
+
+    sse_energies_2t, sse_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=4, vector_size=512)
+    avx_energies_2t, avx_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=4, vector_size=512)
+    avx512_energies_2t, avx512_times_2t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX512", precision="double", thread_count=4, vector_size=512)
+
+    sse_energies_4t, sse_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=8, vector_size=512)
+    avx_energies_4t, avx_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=8, vector_size=512)
+    avx512_energies_4t, avx512_times_4t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX512", precision="double", thread_count=8, vector_size=512)
+
+    sse_energies_8t, sse_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE2", precision="double", thread_count=16, vector_size=512)
+    avx_energies_8t, avx_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", thread_count=16, vector_size=512)
+    avx512_energies_8t, avx512_times_8t = \
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX512", precision="double", thread_count=16, vector_size=512)
+
+    sse_powers_2t = [e / t for e, t in zip(sse_energies_2t, sse_times_2t)]
+    avx_powers_2t = [e / t for e, t in zip(avx_energies_2t, avx_times_2t)]
+    avx512_powers_2t = [e / t for e, t in zip(avx512_energies_2t, avx512_times_2t)]
+
+    sse_powers_4t = [e/t for e, t in zip(sse_energies_4t, sse_times_4t)]
+    avx_powers_4t = [e/t for e, t in zip(avx_energies_4t, avx_times_4t)]
+    avx512_powers_4t = [e/t for e, t in zip(avx512_energies_4t, avx512_times_4t)]
+
+    sse_powers_8t = [e / t for e, t in zip(sse_energies_8t, sse_times_8t)]
+    avx_powers_8t = [e / t for e, t in zip(avx_energies_8t, avx_times_8t)]
+    avx512_powers_8t = [e / t for e, t in zip(avx512_energies_8t, avx512_times_8t)]
+
+    energies_data = [(grouping_metric, sse_energies_2t), (grouping_metric, avx_energies_2t), (grouping_metric, avx512_energies_2t),
+                     (grouping_metric, sse_energies_4t), (grouping_metric, avx_energies_4t), (grouping_metric, avx512_energies_4t),
+                     (grouping_metric, sse_energies_8t), (grouping_metric, avx_energies_8t), (grouping_metric, avx512_energies_8t)]
+
+    times_data = [(grouping_metric, sse_times_2t), (grouping_metric, avx_times_2t), (grouping_metric, avx512_times_2t),
+                  (grouping_metric, sse_times_4t), (grouping_metric, avx_times_4t), (grouping_metric, avx512_times_4t),
+                  (grouping_metric, sse_times_8t), (grouping_metric, avx_times_8t), (grouping_metric, avx512_times_8t)]
+
+    powers_data = [(grouping_metric, sse_powers_2t), (grouping_metric, avx_powers_2t), (grouping_metric, avx512_powers_2t),
+                   (grouping_metric, sse_powers_4t), (grouping_metric, avx_powers_4t), (grouping_metric, avx512_powers_4t),
+                   (grouping_metric, sse_powers_8t), (grouping_metric, avx_powers_8t), (grouping_metric, avx512_powers_8t)]
+
+    relative_energies = [1-(e1/e2) for e1, e2 in zip(sse_energies_2t, avx_energies_2t)]
+
+    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison using SIMD instruction sets",
+                        ["SSE2 - 4 threads", "AVX - 4 threads", "AVX512 - 4 threads", "SSE2 - 8 threads", "AVX - 8 threads", "AVX512 - 8 threads", "SSE2 - 16 threads", "AVX - 16 threads", "AVX512 - 16 threads"],
+                        "center right", x_ticks=grouping_metric)
+    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison using SIMD instruction sets",
+                        ["SSE2 - 4 threads", "AVX - 4 threads", "AVX512 - 4 threads", "SSE2 - 8 threads", "AVX - 8 threads", "AVX512 - 8 threads", "SSE2 - 16 threads", "AVX - 16 threads", "AVX512 - 16 threads"],
+                        "upper right", x_ticks=grouping_metric)
+    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "power draw using SIMD instruction sets",
+                        ["SSE2 - 4 threads", "AVX - 4 threads", "AVX512 - 4 threads", "SSE2 - 8 threads", "AVX - 8 threads", "AVX512 - 8 threads", "SSE2 - 16 threads", "AVX - 16 threads", "AVX512 - 16 threads"],
+                        "upper left", x_ticks=grouping_metric)
+    # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
+
+
 def _create_vectorization_scatter_plots_r9_grouping_threads():
-    folder_name = "R9-7900X_big-vector"
+    folder_name = "R9-7900X_smaller-vectors"
     parameters = get_config(folder_name)
     benchmark_name = "vector-operations"
     grouping_metric = parameters.thread_counts
@@ -144,13 +316,13 @@ def _create_vectorization_scatter_plots_r9_grouping_threads():
     # avx_energies_3100Mhz, avx_times_3100Mhz = process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="double", frequency=2800)
 
     energies_4700Mhz, times_4700Mhz = \
-        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=4700, vector_size=2097152)
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="NO-SPECIFIC", precision="single", frequency=4700, vector_size=512)
     sse_energies_4700Mhz, sse_times_4700Mhz = \
-        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=4700, vector_size=2097152)
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="SSE", precision="single", frequency=4700, vector_size=512)
     avx_energies_4700Mhz, avx_times_4700Mhz = \
-        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=4700, vector_size=2097152)
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX", precision="single", frequency=4700, vector_size=512)
     avx512_energies_4700Mhz, avx512_times_4700Mhz = \
-        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX512", precision="single", frequency=4700, vector_size=2097152)
+        process(parameters, benchmark_name, folder_name, grouping_metric, instruction_set="AVX512", precision="single", frequency=4700, vector_size=512)
 
     powers = [energy / time for energy, time in zip(energies_4700Mhz, times_4700Mhz)]
     sse_powers = [energy / time for energy, time in zip(sse_energies_4700Mhz, sse_times_4700Mhz)]
@@ -174,4 +346,4 @@ def _create_vectorization_scatter_plots_r9_grouping_threads():
 
 
 if __name__ == "__main__":
-    _create_vectorization_scatter_plots_r7_grouping_threads()
+    _create_vectorization_scatter_plots_r9_grouping_threads()
