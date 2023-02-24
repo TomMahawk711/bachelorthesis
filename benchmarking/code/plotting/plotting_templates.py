@@ -20,13 +20,17 @@ def create_heatmap(data, x_labels, y_labels, title):
 
 
 # TODO: fix xticks
-def create_scatter_plot(data, x_label, y_label, title, legend, loc, x_scale='linear'):
+def create_scatter_plot(data, x_label, y_label, title, legend, loc, x_scale='linear', x_ticks=""):
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
+
     if x_scale == 'log':
         plt.xscale('log')
     scatters = list()
+
+    if x_ticks != "":
+        plt.xticks(x_ticks)
 
     for x_list, y_list in data:
         scatters.append(plt.scatter(x_list, y_list, marker="x"))
