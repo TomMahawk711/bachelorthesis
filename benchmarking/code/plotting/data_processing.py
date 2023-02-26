@@ -110,9 +110,6 @@ def _get_data_per_benchmark_per_system(benchmark_name, folder_name, grouping_met
     else:
         data_dict = _get_energy_time_data(files_dict, path)
 
-    print(f"files:{files_dict}")
-    print(f"data:{data_dict}")
-
     return data_dict, files_dict
 
 
@@ -187,7 +184,6 @@ def _extract_stream_data(data, files, grouping_metric):
     triad = list()
 
     for limit in grouping_metric:
-        print(files)
         for file in files[str(limit)]:
             energies.append(data[file][0])
             times.append(data[file][1])
