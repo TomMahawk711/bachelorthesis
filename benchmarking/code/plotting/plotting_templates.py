@@ -20,7 +20,7 @@ def create_heatmap(data, x_labels, y_labels, title):
 
 
 # TODO: fix xticks
-def create_scatter_plot(data, x_label, y_label, title, legend, loc, x_scale='linear', x_ticks=""):
+def create_scatter_plot(data, x_label, y_label, title, legend, loc, x_scale='linear', x_ticks="", bbox=""):
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
@@ -36,7 +36,12 @@ def create_scatter_plot(data, x_label, y_label, title, legend, loc, x_scale='lin
         scatters.append(plt.scatter(x_list, y_list, marker="x"))
 
     plt.grid()
-    plt.legend(scatters, legend, scatterpoints=1, loc=loc, ncol=1, fontsize=8)
+
+    if bbox == "":
+        plt.legend(scatters, legend, scatterpoints=1, loc=loc, ncol=1, fontsize=8)
+    else:
+        plt.legend(scatters, legend, scatterpoints=1, loc=loc, ncol=1, fontsize=8, bbox_to_anchor=bbox)
+
     plt.show()
 
 
