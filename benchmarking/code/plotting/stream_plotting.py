@@ -46,13 +46,13 @@ def _create_stream_plots_i7_by_array_sizes():
                    (grouping_metric_label, triads_3100MHz), (grouping_metric_label, triads_3600MHz), (grouping_metric_label, triads_4100MHz)]
 
     create_scatter_plot(energies_data, "array size [MB]", "energy [J]", "energy consumption on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper left", x_scale='log')
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper left", x_scale='log', x_ticks=grouping_metric_label)
     create_scatter_plot(times_data, "array size [MB]", "time [s]", "wall time on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper left", x_scale='log')
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper left", x_scale='log', x_ticks=grouping_metric_label)
     create_scatter_plot(copys_data, "array size [MB]", "bandwidth [GB/s]", "bandwidth on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper right", x_scale='log')
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper right", x_scale='log', x_ticks=grouping_metric_label)
     create_scatter_plot(triads_data, "array size [MB]", "bandwidth [GB/s]", "bandwidth on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper right", x_scale='log')
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper right", x_scale='log', x_ticks=grouping_metric_label)
 
 
 def _create_stream_plots_r7_by_array_sizes():
@@ -87,13 +87,13 @@ def _create_stream_plots_r7_by_array_sizes():
     triads_data = [(grouping_metric_label, triads_2200MHz), (grouping_metric_label, triads_2800MHz), (grouping_metric_label, triads_3800MHz)]
 
     create_scatter_plot(energies_data, "array size [MB]", "energy [J]", "energy consumption on different array sizes",
-                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper left", x_scale='log')
+                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper left", x_scale='log', x_ticks=grouping_metric_label)
     create_scatter_plot(times_data, "array size [MB]", "time [s]", "wall time on different array sizes",
-                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper left", x_scale='log')
+                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper left", x_scale='log', x_ticks=grouping_metric_label)
     create_scatter_plot(copys_data, "array size [MB]", "bandwidth [GB/s]", "bandwidth on different array sizes",
-                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper right", x_scale='log')
+                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper right", x_scale='log', x_ticks=grouping_metric_label)
     create_scatter_plot(triads_data, "array size [MB]", "bandwidth [GB/s]", "bandwidth on different array sizes",
-                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper right", x_scale='log')
+                        ["2200 MHz", "2800 MHz", "3800 MHz"], "upper right", x_scale='log', x_ticks=grouping_metric_label)
 
 
 def _create_stream_plots_both():
@@ -117,11 +117,11 @@ def _create_stream_plots_both():
     copys_data = [(grouping_metric_i7, copys_i7), (grouping_metric_r7, copys_r7)]
     triads_data = [(grouping_metric_i7, triads_i7), (grouping_metric_r7, triads_r7)]
 
-    create_scatter_plot(energies_data, "frequency [MHz]", "energy [J]", "energy consumption on different CPUs", ["i7 3770", "R7 5800X"], "upper left")
-    create_scatter_plot(speed_up_data, "frequency [MHz]", "speed up", "speed up on different CPUs", ["i7 3770", "R7 5800X"], "upper left")
-    create_scatter_plot(times_data, "frequency [MHz]", "time [s]", "wall time on different CPUs", ["i7 3770", "R7 5800X"], "upper right")
-    create_scatter_plot(copys_data, "frequency [MHz]", "bandwidth [GB/s]", "copy bandwidth on different CPUs", ["i7 3770", "R7 5800X"], "upper left")
-    create_scatter_plot(triads_data, "frequency [MHz]", "bandwidth [GB/s]", "triads bandwidth on different CPUs", ["i7 3770", "R7 5800X"], "upper left")
+    create_scatter_plot(energies_data, "frequency [MHz]", "energy [J]", "energy consumption on different CPUs", ["i7 3770", "R7 5800X"], "upper left", x_ticks=grouping_metric_i7)
+    create_scatter_plot(speed_up_data, "frequency [MHz]", "speed up", "speed up on different CPUs", ["i7 3770", "R7 5800X"], "upper left", x_ticks=grouping_metric_i7)
+    create_scatter_plot(times_data, "frequency [MHz]", "time [s]", "wall time on different CPUs", ["i7 3770", "R7 5800X"], "upper right", x_ticks=grouping_metric_i7)
+    create_scatter_plot(copys_data, "frequency [MHz]", "bandwidth [GB/s]", "copy bandwidth on different CPUs", ["i7 3770", "R7 5800X"], "upper left", x_ticks=grouping_metric_i7)
+    create_scatter_plot(triads_data, "frequency [MHz]", "bandwidth [GB/s]", "triads bandwidth on different CPUs", ["i7 3770", "R7 5800X"], "upper left", x_ticks=grouping_metric_i7)
 
 
 def _create_stream_plots_by_frequencies():
@@ -142,9 +142,9 @@ def _create_stream_plots_by_frequencies():
                   (grouping_metric, copys_3100MHz), (grouping_metric, copys_3600MHz), (grouping_metric, copys_4100MHz)]
 
     create_scatter_plot(energies_data, "array size", "energy [J]", "energy consumption on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper center")
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper center", x_ticks=grouping_metric)
     create_scatter_plot(copys_data, "frequency [MHz]", "bandwidth [MB/s]", "copy bandwidth on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper left")
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper left", x_ticks=grouping_metric)
 
 
 def _create_stream_plots_i7_by_thread_count():
@@ -165,9 +165,9 @@ def _create_stream_plots_i7_by_thread_count():
                   (grouping_metric, copys_3100MHz), (grouping_metric, copys_3600MHz), (grouping_metric, copys_4100MHz)]
 
     create_scatter_plot(energies_data, "array size", "energy [J]", "energy consumption on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper center")
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper center", x_ticks=grouping_metric)
     create_scatter_plot(copys_data, "thread count", "bandwidth [GB/s]", "copy bandwidth on different array sizes",
-                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper right")
+                        ["1600 MHz", "2100 MHz", "2600 MHz", "3100 MHz", "3600 MHz", "4100 MHz"], "upper right", x_ticks=grouping_metric)
 
 
 def _create_stream_plots_r7_by_thread_count():
