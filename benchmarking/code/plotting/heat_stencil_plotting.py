@@ -54,8 +54,6 @@ def _create_heat_stencil_plots_by_frequencies():
     i7_powers_data = [(i7_grouping_metric, i7_powers)]
     i7_energies_times_data = [(i7_times, i7_energies)]
 
-    print(f"i7 times: {i7_times_data}")
-
     r7_parameters = get_config("R7-5800X_smaller-vectors")
     r7_grouping_metric = r7_parameters.limits
     r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_smaller-vectors", r7_grouping_metric, thread_count=4)
@@ -66,9 +64,6 @@ def _create_heat_stencil_plots_by_frequencies():
     r7_times_data = [(r7_grouping_metric, r7_times)]
     r7_powers_data = [(r7_grouping_metric, r7_powers)]
     r7_energies_times_data = [(r7_times, r7_energies)]
-
-    print(f"R7 times: {r7_times_data}")
-
 
     both_energies_data = [(i7_grouping_metric, i7_energies), (r7_grouping_metric, r7_energies)]
     both_times_data = [(i7_grouping_metric, i7_times), (r7_grouping_metric, r7_times)]
