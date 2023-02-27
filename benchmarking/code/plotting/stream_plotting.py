@@ -217,21 +217,11 @@ def _create_stream_plots_r7_by_thread_count():
 
 
 def _create_stream_plots_both_by_thread_count():
-    i7_folder_name = "i7-3770_new"
+    i7_folder_name = "i7-3770_new-stream"
     benchmark_name = "stream"
     i7_parameters = get_config(i7_folder_name)
     i7_grouping_metric = i7_parameters.thread_counts
 
-    energies_1600MHz, times_1600MHz, copys_1600MHz, scales_1600MHz, adds_1600MHz, triads_1600MHz = \
-        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=1600, array_size=400000)
-    energies_2100MHz, times_2100MHz, copys_2100MHz, scales_2100MHz, adds_2100MHz, triads_2100MHz = \
-        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=2100, array_size=400000)
-    energies_2600MHz, times_2600MHz, copys_2600MHz, scales_2600MHz, adds_2600MHz, triads_2600MHz = \
-        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=2600, array_size=400000)
-    energies_3100MHz, times_3100MHz, copys_3100MHz, scales_3100MHz, adds_3100MHz, triads_3100MHz = \
-        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=3100, array_size=400000)
-    energies_3600MHz, times_3600MHz, copys_3600MHz, scales_3600MHz, adds_3600MHz, triads_3600MHz = \
-        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=3600, array_size=400000)
     energies_4100MHz, times_4100MHz, copys_4100MHz, scales_4100MHz, adds_4100MHz, triads_4100MHz = \
         process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=4100, array_size=400000)
 
@@ -247,8 +237,11 @@ def _create_stream_plots_both_by_thread_count():
 
     copys_3800MHz = [bw / 1e3 for bw in copys_3800MHz]
 
+    energies_data = [(i7_grouping_metric, energies_4100MHz), (r7_grouping_metric, energies_3800MHz)]
     copys_data = [(i7_grouping_metric, copys_4100MHz), (r7_grouping_metric, copys_3800MHz)]
 
+    create_scatter_plot(energies_data, "thread count", "energy [J]", "Stream: energy consumption for different thread counts",
+                        ["i7 3770 - 4100 MHz - 3.2 MiB", "R7 5800X - 3800 MHz - 12.8 MiB"], "center right")
     create_scatter_plot(copys_data, "thread count", "bandwidth [GB/s]", "Stream: copy bandwidth for different thread counts",
                         ["i7 3770 - 4100 MHz - 3.2 MiB", "R7 5800X - 3800 MHz - 12.8 MiB"], "center right")
 
