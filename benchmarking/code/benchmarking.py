@@ -312,12 +312,12 @@ def initialize_parameters():
     my_max_value = 4300
     my_step_size = 500
 
-    my_benchmark_names = ["monte-carlo", "heat-stencil", "stream"]
+    my_benchmark_names = ["monte-carlo", "heat-stencil"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
     my_iterations = 5
     my_limit_type = "frequency-limit"
     my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
-    my_thread_counts = [1, 2, 4, 6, 8]
+    my_thread_counts = [1, 2, 4, 6, 8, 12, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096, 8192]
     my_precisions = ["single", "double"]
