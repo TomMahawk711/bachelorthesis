@@ -21,9 +21,9 @@ int main(int argc, char** argv){
 		size = atol(argv[1]);
 	}
 
-	float* a = (float*) memalign(sizeof(float)*8, sizeof(float)*size);
-	float* b = (float*) memalign(sizeof(float)*8, sizeof(float)*size);
-	float* c = (float*) memalign(sizeof(float)*8, sizeof(float)*size);
+	float* a = (float*) memalign(sizeof(float)*4, sizeof(float)*size);
+	float* b = (float*) memalign(sizeof(float)*4, sizeof(float)*size);
+	float* c = (float*) memalign(sizeof(float)*4, sizeof(float)*size);
 
 	init_array_single_precision(a, size, 0);
 	init_array_single_precision(b, size, 1);

@@ -88,8 +88,8 @@ int main(int argc, char **argv) {
         }
 
         //memcpy(A,B,sizeof(double) * N * N);
-        double* temp;
 
+        double* temp;
         temp = B;
         B = A;
         A = temp;

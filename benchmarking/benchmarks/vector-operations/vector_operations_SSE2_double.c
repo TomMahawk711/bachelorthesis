@@ -21,9 +21,9 @@ int main(int argc, char** argv){
 		size = atol(argv[1]);
 	}
 
-	double* a = (double*) memalign(sizeof(double)*8, sizeof(double)*size);
-	double* b = (double*) memalign(sizeof(double)*8, sizeof(double)*size);
-	double* c = (double*) memalign(sizeof(double)*8, sizeof(double)*size);
+	double* a = (double*) memalign(sizeof(double)*2, sizeof(double)*size);
+	double* b = (double*) memalign(sizeof(double)*2, sizeof(double)*size);
+	double* c = (double*) memalign(sizeof(double)*2, sizeof(double)*size);
 
 	init_array_double_precision(a, size, 0);
 	init_array_double_precision(b, size, 1);

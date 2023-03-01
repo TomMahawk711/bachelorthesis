@@ -1,0 +1,14 @@
+benchmark_names:['vector-operations']
+start_time:20230224-113844
+iterations:2
+limit_type:frequency-limit
+limits:[3000, 4700]
+thread_counts:[1, 2, 4, 8, 12, 16, 20, 24]
+vectorization_sizes:[1, 2, 4, 8, 16]
+vector_sizes:[8192, 65536, 262144]
+precisions:['single', 'double']
+optimization_flags:['O0', 'O1', 'O2', 'O3', 'Os']
+instruction_sets:['SSE', 'SSE2', 'AVX', 'AVX512']
+stream_array_sizes:[100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 51200000]
+map_sizes:[100, 200, 400, 800]
+dot_counts:[10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]
