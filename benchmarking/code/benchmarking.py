@@ -292,6 +292,34 @@ def _set_power_limit(power_limit, password):
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -c 1 -l %s" % power_limit)
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -c 0 -l %s" % power_limit)
 
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 1 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 1 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 1:0 -c 0 -l %s" % power_limit)
+
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 2 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 2 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 2:0 -c 0 -l %s" % power_limit)
+
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3:0 -c 0 -l %s" % power_limit)
+
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 4 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 4 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 4:0 -c 0 -l %s" % power_limit)
+
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 5 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 5 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 5:0 -c 0 -l %s" % power_limit)
+
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 6 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 6 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 6:0 -c 0 -l %s" % power_limit)
+
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 7 -c 0 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 7 -c 1 -l %s" % power_limit)
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 7:0 -c 0 -l %s" % power_limit)
+
 
 # --------------------CPUFREQ_STUFF--------------------
 
