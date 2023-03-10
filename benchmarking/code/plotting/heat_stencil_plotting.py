@@ -33,10 +33,14 @@ def _create_heat_stencil_plots_by_thread_counts():
     both_energies_times_data = [(i7_times, i7_energies), (r7_times, r7_energies)]
     both_speed_up = [(i7_grouping_metric, i7_speed_up), (r7_grouping_metric, r7_speed_up)]
 
-    create_scatter_plot(both_speed_up, "thread_count", "speed up", "Heat Stencil: speed up on different thread counts", ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper left")
-    create_scatter_plot(both_energies_data, "thread_count", "energy [J]", "Heat Stencil: energy consumption on different thread counts", ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper right")
-    create_scatter_plot(both_times_data, "thread count", "time [s]", "Heat Stencil: wall time on different thread counts", ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper right")
-    create_scatter_plot(both_powers_data, "thread count", "power [W]", "Heat Stencil: power draw on different thread counts", ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper left")
+    create_scatter_plot(both_speed_up, "thread_count", "speed up", "Heat Stencil: speed up on different thread counts",
+                        ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper left")
+    create_scatter_plot(both_energies_data, "thread_count", "energy [J]", "Heat Stencil: energy consumption on different thread counts",
+                        ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper right")
+    create_scatter_plot(both_times_data, "thread count", "time [s]", "Heat Stencil: wall time on different thread counts",
+                        ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper right")
+    create_scatter_plot(both_powers_data, "thread count", "power [W]", "Heat Stencil: power draw on different thread counts",
+                        ["i7 3770 - 2100 MHz", "R7 5800X - 2200 MHz"], "upper left")
     # create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
 
 
@@ -71,10 +75,14 @@ def _create_heat_stencil_plots_by_frequencies():
     both_energies_times_data = [(i7_times, i7_energies), (r7_times, r7_energies)]
     both_speed_up = [(i7_grouping_metric, i7_speed_up), (r7_grouping_metric, r7_speed_up)]
 
-    create_scatter_plot(both_speed_up, "frequency [MHz]", "speedup", "Heat Stencil: speed up on different frequencies", ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
-    create_scatter_plot(both_energies_data, "frequency [MHz]", "energy [J]", "Heat Stencil: energy consumption on different frequencies", ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
-    create_scatter_plot(both_times_data, "frequency [MHz]", "time [s]", "Heat Stencil: wall time on different frequencies", ["i7 3770", "R7 5800X"], "upper right", x_ticks=i7_grouping_metric)
-    create_scatter_plot(both_powers_data, "frequency [MHz]", "power [W]", "Heat Stencil: power draw on different frequencies", ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
+    create_scatter_plot(both_speed_up, "frequency [MHz]", "speedup", "Heat Stencil: speed up on different frequencies",
+                        ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
+    create_scatter_plot(both_energies_data, "frequency [MHz]", "energy [J]", "Heat Stencil: energy consumption on different frequencies",
+                        ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
+    create_scatter_plot(both_times_data, "frequency [MHz]", "time [s]", "Heat Stencil: wall time on different frequencies",
+                        ["i7 3770", "R7 5800X"], "upper right", x_ticks=i7_grouping_metric)
+    create_scatter_plot(both_powers_data, "frequency [MHz]", "power [W]", "Heat Stencil: power draw on different frequencies",
+                        ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
     # create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
 
 
@@ -106,9 +114,12 @@ def _create_heat_stencil_plots_by_problem_size():
     both_powers_data = [(grouping_metric, i7_powers), (r7_grouping_metric, r7_powers)]
     both_energies_times_data = [(i7_times, i7_energies), (r7_times, r7_energies)]
 
-    create_scatter_plot(both_energies_data, "frequency [MHz]", "energy [J]", "energy consumption heat stencil", ["i7 3770", "R7 5800X"], "upper left")
-    create_scatter_plot(both_times_data, "frequency [MHz]", "time [s]", "time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
-    create_scatter_plot(both_powers_data, "frequency [MHz]", "power [W]", "power consumption heat stencil", ["i7 3770", "R7 5800X"], "upper left")
+    create_scatter_plot(both_energies_data, "frequency [MHz]", "energy [J]", "energy consumption heat stencil",
+                        ["i7 3770", "R7 5800X"], "upper left")
+    create_scatter_plot(both_times_data, "frequency [MHz]", "time [s]", "time heat stencil",
+                        ["i7 3770", "R7 5800X"], "upper right")
+    create_scatter_plot(both_powers_data, "frequency [MHz]", "power [W]", "power consumption heat stencil",
+                        ["i7 3770", "R7 5800X"], "upper left")
     # create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
 
 
@@ -143,10 +154,14 @@ def _create_heat_stencil_plots_by_optimization():
     both_energies_times_data = [(i7_times, i7_energies), (r7_times, r7_energies)]
     both_speed_up = [(i7_grouping_metric, i7_speed_up), (r7_grouping_metric, r7_speed_up)]
 
-    create_scatter_plot(both_speed_up, "optimization flag", "speed up", "Heat Stencil: speed up on different optimizations", ["i7 3770", "R7 5800X"], "upper left")
-    create_scatter_plot(both_energies_data, "optimization flag", "energy [J]", "Heat Stencil: energy consumption on different optimizations", ["i7 3770", "R7 5800X"], "upper right")
-    create_scatter_plot(both_times_data, "optimization flag", "time [s]", "Heat Stencil: wall time on different optimizations", ["i7 3770", "R7 5800X"], "upper right")
-    create_scatter_plot(both_powers_data, "optimization flag", "power [W]", "Heat Stencil: power draw on different optimizations", ["i7 3770", "R7 5800X"], "center left")
+    create_scatter_plot(both_speed_up, "optimization flag", "speed up", "Heat Stencil: speed up on different optimizations",
+                        ["i7 3770", "R7 5800X"], "upper left")
+    create_scatter_plot(both_energies_data, "optimization flag", "energy [J]", "Heat Stencil: energy consumption on different optimizations",
+                        ["i7 3770", "R7 5800X"], "upper right")
+    create_scatter_plot(both_times_data, "optimization flag", "time [s]", "Heat Stencil: wall time on different optimizations",
+                        ["i7 3770", "R7 5800X"], "upper right")
+    create_scatter_plot(both_powers_data, "optimization flag", "power [W]", "Heat Stencil: power draw on different optimizations",
+                        ["i7 3770", "R7 5800X"], "center left")
     # create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
 
 
