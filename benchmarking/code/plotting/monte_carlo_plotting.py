@@ -81,8 +81,8 @@ def _create_monte_carlo_plots_by_frequencies():
 def _create_monte_carlo_plots_by_problem_size():
     benchmark_name = "monte-carlo"
 
-    parameters = get_config("i7-3770_smaller-vectors")
-    grouping_metric = parameters.map_sizes
+    parameters = get_config("i7-3770_new")
+    grouping_metric = parameters.dot_counts
     i7_energies, i7_times = process(parameters, benchmark_name, "i7-3770_new", grouping_metric, thread_count=4, frequency=2100)
     i7_powers = [energy / time for energy, time in zip(i7_energies, i7_times)]
 
@@ -92,7 +92,7 @@ def _create_monte_carlo_plots_by_problem_size():
     i7_energies_times_data = [(i7_times, i7_energies)]
 
     r7_parameters = get_config("R7-5800X_smaller-vectors")
-    r7_grouping_metric = r7_parameters.map_sizes
+    r7_grouping_metric = r7_parameters.dot_counts
     r7_energies, r7_times = process(r7_parameters, benchmark_name, "R7-5800X_smaller-vectors", r7_grouping_metric, thread_count=4, frequency=2200)
     r7_powers = [energy / time for energy, time in zip(r7_energies, r7_times)]
 
@@ -152,7 +152,7 @@ def _create_monte_carlo_plots_by_optimization():
 
 def _create_monte_carlo_plots_by_power_draw_thomson():
     benchmark_name = "monte-carlo"
-    folder_name = "thomson_old"
+    folder_name = "thomson_6p5-39w"
     parameters = get_config(folder_name)
     grouping_metric = parameters.limits
 
@@ -177,26 +177,28 @@ def _create_monte_carlo_plots_by_power_draw_thomson():
     speed_up_8t = [times_8t[0] / time for time in times_8t]
     speed_up_16t = [times_16t[0] / time for time in times_16t]
 
-    energies_data = [(grouping_metric, energies_1t), (grouping_metric, energies_2t), (grouping_metric, energies_4t), (grouping_metric, energies_6t), (grouping_metric, energies_8t),
-                     (grouping_metric, energies_16t)]
+    plotting_grouping_metric = [gm / 1e6 for gm in grouping_metric]
 
-    speed_up_data = [(grouping_metric, speed_up_1t), (grouping_metric, speed_up_2t), (grouping_metric, speed_up_4t), (grouping_metric, speed_up_6t), (grouping_metric, speed_up_8t),
-                     (grouping_metric, speed_up_16t)]
+    energies_data = [(plotting_grouping_metric, energies_1t), (plotting_grouping_metric, energies_2t), (plotting_grouping_metric, energies_4t),
+                     (plotting_grouping_metric, energies_6t), (plotting_grouping_metric, energies_8t), (plotting_grouping_metric, energies_16t)]
 
-    times_data = [(grouping_metric, times_1t), (grouping_metric, times_2t), (grouping_metric, times_4t), (grouping_metric, times_6t), (grouping_metric, times_8t),
-                  (grouping_metric, times_16t)]
+    speed_up_data = [(plotting_grouping_metric, speed_up_1t), (plotting_grouping_metric, speed_up_2t), (plotting_grouping_metric, speed_up_4t),
+                     (plotting_grouping_metric, speed_up_6t), (plotting_grouping_metric, speed_up_8t), (plotting_grouping_metric, speed_up_16t)]
 
-    powers_data = [(grouping_metric, powers_1t), (grouping_metric, powers_2t), (grouping_metric, powers_4t), (grouping_metric, powers_6t), (grouping_metric, powers_8t),
-                   (grouping_metric, powers_16t)]
+    times_data = [(plotting_grouping_metric, times_1t), (plotting_grouping_metric, times_2t), (plotting_grouping_metric, times_4t),
+                  (plotting_grouping_metric, times_6t), (plotting_grouping_metric, times_8t), (plotting_grouping_metric, times_16t)]
 
-    create_scatter_plot(speed_up_data, "power", "speed up", "Heat Stencil: speed up on different optimizations",
-                        ["1 thread", "2 thread", "4 thread", "6 thread", "8 thread", "16 thread"], "upper left")
-    create_scatter_plot(energies_data, "power", "energy [J]", "Heat Stencil: energy consumption on different optimizations",
-                        ["1 thread", "2 thread", "4 thread", "6 thread", "8 thread", "16 thread"], "upper right")
-    create_scatter_plot(times_data, "power", "time [s]", "Heat Stencil: wall time on different optimizations",
-                        ["1 thread", "2 thread", "4 thread", "6 thread", "8 thread", "16 thread"], "upper right")
-    create_scatter_plot(powers_data, "power", "power [W]", "Heat Stencil: power draw on different optimizations",
-                        ["1 thread", "2 thread", "4 thread", "6 thread", "8 thread", "16 thread"], "center left")
+    powers_data = [(plotting_grouping_metric, powers_1t), (plotting_grouping_metric, powers_2t), (plotting_grouping_metric, powers_4t),
+                   (plotting_grouping_metric, powers_6t), (plotting_grouping_metric, powers_8t), (plotting_grouping_metric, powers_16t)]
+
+    create_scatter_plot(speed_up_data, "power [W]", "speed up", "Monte Carlo: speed up on power limits",
+                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper left", x_ticks=plotting_grouping_metric)
+    create_scatter_plot(energies_data, "power [W]", "energy [J]", "Monte Carlo: energy consumption on power limits",
+                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper right", x_ticks=plotting_grouping_metric)
+    create_scatter_plot(times_data, "power [W]", "time [s]", "Monte Carlo: wall time on power limits",
+                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper right", x_ticks=plotting_grouping_metric)
+    create_scatter_plot(powers_data, "power [W]", "power [W]", "Monte Carlo: power draw on power limits",
+                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper left", x_ticks=plotting_grouping_metric)
     # create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
 
 
