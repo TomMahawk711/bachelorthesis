@@ -81,14 +81,14 @@ def power_limit_benchmark(parameters, password, perf_stat_command):
 
     os.system("modprobe intel_rapl_msr >/dev/null")
     _enable_cpu_zones(password)
-    original_power_limit = _get_power_limit()
+#    original_power_limit = _get_power_limit()
 
     for iteration in tqdm(range(0, parameters.iterations), position=0, desc=f"iterations{9 * ' '}", leave=False, colour="#ff0000"):
         for limit in tqdm(parameters.limits, position=1, desc=f"frequency limits{3 * ' '}", leave=False, colour="#ff8000"):
             _set_power_limit(limit, password)
             _execute_benchmarks(parameters, limit, password, iteration, perf_stat_command)
 
-    _set_power_limit(original_power_limit, password)
+#    _set_power_limit(original_power_limit, password)
 
 
 def frequency_limit_benchmark(parameters, password, perf_stat_command):
@@ -278,7 +278,16 @@ def _invalid_avx512_parameters(instruction_set, precision, vectorization_size):
 def _enable_cpu_zones(password):
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0 -e 1")
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 0:0 -e 1")
-
+    
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 1 -e 1")
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 1:0 -e 1")
+    
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 2 -e 1")
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 2:0 -e 1")
+    
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3 -e 1")
+    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3:0 -e 1")
+    
 
 def _get_power_limit():
     output = os.popen("powercap-info -p intel-rapl").read()
@@ -304,22 +313,6 @@ def _set_power_limit(power_limit, password):
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3 -c 1 -l %s" % power_limit)
     os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 3:0 -c 0 -l %s" % power_limit)
 
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 4 -c 0 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 4 -c 1 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 4:0 -c 0 -l %s" % power_limit)
-
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 5 -c 0 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 5 -c 1 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 5:0 -c 0 -l %s" % power_limit)
-
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 6 -c 0 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 6 -c 1 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 6:0 -c 0 -l %s" % power_limit)
-
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 7 -c 0 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 7 -c 1 -l %s" % power_limit)
-    os.system(f"echo {password}|sudo powercap-set -p intel-rapl -z 7:0 -c 0 -l %s" % power_limit)
-
 
 # --------------------CPUFREQ_STUFF--------------------
 
@@ -342,9 +335,9 @@ def initialize_parameters():
 
     my_benchmark_names = ["monte-carlo", "heat-stencil"]
     my_start_time = time.strftime("%Y%m%d-%H%M%S")
-    my_iterations = 5
-    my_limit_type = "frequency-limit"
-    my_limits = [x for x in range(my_min_value, my_max_value, my_step_size)]
+    my_iterations = 3
+    my_limit_type = "power-limit"
+    my_limits = [26000000, 52000000, 78000000, 104000000, 130000000]
     my_thread_counts = [1, 2, 4, 6, 8, 12, 16]
     my_vectorization_sizes = [1, 2, 4, 8, 16]
     my_vector_sizes = [512, 1024, 2048, 4096, 8192]
