@@ -194,7 +194,7 @@ def _create_monte_carlo_plots_by_power_draw_thomson():
 
     plotting_grouping_metric = [gm / 1e6 for gm in grouping_metric]
 
-    energies_data = [(plotting_grouping_metric, energies_1t), (plotting_grouping_metric, energies_2t), (plotting_grouping_metric, energies_4t),
+    energies_data = [(plotting_grouping_metric, energies_2t), (plotting_grouping_metric, energies_4t),
                      (plotting_grouping_metric, energies_6t), (plotting_grouping_metric, energies_8t), (plotting_grouping_metric, energies_16t)]
 
     speed_up_data = [(plotting_grouping_metric, speed_up_1t), (plotting_grouping_metric, speed_up_2t), (plotting_grouping_metric, speed_up_4t),
@@ -206,16 +206,16 @@ def _create_monte_carlo_plots_by_power_draw_thomson():
     powers_data = [(plotting_grouping_metric, powers_1t), (plotting_grouping_metric, powers_2t), (plotting_grouping_metric, powers_4t),
                    (plotting_grouping_metric, powers_6t), (plotting_grouping_metric, powers_8t), (plotting_grouping_metric, powers_16t)]
 
-    create_scatter_plot(speed_up_data, "power [W]", "speed up", "Monte Carlo: speed up on power limits",
-                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper left", x_ticks=plotting_grouping_metric)
-    create_scatter_plot(energies_data, "power [W]", "energy [J]", "Monte Carlo: energy consumption on power limits",
-                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper right", x_ticks=plotting_grouping_metric)
-    create_scatter_plot(times_data, "power [W]", "time [s]", "Monte Carlo: wall time on power limits",
-                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper right", x_ticks=plotting_grouping_metric)
-    create_scatter_plot(powers_data, "power [W]", "power [W]", "Monte Carlo: power draw on power limits",
-                        ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper left", x_ticks=plotting_grouping_metric)
+    # create_scatter_plot(speed_up_data, "set power limit [W]", "speed up", "Monte Carlo: speed up on power limits",
+    #                     ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper left", x_ticks=plotting_grouping_metric)
+    create_scatter_plot(energies_data, "set power limit [W]", "energy [J]", "Monte Carlo: energy consumption on power limits",
+                        ["2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper right", x_ticks=plotting_grouping_metric)
+    # create_scatter_plot(times_data, "set power limit [W]", "time [s]", "Monte Carlo: wall time on power limits",
+    #                     ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper right", x_ticks=plotting_grouping_metric)
+    # create_scatter_plot(powers_data, "set power limit [W]", "measured power draw [W]", "Monte Carlo: power draw on power limits",
+    #                     ["1 thread", "2 threads", "4 threads", "6 threads", "8 threads", "16 threads"], "upper left", x_ticks=plotting_grouping_metric)
     # create_scatter_plot(both_energies_times_data, "times", "energies", "energy/time heat stencil", ["i7 3770", "R7 5800X"], "upper right")
 
 
 if __name__ == "__main__":
-    _create_monte_carlo_plots_by_frequencies()
+    _create_monte_carlo_plots_by_power_draw_thomson()

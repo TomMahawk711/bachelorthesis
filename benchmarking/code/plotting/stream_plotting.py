@@ -223,7 +223,7 @@ def _create_stream_plots_both_by_thread_count():
     i7_grouping_metric = i7_parameters.thread_counts
 
     energies_4100MHz, times_4100MHz, copys_4100MHz, scales_4100MHz, adds_4100MHz, triads_4100MHz = \
-        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=4100, array_size=400000)
+        process(i7_parameters, benchmark_name, i7_folder_name, i7_grouping_metric, frequency=4100, array_size=200000)
 
     copys_4100MHz = [bw / 1e3 for bw in copys_4100MHz]
 
