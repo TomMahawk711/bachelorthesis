@@ -75,13 +75,13 @@ def _create_vectorization_scatter_plots_i7_grouping_frequencies():
 
     relative_energies = [1-(e1/e2) for e1, e2 in zip(sse_energies_2t, avx_energies_2t)]
 
-    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison using SIMD instruction sets",
+    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "Vectors: energy consumption on different SIMD instruction sets",
                         ["None - 2 threads", "SSE2 - 2 threads", "AVX - 2 threads", "None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads"],
                         "center right", x_ticks=grouping_metric)
-    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison using SIMD instruction sets",
+    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "Vectors: wall times on different SIMD instruction sets",
                         ["None - 2 threads", "SSE2 - 2 threads", "AVX - 2 threads", "None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads"],
                         "upper right", x_ticks=grouping_metric)
-    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "power draw using SIMD instruction sets",
+    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "Vectors: power draw on different SIMD instruction sets",
                         ["None - 2 threads", "SSE2 - 2 threads", "AVX - 2 threads", "None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads"],
                         "upper left", x_ticks=grouping_metric)
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
@@ -140,13 +140,13 @@ def _create_vectorization_scatter_plots_r7_grouping_frequencies():
 
     relative_energies = [1-(e1/e2) for e1, e2 in zip(sse_energies_2t, avx_energies_2t)]
 
-    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison using SIMD instruction sets",
+    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "Vectors: energy consumption on different SIMD instruction sets",
                         ["None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads", "None - 16 threads", "SSE2 - 16 threads", "AVX - 16 threads"],
                         "center right", x_ticks=grouping_metric)
-    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison using SIMD instruction sets",
+    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "Vectors: wall times on different SIMD instruction sets",
                         ["None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads", "None - 16 threads", "SSE2 - 16 threads", "AVX - 16 threads"],
                         "upper right", x_ticks=grouping_metric)
-    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "power draw using SIMD instruction sets",
+    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "Vectors: power draw on different SIMD instruction sets",
                         ["None - 4 threads", "SSE2 - 4 threads", "AVX - 4 threads", "None - 8 threads", "SSE2 - 8 threads", "AVX - 8 threads", "None - 16 threads", "SSE2 - 16 threads", "AVX - 16 threads"],
                         "upper left", x_ticks=grouping_metric)
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
@@ -191,7 +191,7 @@ def _create_vectorization_scatter_plots_i7_grouping_threads():
 
     # create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison of instruction sets",
     # ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
-    create_scatter_plot(times_data, "thread count", "time [s]", "time comparison of instruction sets",
+    create_scatter_plot(times_data, "thread count", "time [s]", "Vectors: wall times on different SIMD instruction sets",
                         ["SSE - 2100MHz", "AVX - 2100MHz", "SSE - 3100MHz", "AVX - 3100MHz", "SSE - 4100MHz", "AVX - 4100MHz"], "upper center")
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
 
@@ -225,11 +225,11 @@ def _create_vectorization_scatter_plots_r7_grouping_threads():
 
     # relative_energies = [1 - (e1 / e2) for e1, e2 in zip(sse_energies_2100Mhz, avx_energies_2100Mhz)]
 
-    create_scatter_plot(powers_data, "thread count", "power draw [W]", "power consumption with different instruction sets and thread counts",
+    create_scatter_plot(powers_data, "thread count", "power draw [W]", "Vectors: power draw on different SIMD instruction sets and thread counts",
                         ["SSE - 3800MHz", "AVX - 3800MHz"], "upper center")
-    create_scatter_plot(energies_data, "thread count", "consumed energy [Joules]", "energy comparison of instruction sets",
+    create_scatter_plot(energies_data, "thread count", "consumed energy [Joules]", "Vectors: energy consumption on different SIMD instruction sets",
                         ["SSE - 3800MHz", "AVX - 3800MHz"], "upper center")
-    create_scatter_plot(times_data, "thread count", "time [s]", "time comparison of instruction sets",
+    create_scatter_plot(times_data, "thread count", "time [s]", "Vectors: wall times on different SIMD instruction sets",
                         ["SSE - 3800MHz", "AVX - 3800MHz"], "upper center")
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
 
@@ -287,13 +287,13 @@ def _create_vectorization_scatter_plots_r9_grouping_frequencies():
 
     relative_energies = [1-(e1/e2) for e1, e2 in zip(sse_energies_2t, avx_energies_2t)]
 
-    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "energy comparison using SIMD instruction sets",
+    create_scatter_plot(energies_data, "frequencies [MHz]", "consumed energy [Joules]", "Vectors: energy consumption on different SIMD instruction sets",
                         ["SSE2 - 4 threads", "AVX - 4 threads", "AVX512 - 4 threads", "SSE2 - 8 threads", "AVX - 8 threads", "AVX512 - 8 threads", "SSE2 - 16 threads", "AVX - 16 threads", "AVX512 - 16 threads"],
                         "center right", x_ticks=grouping_metric)
-    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "time comparison using SIMD instruction sets",
+    create_scatter_plot(times_data, "frequencies [MHz]", "time [s]", "Vectors: wall times on different SIMD instruction sets",
                         ["SSE2 - 4 threads", "AVX - 4 threads", "AVX512 - 4 threads", "SSE2 - 8 threads", "AVX - 8 threads", "AVX512 - 8 threads", "SSE2 - 16 threads", "AVX - 16 threads", "AVX512 - 16 threads"],
                         "upper right", x_ticks=grouping_metric)
-    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "power draw using SIMD instruction sets",
+    create_scatter_plot(powers_data, "frequencies [MHz]", "power draw [W]", "Vectors: power draw on different SIMD instruction sets",
                         ["SSE2 - 4 threads", "AVX - 4 threads", "AVX512 - 4 threads", "SSE2 - 8 threads", "AVX - 8 threads", "AVX512 - 8 threads", "SSE2 - 16 threads", "AVX - 16 threads", "AVX512 - 16 threads"],
                         "upper left", x_ticks=grouping_metric)
     # create_bar_plot(grouping_metric, relative_energies, "frequencies [MHz]", "relative energy difference", "relative energy difference SSE/AVX")
@@ -332,7 +332,7 @@ def _create_vectorization_scatter_plots_r9_grouping_vector_sizes():
 
     # relative_energies = [1 - (e1 / e2) for e1, e2 in zip(sse_energies_2100Mhz, avx_energies_2100Mhz)]
 
-    create_scatter_plot(speed_up_data, "vector size", "speed up", "Vectors: speed up using different instruction sets and vector sizes",
+    create_scatter_plot(speed_up_data, "vector size", "speed up", "Vectors: speed up of AVX and AVX512 instruction sets and vector sizes",
                         ["AVX - 4700MHz", "AVX512 - 4700MHz"], "upper right", x_ticks=grouping_metric, x_scale='log')
     # create_scatter_plot(energies_data, "vector size", "consumed energy [Joules]", "Vectors: energy consumption using different instruction sets and vector sizes",
     #                     ["SSE - 4700MHz", "AVX - 4700MHz", "AVX512 - 4700MHz"], "upper center", x_ticks=grouping_metric, x_scale='log')
