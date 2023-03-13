@@ -1,0 +1,11 @@
+benchmark_names:['vector-operations']
+start_time:20230130-195439
+iterations:1
+limit_type:frequency-limit
+limits:[3800]
+thread_counts:[1, 2, 4, 8, 16]
+vectorization_sizes:[0]
+vector_sizes:[1024, 2048, 4096, 16384, 65536]
+precisions:['single', 'double']
+optimization_flags:['O0']
+instruction_sets:['SSE', 'SSE2', 'AVX']

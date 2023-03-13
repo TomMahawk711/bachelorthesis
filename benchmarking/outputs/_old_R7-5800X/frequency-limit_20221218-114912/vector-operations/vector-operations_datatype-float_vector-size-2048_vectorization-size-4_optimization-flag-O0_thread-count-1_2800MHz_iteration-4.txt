@@ -1,0 +1,9 @@
+# started on Sun Dec 18 17:21:03 2022
+
+
+ Performance counter stats for 'system wide':
+
+            158.67 Joules power/energy-pkg/                                           
+
+       5.704468875 seconds time elapsed
+

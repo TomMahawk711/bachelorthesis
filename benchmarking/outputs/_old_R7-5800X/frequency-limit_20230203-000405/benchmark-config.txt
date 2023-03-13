@@ -1,0 +1,14 @@
+benchmark_names:['stream']
+start_time:20230203-000405
+iterations:10
+limit_type:frequency-limit
+limits:[2200, 2800, 3800]
+thread_counts:[1, 2, 4, 8, 16]
+vectorization_sizes:[1, 2, 4, 8, 16]
+vector_sizes:[512, 1024, 2048, 4096]
+precisions:['single', 'double']
+optimization_flags:['O0', 'O1', 'O2', 'O3', 'Os']
+instruction_sets:['SSE', 'SSE2', 'AVX']
+stream_array_sizes:[100000, 1000000, 10000000, 100000000]
+map_sizes:[100, 200, 400, 800]
+dot_counts:[10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]

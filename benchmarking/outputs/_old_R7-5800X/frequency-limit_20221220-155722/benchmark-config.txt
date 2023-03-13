@@ -1,0 +1,9 @@
+benchmark_names:['vector-operations']
+start_time:20221220-155722
+iterations:5
+limit_type:frequency-limit
+limits:[2800]
+thread_counts:[1, 2, 4, 8]
+vectorization_sizes:[1, 2, 4, 8, 16]
+vector_sizes:[512, 1024, 2048, 4096]
+map_sizes:[100, 200, 400, 800]

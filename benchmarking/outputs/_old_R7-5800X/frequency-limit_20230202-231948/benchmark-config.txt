@@ -1,0 +1,13 @@
+benchmark_names:['heat-stencil']
+start_time:20230202-231948
+iterations:5
+limit_type:frequency-limit
+limits:[2200, 2800, 3800]
+thread_counts:[1, 2, 4, 8, 16]
+vectorization_sizes:[8, 16]
+vector_sizes:[512, 1024]
+precisions:['single', 'double']
+optimization_flags:['O1', 'O2']
+instruction_sets:['SSE', 'SSE2', 'AVX']
+stream_array_sizes:[1000000, 5000000, 10000000, 50000000, 100000000]
+map_sizes:[100, 200, 400, 800]
