@@ -75,7 +75,7 @@ def _create_monte_carlo_plots_by_frequencies():
     both_energies_times_data = [(i7_times, i7_energies), (r7_times, r7_energies)]
     both_speed_up = [(i7_grouping_metric, i7_speed_up), (r7_grouping_metric, r7_speed_up)]
 
-    create_scatter_plot(both_speed_up, "frequency [MHz]", "speedup", "Monte Carlo: speed up on different frequencies",
+    create_scatter_plot(both_speed_up, "frequency [MHz]", "speed up", "Monte Carlo: speed up on different frequencies",
                         ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
     create_scatter_plot(both_energies_data, "frequency [MHz]", "energy [J]", "Monte Carlo: energy consumption on different frequencies",
                         ["i7 3770", "R7 5800X"], "upper left", x_ticks=i7_grouping_metric)
@@ -218,4 +218,4 @@ def _create_monte_carlo_plots_by_power_draw_thomson():
 
 
 if __name__ == "__main__":
-    _create_monte_carlo_plots_by_power_draw_thomson()
+    _create_monte_carlo_plots_by_frequencies()

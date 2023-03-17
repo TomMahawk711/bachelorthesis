@@ -39,7 +39,7 @@ def _create_vectorization_scatter_plots_r9_grouping_vector_sizes():
 
     # relative_energies = [1 - (e1 / e2) for e1, e2 in zip(sse_energies_2100Mhz, avx_energies_2100Mhz)]
 
-    create_scatter_plot(speed_up_data, "vector size [kiB]", "speed up", "Vectors: speed up of AVX and AVX512",
+    create_scatter_plot(speed_up_data, "vector size [kiB]", "speed up", "Vectors: speed up of SSE, AVX and AVX512",
                         ["SSE - 4700 MHz", "AVX - 4700 MHz", "AVX512 - 4700 MHz"], "upper right", x_ticks=grouping_metric_label, x_scale='linear', x_rotation=45)
     create_scatter_plot(energies_data, "vector size [kiB]", "consumed energy [Joules]", "Vectors: energy consumption using different instruction sets and vector sizes",
                         ["None - 4700 MHz", "SSE - 4700 MHz", "AVX - 4700 MHz", "AVX512 - 4700 MHz"], "upper left", x_ticks=grouping_metric_label, x_scale='linear', x_rotation=45)
@@ -137,4 +137,4 @@ def _create_vectorization_scatter_plots_i7_grouping_vector_sizes():
 
 
 if __name__ == "__main__":
-    _create_vectorization_scatter_plots_i7_grouping_vector_sizes()
+    _create_vectorization_scatter_plots_r9_grouping_vector_sizes()
