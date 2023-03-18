@@ -1,0 +1,9 @@
+# started on Mon Feb 13 00:44:38 2023
+
+
+ Performance counter stats for 'system wide':
+
+            394.81 Joules power/energy-cores/                                         
+
+       3.116079642 seconds time elapsed
+

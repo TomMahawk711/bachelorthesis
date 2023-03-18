@@ -1,0 +1,14 @@
+benchmark_names:['monte-carlo', 'heat-stencil']
+start_time:20230305-144357
+iterations:3
+limit_type:frequency-limit
+limits:[13000000, 26000000, 39000000, 52000000, 65000000]
+thread_counts:[1, 2, 4, 6, 8, 12, 16]
+vectorization_sizes:[1, 2, 4, 8, 16]
+vector_sizes:[512, 1024, 2048, 4096, 8192]
+precisions:['single', 'double']
+optimization_flags:['O0', 'O2']
+instruction_sets:['SSE', 'SSE2', 'AVX']
+stream_array_sizes:[100000, 200000, 400000, 800000, 1600000, 3200000, 6400000, 12800000, 25600000, 51200000]
+map_sizes:[100, 200, 300, 400, 500]
+dot_counts:[10000000, 20000000, 40000000, 80000000, 160000000, 320000000, 640000000]

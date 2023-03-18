@@ -1,0 +1,11 @@
+benchmark_names:['monte-carlo', 'vector-operations', 'heat-stencil']
+start_time:20221218-225201
+iterations:10
+limit_type:frequency-limit
+limits:[2700]
+thread_counts:[1, 2, 4, 8, 16]
+vectorization_sizes:[1, 2, 4, 8, 16]
+vector_sizes:[128, 256, 512, 1024, 2048, 4096]
+datatypes:['float', 'double']
+map_sizes:[100, 200, 400, 800]
+optimization_flags:['O0', 'O1', 'O2', 'O3', 'Os']
